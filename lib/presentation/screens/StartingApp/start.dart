@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import '../../styles/systemThemes.dart';
+import 'package:page_transition/page_transition.dart';
 import 'previews.dart';
+import '../../styles/systemThemes.dart';
 import '../../styles/colors.dart';
 
 class EffectIntro extends StatefulWidget {
@@ -78,6 +78,8 @@ class LogoAnimation extends StatefulWidget {
 class _StartingState extends State<LogoAnimation> {
   Alignment _alignment = Alignment.bottomCenter;
 
+  void nextSwiper() {}
+
   @override
   void initState() {
     super.initState();
@@ -88,12 +90,15 @@ class _StartingState extends State<LogoAnimation> {
       });
     });
 
-    Future.delayed(const Duration(seconds: 2), () async {
-      await Get.to(
-        const Previews(),
-        duration: const Duration(milliseconds: 2600),
-        transition: Transition.rightToLeft,
-        curve: Curves.easeIn,
+    Timer(const Duration(seconds: 2), () {
+      Navigator.push(
+        context,
+        PageTransition(
+          type: PageTransitionType
+              .rightToLeft, // Define your custom transition type
+          duration: const Duration(seconds: 5), // Set the transition duration
+          child: const Previews(),
+        ),
       );
     });
   }
