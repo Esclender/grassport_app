@@ -26,35 +26,52 @@ class _StartingPreviews extends State<Previews> {
   Widget build(BuildContext context) {
     final currentSwiperIndex = context.watch<NextSwipers>();
 
-    return Scaffold(
-      backgroundColor: c1,
-      body: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(
-              top: 50.0,
-              left: 20.0,
-              right: 20.0,
-            ),
-            alignment: Alignment.topCenter,
-            child: Row(
+    return BlocListener<NextSwipers, int>(
+      listener: (context, state) {
+        Navigator.push(
+          context,
+          PageTransition(
+            type: PageTransitionType
+                .rightToLeft, // Define your custom transition type
+            duration: currentSwiperIndex.state == 1
+                ? const Duration(seconds: 2)
+                : const Duration(seconds: 1), // Set the transition duration
+            child: const Previews(),
+          ),
+        );
+      },
+      child: BlocBuilder<NextSwipers, int>(
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: c1,
+            body: Column(
               children: [
-                Swipers(
-                  colorSwiper: currentSwiperIndex.state >= 0 ? c8 : c10,
+                Container(
+                  margin: const EdgeInsets.only(
+                    top: 50.0,
+                    left: 20.0,
+                    right: 20.0,
+                  ),
+                  alignment: Alignment.topCenter,
+                  child: Row(
+                    children: [
+                      Swipers(
+                        colorSwiper: currentSwiperIndex.state >= 0 ? c8 : c10,
+                      ),
+                      Swipers(
+                        colorSwiper: currentSwiperIndex.state >= 1 ? c8 : c10,
+                      ),
+                      Swipers(
+                        colorSwiper: currentSwiperIndex.state >= 2 ? c8 : c10,
+                      ),
+                    ],
+                  ),
                 ),
-                Swipers(
-                  colorSwiper: currentSwiperIndex.state >= 1 ? c8 : c10,
-                ),
-                Swipers(
-                  colorSwiper: currentSwiperIndex.state >= 2 ? c8 : c10,
-                ),
+                const SwiperInfo(),
               ],
             ),
-          ),
-          SwiperInfo(
-            fatherContext: context,
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -85,50 +102,35 @@ class _StartingSwipers extends State<Swipers> {
 }
 
 class SwiperInfo extends StatelessWidget {
-  final BuildContext fatherContext;
-  const SwiperInfo({super.key, required this.fatherContext});
+  const SwiperInfo({super.key});
 
   @override
   Widget build(context) {
-    final swiperInfo = context.watch<NextSwipers>().getSwipperInfo();
+    final swiperInfo = context.read<NextSwipers>().getSwipperInfo();
 
-    return BlocListener<NextSwipers, int>(
-      listener: (context, state) {
-        Navigator.push(
-          fatherContext,
-          PageTransition(
-            type: PageTransitionType
-                .rightToLeft, // Define your custom transition type
-            duration: const Duration(seconds: 2), // Set the transition duration
-            child: const Previews(),
+    return Container(
+      margin: const EdgeInsets.only(
+        top: 150.0,
+        left: 40.0,
+        right: 40.0,
+      ),
+      child: Column(
+        children: [
+          Image.asset((swiperInfo["image"] as String)),
+          const Gap(60),
+          Text(
+            (swiperInfo["title"] as String),
+            style: const TextStyle(fontFamily: 'blinker', fontSize: 20.0),
+            textAlign: TextAlign.center,
           ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(
-          top: 150.0,
-          left: 40.0,
-          right: 40.0,
-        ),
-        child: Column(
-          children: [
-            Image.asset((swiperInfo["image"] as String)),
-            const Gap(60),
-            Text(
-              (swiperInfo["title"] as String),
-              style: const TextStyle(fontFamily: 'blinker', fontSize: 20.0),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              (swiperInfo["description"] as String),
-              style:
-                  TextStyle(fontFamily: 'blinker', fontSize: 14.5, color: c11),
-              textAlign: TextAlign.center,
-            ),
-            const Gap(20),
-            const ButtonsSkipAndNext()
-          ],
-        ),
+          Text(
+            (swiperInfo["description"] as String),
+            style: TextStyle(fontFamily: 'blinker', fontSize: 14.5, color: c11),
+            textAlign: TextAlign.center,
+          ),
+          const Gap(20),
+          const ButtonsSkipAndNext()
+        ],
       ),
     );
   }
@@ -143,36 +145,36 @@ class ButtonsSkipAndNext extends StatelessWidget {
 
     return Column(
       children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.8,
-          child: FloatingActionButton(
-            heroTag: 'btn_next_swiper',
-            backgroundColor: c8,
-            onPressed: () {
-              currentSwiperIndex.setSwiperIndex(currentSwiperIndex.state + 1);
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Siguiente',
-                  style: TextStyle(color: c1),
-                ),
-                const Gap(5),
-                Image.asset('assets/images/Next.png')
-              ],
-            ),
+        TextButton(
+          style: TextButton.styleFrom(
+              backgroundColor: c8,
+              minimumSize: const Size(280, 50),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              )),
+          onPressed: () {
+            currentSwiperIndex.incrementIndex();
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                currentSwiperIndex.state >= 2 ? 'Empezar' : 'Siguiente',
+                style: TextStyle(color: c1),
+              ),
+              const Gap(5),
+              Image.asset('assets/images/Next.png')
+            ],
           ),
         ),
-        FloatingActionButton(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
+        TextButton(
           onPressed: () {},
-          child: const Text(
+          child: Text(
             'Saltar',
             style: TextStyle(
               decorationThickness: 2.0,
               decoration: TextDecoration.underline,
+              color: c9,
             ),
           ),
         )

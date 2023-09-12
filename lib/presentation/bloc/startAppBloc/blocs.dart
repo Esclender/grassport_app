@@ -24,8 +24,8 @@ List<Map<String, String>> swipersInfo = [
 class NextSwipers extends Cubit<int> {
   NextSwipers() : super(0);
 
-  void setSwiperIndex(int index) {
-    emit(index);
+  void incrementIndex() {
+    emit(state + 1);
   }
 
   Map<String, String> getSwipperInfo() {
