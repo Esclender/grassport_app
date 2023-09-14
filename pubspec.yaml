@@ -35,6 +35,7 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.1.3
   gap: ^3.0.1
+  go_router: ^10.1.2
   hexcolor: ^3.0.1
   page_transition: ^2.1.0
 

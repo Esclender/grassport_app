@@ -34,7 +34,7 @@ class _StartingPreviews extends State<Previews> {
             type: PageTransitionType
                 .rightToLeft, // Define your custom transition type
             duration: currentSwiperIndex.state == 1
-                ? const Duration(seconds: 2)
+                ? const Duration(milliseconds: 1500)
                 : const Duration(seconds: 1), // Set the transition duration
             child: const Previews(),
           ),

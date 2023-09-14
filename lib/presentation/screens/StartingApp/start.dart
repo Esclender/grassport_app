@@ -1,8 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
-import 'package:page_transition/page_transition.dart';
-import 'previews.dart';
 import '../chargeScreens/main_charge.dart';
 import '../../styles/systemThemes.dart';
 
@@ -19,16 +19,8 @@ class _StartViewState extends State<StartView> {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemModifiers.overlayLigth);
 
-    Future.delayed(const Duration(milliseconds: 2500), () {
-      Navigator.push(
-        context,
-        PageTransition(
-          type: PageTransitionType.rightToLeftWithFade,
-          duration:
-              const Duration(milliseconds: 4700), // Set the transition duration
-          child: const Previews(),
-        ),
-      );
+    Timer(const Duration(seconds: 2), () {
+      context.go('/previews');
     });
   }
 
@@ -40,17 +32,3 @@ class _StartViewState extends State<StartView> {
     );
   }
 }
-
-
-
-    // Future.delayed(const Duration(microseconds: 1500), () {
-    //   Navigator.push(
-    //     context,
-    //     PageTransition(
-    //       type: PageTransitionType.rightToLeftWithFade,
-    //       duration:
-    //           const Duration(milliseconds: 4700), // Set the transition duration
-    //       child: const Previews(),
-    //     ),
-    //   );
-    // });

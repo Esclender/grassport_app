@@ -15,19 +15,19 @@ class _EffectIntroState extends State<EffectIntro>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scale;
+  AlignmentGeometry alignment = Alignment.bottomCenter;
 
   @override
   void initState() {
     super.initState();
 
-    Timer(const Duration(milliseconds: 1500), () {
+    Timer(const Duration(milliseconds: 1600), () {
       SystemChrome.setSystemUIOverlayStyle(SystemModifiers.overlayDark);
     });
 
     _controller = AnimationController(
       vsync: this,
-      duration:
-          const Duration(milliseconds: 2500), // Adjust the duration as needed
+      duration: const Duration(seconds: 3), // Adjust the duration as needed
     );
 
     // Create the scale animation
@@ -43,7 +43,9 @@ class _EffectIntroState extends State<EffectIntro>
 
     // Add a listener to the scale animation
     _scale.addListener(() {
-      setState(() {});
+      setState(() {
+        alignment = Alignment.center;
+      });
     });
   }
 
@@ -61,7 +63,7 @@ class _EffectIntroState extends State<EffectIntro>
               fit: BoxFit.contain,
             ),
           ),
-          const LogoAnimation()
+          LogoAnimation(alignment: alignment)
         ],
       ),
     );
@@ -69,7 +71,8 @@ class _EffectIntroState extends State<EffectIntro>
 }
 
 class LogoAnimation extends StatefulWidget {
-  const LogoAnimation({super.key});
+  final AlignmentGeometry alignment;
+  const LogoAnimation({super.key, required this.alignment});
 
   @override
   State<LogoAnimation> createState() => _StartingState();
@@ -77,37 +80,11 @@ class LogoAnimation extends StatefulWidget {
 
 class _StartingState extends State<LogoAnimation>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controllador;
-  late Animation<Alignment> _alignment;
-
   //MANAGE THE ANIMATIONS WITH LISTENERS LIKE ABOVE XD
 
   @override
   void initState() {
     super.initState();
-
-    _controllador = AnimationController(
-      vsync: this,
-      duration:
-          const Duration(milliseconds: 100), // Adjust the duration as needed
-    );
-
-    // Create the alignment animation
-    _alignment = AlignmentTween(
-      begin: Alignment.bottomCenter,
-      end: Alignment.center,
-    ).animate(
-      CurvedAnimation(
-        parent: _controllador,
-        curve: Curves.fastOutSlowIn,
-      ),
-    );
-
-    _controllador.forward();
-
-    _alignment.addListener(() {
-      setState(() {});
-    });
   }
 
   @override
@@ -115,7 +92,7 @@ class _StartingState extends State<LogoAnimation>
     return Stack(
       children: [
         AnimatedAlign(
-          alignment: _alignment.value,
+          alignment: widget.alignment,
           duration: const Duration(seconds: 1),
           curve: Curves.fastOutSlowIn,
           child: Image.asset('assets/images/Logo.png'),
@@ -123,7 +100,7 @@ class _StartingState extends State<LogoAnimation>
         Padding(
           padding: const EdgeInsets.only(top: 160.0),
           child: AnimatedAlign(
-            alignment: _alignment.value,
+            alignment: widget.alignment,
             duration: const Duration(seconds: 1),
             curve: Curves.fastOutSlowIn,
             child: Text(
