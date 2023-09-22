@@ -32,7 +32,6 @@ class _LoginState extends State<Login> {
           const Text(
             'Grassport',
             style: TextStyle(
-              fontFamily: 'blinker',
               fontSize: 40,
             ),
           ),
@@ -58,7 +57,7 @@ class _LoginState extends State<Login> {
                 const Gap(2),
                 Text(
                   'Iniciar sesion con Google',
-                  style: TextStyle(color: c1, fontFamily: 'blinker'),
+                  style: TextStyle(color: c1),
                 ),
               ],
             ),
@@ -68,9 +67,9 @@ class _LoginState extends State<Login> {
             child: Text(
               'Iniciar sesion despues',
               style: TextStyle(
-                  color: c1,
-                  fontFamily: 'blinker',
-                  decoration: TextDecoration.underline),
+                color: c1,
+                decoration: TextDecoration.underline,
+              ),
             ),
           )
         ],

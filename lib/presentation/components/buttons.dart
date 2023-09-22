@@ -1,13 +1,12 @@
 import "package:flutter/material.dart";
 import 'package:gap/gap.dart';
-import '../styles/colors.dart';
 
 //ignore: must_be_immutable
 class CustomButton extends StatelessWidget {
   Color? bg = Colors.white;
-  String text = "Siguiente";
+  Widget text;
   final Function() next;
-  CustomButton({super.key, required this.next, this.bg});
+  CustomButton({super.key, required this.next, required this.text, this.bg});
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +23,9 @@ class CustomButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            text,
-            style: TextStyle(color: c1),
-          ),
+          text,
           const Gap(5),
-          Image.asset('assets/images/Next.png')
+          Image.asset('assets/images/Next.png'),
         ],
       ),
     );

@@ -120,12 +120,12 @@ class SwiperInfo extends StatelessWidget {
           const Gap(60),
           Text(
             (swiperInfo["title"] as String),
-            style: const TextStyle(fontFamily: 'blinker', fontSize: 20.0),
+            style: const TextStyle(fontSize: 20.0),
             textAlign: TextAlign.center,
           ),
           Text(
             (swiperInfo["description"] as String),
-            style: TextStyle(fontFamily: 'blinker', fontSize: 14.5, color: c11),
+            style: TextStyle(fontSize: 14.5, color: c11),
             textAlign: TextAlign.center,
           ),
           const Gap(20),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import './presentation/router/routes.dart';
 import './presentation/bloc/bloc.dart';
-import './presentation/screens/StartingApp/login.dart';
 
 void main() {
   runApp(const BlocsProvider());
@@ -19,7 +18,7 @@ class BlocsProvider extends StatelessWidget {
       ],
       child: const Directionality(
         textDirection: TextDirection.ltr,
-        child: Login(),
+        child: MyApp(),
       ), //const MyApp()
     );
   }
@@ -34,6 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        fontFamily: 'blinker',
         useMaterial3: true,
       ),
       routerConfig: router,

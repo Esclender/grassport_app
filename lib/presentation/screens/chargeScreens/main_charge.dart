@@ -106,7 +106,6 @@ class _StartingState extends State<LogoAnimation>
             child: Text(
               'GrasSport',
               style: TextStyle(
-                fontFamily: 'blinker',
                 fontSize: 35.0,
                 color: c2,
                 decoration: TextDecoration.none,
