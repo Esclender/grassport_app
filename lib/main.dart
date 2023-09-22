@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import './presentation/router/routes.dart';
 import './presentation/bloc/bloc.dart';
+import './presentation/screens/StartingApp/login.dart';
 
 void main() {
   runApp(const BlocsProvider());
@@ -16,7 +17,10 @@ class BlocsProvider extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => NextSwipers()),
       ],
-      child: const MyApp(),
+      child: const Directionality(
+        textDirection: TextDirection.ltr,
+        child: Login(),
+      ), //const MyApp()
     );
   }
 }
