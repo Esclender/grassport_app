@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grassport_app/presentation/bloc/charge/bloc.dart';
 import '../../styles/systemThemes.dart';
 import '../../styles/colors.dart';
 
@@ -51,6 +53,8 @@ class _EffectIntroState extends State<EffectIntro>
 
   @override
   Widget build(context) {
+    String currentRoute = context.read<ChargeRoute>().state;
+
     return Container(
       color: c1,
       child: Stack(
@@ -63,7 +67,10 @@ class _EffectIntroState extends State<EffectIntro>
               fit: BoxFit.contain,
             ),
           ),
-          LogoAnimation(alignment: alignment)
+          LogoAnimation(
+            alignment: alignment,
+            route: currentRoute,
+          )
         ],
       ),
     );
@@ -72,7 +79,10 @@ class _EffectIntroState extends State<EffectIntro>
 
 class LogoAnimation extends StatefulWidget {
   final AlignmentGeometry alignment;
-  const LogoAnimation({super.key, required this.alignment});
+  final String route;
+
+  const LogoAnimation(
+      {super.key, required this.alignment, required this.route});
 
   @override
   State<LogoAnimation> createState() => _StartingState();
@@ -80,11 +90,15 @@ class LogoAnimation extends StatefulWidget {
 
 class _StartingState extends State<LogoAnimation>
     with SingleTickerProviderStateMixin {
-  //MANAGE THE ANIMATIONS WITH LISTENERS LIKE ABOVE XD
-
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Timer(const Duration(seconds: 2), () {
+        Navigator.pushNamed(context, widget.route);
+      });
+    });
   }
 
   @override
@@ -109,6 +123,7 @@ class _StartingState extends State<LogoAnimation>
                 fontSize: 35.0,
                 color: c2,
                 decoration: TextDecoration.none,
+                fontFamily: 'blinker',
               ),
             ),
           ),

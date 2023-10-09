@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/components/buttons.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:grassport_app/presentation/styles/systemThemes.dart';
@@ -25,7 +26,12 @@ class _AgreementLocationState extends State<AgreementLocation> {
     return Scaffold(
         backgroundColor: c1,
         appBar: AppBar(
-          title: const Icon(Icons.arrow_back),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back),
+          ),
         ),
         body: SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -62,7 +68,9 @@ class _AgreementLocationState extends State<AgreementLocation> {
                 child: Column(
                   children: [
                     CustomButton(
-                      next: () {},
+                      next: () {
+                        //APPLY ACTUAL LOCATION LOGIC
+                      },
                       bg: c8,
                       text: Text(
                         'Usar ubicacion actual',
@@ -71,11 +79,15 @@ class _AgreementLocationState extends State<AgreementLocation> {
                     ),
                     const Gap(10),
                     CustomButton(
-                      next: () {},
-                      bg: c12,
+                      next: () {
+                        Future.delayed(const Duration(milliseconds: 500), () {
+                          Navigator.pushNamed(context, routeSelectLocation);
+                        });
+                      },
+                      bg: c1,
                       text: Text(
-                        'Ingresar Manualmente',
-                        style: TextStyle(color: c9),
+                        'Iniciar sesion manualmente',
+                        style: TextStyle(color: c8),
                       ),
                     ),
                   ],
@@ -86,13 +98,3 @@ class _AgreementLocationState extends State<AgreementLocation> {
         ));
   }
 }
-
-// class LocationBtns extends StatelessWidget {
-//   const LocationBtns({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return TextButton(
-//         onPressed: () {}, child: const Text('Permitir ubicacion'), style: ,);
-//   }
-// }

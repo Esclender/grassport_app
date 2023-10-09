@@ -25,7 +25,9 @@ class NextSwipers extends Cubit<int> {
   NextSwipers() : super(0);
 
   void incrementIndex() {
-    emit(state + 1);
+    if (state < 2) {
+      emit(state + 1);
+    }
   }
 
   Map<String, String> getSwipperInfo() {

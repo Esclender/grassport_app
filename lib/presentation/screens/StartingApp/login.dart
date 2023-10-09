@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
@@ -29,10 +30,14 @@ class _LoginState extends State<Login> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
+          Text(
             'Grassport',
             style: TextStyle(
               fontSize: 40,
+              fontWeight: FontWeight.w300,
+              fontFamily: 'blinker',
+              color: c1,
+              decoration: TextDecoration.none,
             ),
           ),
           const Gap(10),
@@ -63,12 +68,15 @@ class _LoginState extends State<Login> {
             ),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, routeAgreementLocation);
+            },
             child: Text(
               'Iniciar sesion despues',
               style: TextStyle(
                 color: c1,
                 decoration: TextDecoration.underline,
+                decorationColor: c1,
               ),
             ),
           )

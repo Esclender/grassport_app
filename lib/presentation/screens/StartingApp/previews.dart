@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/bloc/startAppBloc/blocs.dart';
 import '../../styles/systemThemes.dart';
 import '../../styles/colors.dart';
@@ -26,52 +26,33 @@ class _StartingPreviews extends State<Previews> {
   Widget build(BuildContext context) {
     final currentSwiperIndex = context.watch<NextSwipers>();
 
-    return BlocListener<NextSwipers, int>(
-      listener: (context, state) {
-        Navigator.push(
-          context,
-          PageTransition(
-            type: PageTransitionType
-                .rightToLeft, // Define your custom transition type
-            duration: currentSwiperIndex.state == 1
-                ? const Duration(milliseconds: 1500)
-                : const Duration(seconds: 1), // Set the transition duration
-            child: const Previews(),
-          ),
-        );
-      },
-      child: BlocBuilder<NextSwipers, int>(
-        builder: (context, state) {
-          return Scaffold(
-            backgroundColor: c1,
-            body: Column(
+    return Scaffold(
+      backgroundColor: c1,
+      body: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(
+              top: 50.0,
+              left: 20.0,
+              right: 20.0,
+            ),
+            alignment: Alignment.topCenter,
+            child: Row(
               children: [
-                Container(
-                  margin: const EdgeInsets.only(
-                    top: 50.0,
-                    left: 20.0,
-                    right: 20.0,
-                  ),
-                  alignment: Alignment.topCenter,
-                  child: Row(
-                    children: [
-                      Swipers(
-                        colorSwiper: currentSwiperIndex.state >= 0 ? c8 : c10,
-                      ),
-                      Swipers(
-                        colorSwiper: currentSwiperIndex.state >= 1 ? c8 : c10,
-                      ),
-                      Swipers(
-                        colorSwiper: currentSwiperIndex.state >= 2 ? c8 : c10,
-                      ),
-                    ],
-                  ),
+                Swipers(
+                  colorSwiper: currentSwiperIndex.state >= 0 ? c8 : c10,
                 ),
-                const SwiperInfo(),
+                Swipers(
+                  colorSwiper: currentSwiperIndex.state >= 1 ? c8 : c10,
+                ),
+                Swipers(
+                  colorSwiper: currentSwiperIndex.state >= 2 ? c8 : c10,
+                ),
               ],
             ),
-          );
-        },
+          ),
+          const SwiperInfo(),
+        ],
       ),
     );
   }
@@ -153,7 +134,12 @@ class ButtonsSkipAndNext extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(15)),
               )),
           onPressed: () {
-            currentSwiperIndex.incrementIndex();
+            if (currentSwiperIndex.state == 2) {
+              Navigator.pushNamed(context, routeLogin);
+            } else {
+              currentSwiperIndex.incrementIndex();
+              Navigator.pushNamed(context, routePreviews);
+            }
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -168,7 +154,9 @@ class ButtonsSkipAndNext extends StatelessWidget {
           ),
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, routeLogin);
+          },
           child: Text(
             'Saltar',
             style: TextStyle(
