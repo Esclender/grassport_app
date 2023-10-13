@@ -64,6 +64,7 @@ flutter:
     - assets\images\preview-image2.png
     - assets\images\preview-image3.png
     - assets\images\icons8-logo-de-google.svg
+    - assets\images\Street_bg.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

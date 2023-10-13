@@ -17,42 +17,39 @@ class Previews extends StatefulWidget {
 
 class _StartingPreviews extends State<Previews> {
   @override
-  void initState() {
-    super.initState();
-    SystemChrome.setSystemUIOverlayStyle(SystemModifiers.overlayLigth);
-  }
-
-  @override
   Widget build(BuildContext context) {
     final currentSwiperIndex = context.watch<NextSwipers>();
 
-    return Scaffold(
-      backgroundColor: c1,
-      body: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(
-              top: 50.0,
-              left: 20.0,
-              right: 20.0,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemModifiers.overlayLigth,
+      child: Scaffold(
+        backgroundColor: c1,
+        body: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(
+                top: 50.0,
+                left: 20.0,
+                right: 20.0,
+              ),
+              alignment: Alignment.topCenter,
+              child: Row(
+                children: [
+                  Swipers(
+                    colorSwiper: currentSwiperIndex.state >= 0 ? c8 : c10,
+                  ),
+                  Swipers(
+                    colorSwiper: currentSwiperIndex.state >= 1 ? c8 : c10,
+                  ),
+                  Swipers(
+                    colorSwiper: currentSwiperIndex.state >= 2 ? c8 : c10,
+                  ),
+                ],
+              ),
             ),
-            alignment: Alignment.topCenter,
-            child: Row(
-              children: [
-                Swipers(
-                  colorSwiper: currentSwiperIndex.state >= 0 ? c8 : c10,
-                ),
-                Swipers(
-                  colorSwiper: currentSwiperIndex.state >= 1 ? c8 : c10,
-                ),
-                Swipers(
-                  colorSwiper: currentSwiperIndex.state >= 2 ? c8 : c10,
-                ),
-              ],
-            ),
-          ),
-          const SwiperInfo(),
-        ],
+            const SwiperInfo(),
+          ],
+        ),
       ),
     );
   }

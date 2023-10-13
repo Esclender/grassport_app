@@ -23,7 +23,9 @@ class _AgreementLocationState extends State<AgreementLocation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemModifiers.overlayLigth,
+      child: Scaffold(
         backgroundColor: c1,
         appBar: AppBar(
           leading: IconButton(
@@ -95,6 +97,8 @@ class _AgreementLocationState extends State<AgreementLocation> {
               )
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

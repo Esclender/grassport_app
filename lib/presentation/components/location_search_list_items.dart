@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grassport_app/presentation/bloc/charge/bloc.dart';
+import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
 class LocationTag extends StatelessWidget {
@@ -16,9 +19,10 @@ class LocationTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<ChargeRoute>().changeRoute(routeHomeApp);
     return TextButton(
       onPressed: () {
-        //Navigator.pushNamed(context, );
+        Navigator.pushNamed(context, routeCharge);
       },
       style: TextButton.styleFrom(foregroundColor: c9),
       child: Row(

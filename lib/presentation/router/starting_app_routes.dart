@@ -5,6 +5,7 @@ import 'package:grassport_app/presentation/screens/StartingApp/previews.dart';
 import 'package:grassport_app/presentation/screens/StartingApp/select_current_location.dart';
 import 'package:grassport_app/presentation/screens/StartingApp/start.dart';
 import 'package:grassport_app/presentation/screens/chargeScreens/main_charge.dart';
+import 'package:grassport_app/presentation/screens/home_app/home_view.dart';
 import 'package:grassport_app/presentation/styles/side_to_side_transition.dart';
 
 const String routeStartApp = '/start';
@@ -13,6 +14,7 @@ const String routePreviews = '/start/previews';
 const String routeLogin = '/start/login';
 const String routeAgreementLocation = '/agreementLocation';
 const String routeSelectLocation = '/agreementLocation/selectCurrentLocation';
+const String routeHomeApp = '/home';
 
 class MyRouters {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -29,6 +31,8 @@ class MyRouters {
         return SideToSideTransition(child: const AgreementLocation());
       case "/agreementLocation/selectCurrentLocation":
         return SideToSideTransition(child: const SelectCurrentLocation());
+      case "/home":
+        return SideToSideTransition(child: const HomeApp());
       default:
         return MaterialPageRoute(builder: (context) => const StartView());
     }

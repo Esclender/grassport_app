@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grassport_app/presentation/bloc/charge/bloc.dart';
 import 'package:grassport_app/presentation/bloc/locations/blocs.dart';
+import 'package:grassport_app/presentation/bloc/nearCanchas/blocs.dart';
+import 'package:grassport_app/presentation/bloc/savedLocations/blocs.dart';
 import 'package:grassport_app/presentation/bloc/startAppBloc/blocs.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/screens/StartingApp/start.dart';
@@ -20,6 +22,8 @@ class BlocsProvider extends StatelessWidget {
         BlocProvider(create: (context) => NextSwipers()),
         BlocProvider(create: (context) => SelectLocation()),
         BlocProvider(create: (context) => ChargeRoute()),
+        BlocProvider(create: (context) => NearCanchas()),
+        BlocProvider(create: (context) => SavedLocations()),
       ],
       child: const MyApp(),
     );
@@ -35,7 +39,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: MyRouters.generateRoute,
-      initialRoute: routeStartApp,
+      initialRoute: routeStartApp, //routeStartApp
       theme: ThemeData(
         fontFamily: 'blinker',
         useMaterial3: true,

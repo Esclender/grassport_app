@@ -55,23 +55,26 @@ class _EffectIntroState extends State<EffectIntro>
   Widget build(context) {
     String currentRoute = context.read<ChargeRoute>().state;
 
-    return Container(
-      color: c1,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Transform.scale(
-            scale: _scale.value,
-            child: Image.asset(
-              'assets/images/start-vector.png',
-              fit: BoxFit.contain,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemModifiers.overlayDark,
+      child: Container(
+        color: c1,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Transform.scale(
+              scale: _scale.value,
+              child: Image.asset(
+                'assets/images/start-vector.png',
+                fit: BoxFit.contain,
+              ),
             ),
-          ),
-          LogoAnimation(
-            alignment: alignment,
-            route: currentRoute,
-          )
-        ],
+            LogoAnimation(
+              alignment: alignment,
+              route: currentRoute,
+            )
+          ],
+        ),
       ),
     );
   }
