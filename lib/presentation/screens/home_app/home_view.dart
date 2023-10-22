@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:grassport_app/presentation/bloc/nearCanchas/blocs.dart';
 import 'package:grassport_app/presentation/components/cancha_card.dart';
 import 'package:grassport_app/presentation/components/home_badget.dart';
@@ -106,7 +107,7 @@ class _BottomModalState extends State<BottomModal> {
                   scrollController: scrollcontroller,
                   canchasArray: nearCanchas.state,
                 ),
-              )
+              ),
             ],
           ),
         );
@@ -131,7 +132,7 @@ class ListCanchas extends StatelessWidget {
       itemCount: canchasArray.length,
       itemBuilder: (context, ind) {
         return CanchaCard(
-          img: canchasArray[ind]["img"],
+          data: canchasArray[ind],
         );
       },
     );

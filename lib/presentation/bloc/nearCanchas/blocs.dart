@@ -4,7 +4,19 @@ const nearCanchas = [
   {
     "nombre": "Cancha 002",
     "rating": 3,
+    "owner": "Esclender",
     "direccion": "Av Mexio, Surco, Peru",
+    "price": 0,
+    "horario": {"start": "10:00", "end": "19:00"},
+    "img":
+        "https://ichef.bbci.co.uk/news/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg"
+  },
+  {
+    "nombre": "Cancha 002",
+    "rating": 5,
+    "owner": "Esclender",
+    "direccion": "Av Mexio, Surco, Peru",
+    "price": 100.10,
     "horario": {"start": "10:00", "end": "19:00"},
     "img":
         "https://ichef.bbci.co.uk/news/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg"
@@ -12,7 +24,9 @@ const nearCanchas = [
   {
     "nombre": "Cancha 002",
     "rating": 3,
+    "owner": "Esclender",
     "direccion": "Av Mexio, Surco, Peru",
+    "price": 100.10,
     "horario": {"start": "10:00", "end": "19:00"},
     "img":
         "https://ichef.bbci.co.uk/news/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg"
@@ -20,23 +34,19 @@ const nearCanchas = [
   {
     "nombre": "Cancha 002",
     "rating": 3,
+    "owner": "Esclender",
     "direccion": "Av Mexio, Surco, Peru",
+    "price": 100.10,
     "horario": {"start": "10:00", "end": "19:00"},
     "img":
         "https://ichef.bbci.co.uk/news/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg"
   },
   {
     "nombre": "Cancha 002",
-    "rating": 3,
+    "rating": 4,
+    "owner": "Esclender",
     "direccion": "Av Mexio, Surco, Peru",
-    "horario": {"start": "10:00", "end": "19:00"},
-    "img":
-        "https://ichef.bbci.co.uk/news/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg"
-  },
-  {
-    "nombre": "Cancha 002",
-    "rating": 3,
-    "direccion": "Av Mexio, Surco, Peru",
+    "price": 100.10,
     "horario": {"start": "10:00", "end": "19:00"},
     "img":
         "https://ichef.bbci.co.uk/news/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg"
