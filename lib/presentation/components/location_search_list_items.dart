@@ -24,7 +24,9 @@ class LocationTag extends StatelessWidget {
       onPressed: () {
         Navigator.pushNamed(context, routeCharge);
       },
-      style: TextButton.styleFrom(foregroundColor: c9),
+      style: TextButton.styleFrom(
+        foregroundColor: c9,
+      ),
       child: Row(
         children: [
           leading,

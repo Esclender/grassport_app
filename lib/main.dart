@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grassport_app/presentation/bloc/charge/bloc.dart';
+import 'package:grassport_app/presentation/bloc/home_is_search/bloc.dart';
 import 'package:grassport_app/presentation/bloc/locations/blocs.dart';
 import 'package:grassport_app/presentation/bloc/nearCanchas/blocs.dart';
 import 'package:grassport_app/presentation/bloc/savedLocations/blocs.dart';
@@ -24,6 +25,7 @@ class BlocsProvider extends StatelessWidget {
         BlocProvider(create: (context) => ChargeRoute()),
         BlocProvider(create: (context) => NearCanchas()),
         BlocProvider(create: (context) => SavedLocations()),
+        BlocProvider(create: (context) => IsSearch()),
       ],
       child: const MyApp(),
     );
@@ -44,7 +46,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'blinker',
         useMaterial3: true,
       ),
-      home: const StartView(),
+      home: const StartView(), //
     );
   }
 }

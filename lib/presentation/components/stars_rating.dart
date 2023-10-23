@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
+// ignore: must_be_immutable
 class StarsRating extends StatefulWidget {
   final Function() canchaUpdate;
   int rate;
@@ -11,8 +12,6 @@ class StarsRating extends StatefulWidget {
 }
 
 class _StarsRatingState extends State<StarsRating> {
-  //0 is equal to 1 in this case, this is just to don't sum int setState
-
   @override
   Widget build(BuildContext context) {
     int countStars = widget.rate ?? 1;

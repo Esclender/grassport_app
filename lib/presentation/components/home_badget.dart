@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grassport_app/presentation/bloc/home_is_search/bloc.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
+// ignore: must_be_immutable
 class HomeBadget extends StatefulWidget {
   const HomeBadget({super.key});
 
@@ -13,6 +16,8 @@ class _HomeBadgetState extends State<HomeBadget> {
 
   @override
   Widget build(BuildContext context) {
+    IsSearch showTopScreen = context.watch<IsSearch>();
+
     return Container(
       width: 220,
       height: 40,
@@ -34,6 +39,7 @@ class _HomeBadgetState extends State<HomeBadget> {
               setState(() {
                 selectedIcon = 0;
               });
+              showTopScreen.toggleSearch(false);
             },
             icon: selectedIcon == 0
                 ? const Icon(

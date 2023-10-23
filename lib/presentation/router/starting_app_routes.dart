@@ -15,6 +15,7 @@ const String routeLogin = '/start/login';
 const String routeAgreementLocation = '/agreementLocation';
 const String routeSelectLocation = '/agreementLocation/selectCurrentLocation';
 const String routeHomeApp = '/home';
+const String routeHomeAppView = '/home/view';
 
 class MyRouters {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -33,6 +34,8 @@ class MyRouters {
         return SideToSideTransition(child: const SelectCurrentLocation());
       case "/home":
         return SideToSideTransition(child: const HomeApp());
+      case "/home/view":
+        return TopToBottom(child: const HomeApp());
       default:
         return MaterialPageRoute(builder: (context) => const StartView());
     }
