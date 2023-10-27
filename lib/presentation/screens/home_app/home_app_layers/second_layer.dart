@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_is_search/bloc.dart';
+import 'package:grassport_app/presentation/components/popus/profile_home_pp.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
 // ignore: must_be_immutable
@@ -55,19 +56,25 @@ class Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 60),
-      child: Container(
-        decoration: BoxDecoration(
-          color: c8,
-          borderRadius: BorderRadius.circular(50.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: CircleAvatar(
-            radius: 15.0,
-            backgroundColor: c1,
-            child: Icon(
-              Icons.person_2_outlined,
-              color: c8,
+      child: GestureDetector(
+        onTap: () {
+          showDialog(
+              context: context, builder: (context) => const ProfilePopup());
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: c8,
+            borderRadius: BorderRadius.circular(50.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: CircleAvatar(
+              radius: 15.0,
+              backgroundColor: c1,
+              child: Icon(
+                Icons.person_2_outlined,
+                color: c8,
+              ),
             ),
           ),
         ),

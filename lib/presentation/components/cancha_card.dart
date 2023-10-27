@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grassport_app/presentation/components/stars_rating.dart';
+import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/boxx_shadows.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
@@ -11,31 +12,37 @@ class CanchaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-        color: Colors.white,
-        boxShadow: [
-          canchaCards,
-        ],
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-              child: Image.network(
-                data["img"],
-                height: MediaQuery.of(context).size.height * .25,
+    return GestureDetector(
+      onTap: () {
+        //Navigator.pushNamed(context, '/cancha', arguments: {'id': data['id']});
+        Navigator.pushNamed(context, routeCanchaDetails);
+      },
+      child: Container(
+        margin: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+          color: Colors.white,
+          boxShadow: [
+            canchaCards,
+          ],
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                child: Image.network(
+                  data["img"],
+                  height: MediaQuery.of(context).size.height * .25,
+                ),
               ),
             ),
-          ),
-          CardInfo(
-            data: data,
-          )
-        ],
+            CardInfo(
+              data: data,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -72,6 +79,7 @@ class CardInfo extends StatelessWidget {
                 StarsRating(
                   canchaUpdate: () {},
                   rate: data["rating"],
+                  isDetails: false,
                 ),
                 Text(
                   data["direccion"],

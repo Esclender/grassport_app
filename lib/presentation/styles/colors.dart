@@ -14,3 +14,5 @@ Color c10 = HexColor('#B7B7B7');
 Color c11 = HexColor('#575757');
 Color c12 = HexColor('#F2F8F1');
 Color c13 = HexColor('#FFDF00');
+Color c14 = HexColor('#7B37F3');
+Color c15 = HexColor('#00C841');

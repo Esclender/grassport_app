@@ -5,7 +5,13 @@ import 'package:grassport_app/presentation/styles/colors.dart';
 class StarsRating extends StatefulWidget {
   final Function() canchaUpdate;
   int rate;
-  StarsRating({super.key, required this.canchaUpdate, required this.rate});
+  bool isDetails;
+
+  StarsRating(
+      {super.key,
+      required this.canchaUpdate,
+      required this.rate,
+      required this.isDetails});
 
   @override
   State<StarsRating> createState() => _StarsRatingState();
@@ -22,22 +28,20 @@ class _StarsRatingState extends State<StarsRating> {
       child: Row(
         children: [
           Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 5,
-              itemBuilder: (context, ind) {
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      countStars = ind;
-                    });
-                  },
-                  child: Icon(
+            child: GestureDetector(
+              onTap: () {
+                print("click rating");
+              },
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (context, ind) {
+                  return Icon(
                     countStars >= (ind + 1) ? Icons.star : Icons.star_border,
                     color: c13,
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           )
         ],

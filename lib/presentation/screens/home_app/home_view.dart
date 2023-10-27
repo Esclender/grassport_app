@@ -37,19 +37,3 @@ class _HomeAppState extends State<HomeApp> {
     );
   }
 }
-
-/**
- * Transform.scale(
-            scale: showTopScreen.state ? 60 : 0.1,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeIn,
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: showTopScreen.state ? c1 : Colors.transparent,
-              ),
-            ),
-          ),
- */

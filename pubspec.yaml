@@ -66,6 +66,8 @@ flutter:
     - assets\images\icons8-logo-de-google.svg
     - assets\images\Street_bg.png
     - assets\images\Home_Vector.svg
+    - assets\images\Map_small.png
+    - assets/app_icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
