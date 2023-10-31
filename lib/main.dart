@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grassport_app/presentation/bloc/charge/bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_is_search/bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_profile/bloc.dart';
+import 'package:grassport_app/presentation/bloc/home_view_selected/bloc.dart';
 import 'package:grassport_app/presentation/bloc/locations/blocs.dart';
+import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/bloc/nearCanchas/blocs.dart';
+import 'package:grassport_app/presentation/bloc/notifications/bloc.dart';
 import 'package:grassport_app/presentation/bloc/savedLocations/blocs.dart';
 import 'package:grassport_app/presentation/bloc/startAppBloc/blocs.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
@@ -28,6 +31,9 @@ class BlocsProvider extends StatelessWidget {
         BlocProvider(create: (context) => SavedLocations()),
         BlocProvider(create: (context) => IsSearch()),
         BlocProvider(create: (context) => IsProfile()),
+        BlocProvider(create: (context) => HomeView()),
+        BlocProvider(create: (context) => Notifications()),
+        BlocProvider(create: (context) => LoggedUser()),
       ],
       child: const MyApp(),
     );

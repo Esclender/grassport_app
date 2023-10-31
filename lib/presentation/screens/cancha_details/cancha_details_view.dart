@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/models/cancha_info.dart';
 import 'package:grassport_app/presentation/components/map.dart';
 import 'package:grassport_app/presentation/components/stars_rating.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
+// ignore: must_be_immutable
 class CanchaDetails extends StatefulWidget {
-  const CanchaDetails({super.key});
+  CanchaInfo cancha;
+
+  CanchaDetails({super.key, required this.cancha});
 
   @override
   State<CanchaDetails> createState() => _CanchaDetailsState();
@@ -21,34 +25,37 @@ class _CanchaDetailsState extends State<CanchaDetails> {
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
-        child: Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20.0),
-                  child: Image.network(
-                    "https://ichef.bbci.co.uk/news/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg",
-                    fit: BoxFit.contain,
-                  ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.27,
+                width: MediaQuery.of(context).size.width * 0.95,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                  image: DecorationImage(
+                      image: NetworkImage(widget.cancha.img),
+                      fit: BoxFit.cover),
                 ),
-                const Gap(10),
-                const DetailsTitles(),
-                Text(
-                  "Lorem ipsum dolor sit amet consectetur. Eu eget a urna id varius urna. Aliquet ornare bibendum blandit et. Congue quis malesuada quam velit sed sed. Cursus maecenas lectus ridiculus porttitor.",
-                  style: TextStyle(color: c11),
-                ),
-                const Gap(10),
-                const Text(
-                  "Av. México, Miraflores, Perú",
-                  style: TextStyle(fontSize: 18),
-                ),
-                const StreetMap(),
-                const Gap(15),
-                const ActionBtns()
-              ],
-            ),
+              ),
+              const Gap(10),
+              DetailsTitles(
+                data: widget.cancha,
+              ),
+              Text(
+                "Lorem ipsum dolor sit amet consectetur. Eu eget a urna id varius urna. Aliquet ornare bibendum blandit et. Congue quis malesuada quam velit sed sed. Cursus maecenas lectus ridiculus porttitor.",
+                style: TextStyle(color: c11),
+              ),
+              const Gap(10),
+              Text(
+                widget.cancha.direccion,
+                style: const TextStyle(fontSize: 18),
+              ),
+              const StreetMap(),
+              const Gap(15),
+              const ActionBtns()
+            ],
           ),
         ),
       ),
@@ -56,8 +63,10 @@ class _CanchaDetailsState extends State<CanchaDetails> {
   }
 }
 
+// ignore: must_be_immutable
 class DetailsTitles extends StatelessWidget {
-  const DetailsTitles({super.key});
+  CanchaInfo data;
+  DetailsTitles({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -69,16 +78,16 @@ class DetailsTitles extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Cancha #001",
+              data.nombre,
               style: TextStyle(color: c9, fontSize: 20),
             ),
             Text(
-              "Esclender Lugo",
+              data.owner,
               style: TextStyle(color: c11, fontSize: 16),
             ),
             StarsRating(
               canchaUpdate: () {},
-              rate: 4,
+              rate: data.rating,
               isDetails: true,
             )
           ],
@@ -87,11 +96,11 @@ class DetailsTitles extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "S/ 100",
+              "S/ ${data.price}",
               style: TextStyle(color: c9, fontSize: 20),
             ),
             Text(
-              "10:00 a 11:00",
+              "${data.horario["start"]} a ${data.horario["end"]}",
               style: TextStyle(color: c11, fontSize: 16),
             )
           ],

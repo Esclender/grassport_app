@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grassport_app/models/cancha_info.dart';
 
-var searchLocations = [
+var notifications = [
   CanchaInfo(
     nombre: "Cancha 2",
     direccion: "Av Mexico, Miraflores",
@@ -54,6 +54,6 @@ var searchLocations = [
   )
 ];
 
-class SavedLocations extends Cubit<List<CanchaInfo>> {
-  SavedLocations() : super(searchLocations);
+class Notifications extends Cubit<List<CanchaInfo>> {
+  Notifications() : super(notifications);
 }

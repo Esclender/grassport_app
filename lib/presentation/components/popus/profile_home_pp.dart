@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
 // ignore: must_be_immutable
@@ -47,7 +48,9 @@ class ProfileSettings extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconSetting(
-            fun: () {},
+            fun: () {
+              Navigator.pushNamed(context, routeEditProfile);
+            },
             text: "Mi perfil",
             icon: "assets/app_icons/profile_icon.svg",
           ),

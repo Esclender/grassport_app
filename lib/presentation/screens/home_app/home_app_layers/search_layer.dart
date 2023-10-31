@@ -50,7 +50,7 @@ class _HomeListState extends State<HomeList> {
       opacity: showTopScreen.state ? 1.0 : 0.0,
       child: Material(
         child: AnimatedContainer(
-          margin: const EdgeInsets.only(top: 100),
+          margin: const EdgeInsets.only(top: 100, bottom: 100),
           height: MediaQuery.of(context).size.height * .70,
           duration: const Duration(milliseconds: 2000),
           color: c1,

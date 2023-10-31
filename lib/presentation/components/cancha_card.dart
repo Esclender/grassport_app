@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grassport_app/models/cancha_info.dart';
 import 'package:grassport_app/presentation/components/stars_rating.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/boxx_shadows.dart';
@@ -6,7 +7,7 @@ import 'package:grassport_app/presentation/styles/colors.dart';
 
 // ignore: must_be_immutable
 class CanchaCard extends StatelessWidget {
-  Map data;
+  CanchaInfo data;
 
   CanchaCard({super.key, required this.data});
 
@@ -15,7 +16,7 @@ class CanchaCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         //Navigator.pushNamed(context, '/cancha', arguments: {'id': data['id']});
-        Navigator.pushNamed(context, routeCanchaDetails);
+        Navigator.pushNamed(context, routeCanchaDetails, arguments: data);
       },
       child: Container(
         margin: const EdgeInsets.all(20),
@@ -30,11 +31,13 @@ class CanchaCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(20),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                child: Image.network(
-                  data["img"],
-                  height: MediaQuery.of(context).size.height * .25,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.25,
+                width: MediaQuery.of(context).size.width * 0.85,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                  image: DecorationImage(
+                      image: NetworkImage(data.img), fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -50,7 +53,7 @@ class CanchaCard extends StatelessWidget {
 
 // ignore: must_be_immutable
 class CardInfo extends StatelessWidget {
-  Map data;
+  CanchaInfo data;
 
   CardInfo({super.key, required this.data});
 
@@ -69,20 +72,20 @@ class CardInfo extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  data["nombre"],
+                  data.nombre,
                   style: const TextStyle(fontSize: 16),
                 ),
                 Text(
-                  data["owner"],
+                  data.owner,
                   style: TextStyle(color: c11),
                 ),
                 StarsRating(
                   canchaUpdate: () {},
-                  rate: data["rating"],
+                  rate: data.rating,
                   isDetails: false,
                 ),
                 Text(
-                  data["direccion"],
+                  data.direccion,
                   style: TextStyle(color: c9),
                 )
               ],
@@ -93,13 +96,11 @@ class CardInfo extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    data["price"] > 0 && data["price"] != null
-                        ? "S/${data["price"]}"
-                        : "Gratis",
+                    data.price > 0 ? "S/${data.price}" : "Gratis",
                     style: const TextStyle(fontSize: 16),
                   ),
                   Text(
-                    "${data["horario"]["start"]} a ${data["horario"]["end"]}",
+                    "${data.horario["start"]} a ${data.horario["end"]}",
                     style: TextStyle(color: c11),
                   )
                 ],

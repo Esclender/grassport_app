@@ -47,7 +47,9 @@ class _StartingPreviews extends State<Previews> {
                 ],
               ),
             ),
-            const SwiperInfo(),
+            const Expanded(
+              child: SwiperInfo(),
+            )
           ],
         ),
       ),
@@ -86,30 +88,33 @@ class SwiperInfo extends StatelessWidget {
   Widget build(context) {
     final swiperInfo = context.read<NextSwipers>().getSwipperInfo();
 
-    return Container(
-      margin: const EdgeInsets.only(
-        top: 150.0,
-        left: 40.0,
-        right: 40.0,
-      ),
-      child: Column(
-        children: [
-          Image.asset((swiperInfo["image"] as String)),
-          const Gap(60),
-          Text(
-            (swiperInfo["title"] as String),
-            style: const TextStyle(fontSize: 20.0),
-            textAlign: TextAlign.center,
+    return ListView(
+      children: [
+        Image.asset((swiperInfo["image"] as String)),
+        const Gap(60),
+        Text(
+          (swiperInfo["title"] as String),
+          style: const TextStyle(fontSize: 20.0),
+          textAlign: TextAlign.center,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 40.0,
+            right: 40.0,
           ),
-          Text(
-            (swiperInfo["description"] as String),
-            style: TextStyle(fontSize: 14.5, color: c11),
-            textAlign: TextAlign.center,
+          child: Column(
+            children: [
+              Text(
+                (swiperInfo["description"] as String),
+                style: TextStyle(fontSize: 14.5, color: c11),
+                textAlign: TextAlign.center,
+              ),
+              const Gap(20),
+              const ButtonsSkipAndNext()
+            ],
           ),
-          const Gap(20),
-          const ButtonsSkipAndNext()
-        ],
-      ),
+        )
+      ],
     );
   }
 }
