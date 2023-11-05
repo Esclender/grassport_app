@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grassport_app/presentation/bloc/charge/bloc.dart';
@@ -13,7 +14,9 @@ import 'package:grassport_app/presentation/bloc/startAppBloc/blocs.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/screens/StartingApp/start.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const BlocsProvider());
 }
 
@@ -54,7 +57,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'blinker',
         useMaterial3: true,
       ),
-      home: const StartView(), //
+      home: const StartView(),
     );
   }
 }

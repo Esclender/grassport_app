@@ -1,8 +1,15 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
+import 'package:grassport_app/presentation/components/popus/canchas_filters.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
+import 'package:grassport_app/services/auth_login.dart';
 
 // ignore: must_be_immutable
 class ProfileTop extends StatelessWidget {
@@ -12,24 +19,33 @@ class ProfileTop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserCredential? userData = context.watch<LoggedUser>().state;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         RichText(
+          maxLines: 1,
           text: TextSpan(
             text: 'Hola ',
             style: TextStyle(color: c1, fontSize: 18, fontFamily: "blinker"),
             children: <TextSpan>[
               TextSpan(
-                text: nombre,
+                text: userData?.additionalUserInfo?.profile?["given_name"] ??
+                    'Guest',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
           ),
         ),
-        CircleAvatar(
-          backgroundColor: c1,
-        )
+        userData != null
+            ? CircleAvatar(
+                backgroundImage: NetworkImage(
+                    userData.additionalUserInfo?.profile?["picture"]),
+              )
+            : CircleAvatar(
+                backgroundColor: c1,
+              )
       ],
     );
   }
@@ -55,17 +71,31 @@ class ProfileSettings extends StatelessWidget {
             icon: "assets/app_icons/profile_icon.svg",
           ),
           IconSetting(
-            fun: () {},
+            fun: () {
+              Navigator.of(context).pop();
+              showDialog(
+                  context: context, builder: (context) => const FliterPopup());
+            },
             text: "Filtros",
             icon: "assets/app_icons/filter_icon.svg",
           ),
           IconSetting(
-            fun: () {},
+            fun: () {
+              Navigator.pushNamed(context, routeReportProblem);
+            },
             text: "Reportar un problema",
             icon: "assets/app_icons/warning.svg",
           ),
           IconSetting(
-            fun: () {},
+            fun: () async {
+              Navigator.pushNamed(context, routeLogin);
+              await logOutWithGoogle();
+              // ignore: use_build_context_synchronously
+              Timer(const Duration(seconds: 2), () {
+                context.read<LoggedUser>().setData(null);
+              });
+              // ignore: use_build_context_synchronously
+            },
             text: "Cerrar sesion",
             icon: "assets/app_icons/cerrar_sesion.svg",
           )
@@ -143,7 +173,9 @@ class ProfilePopup extends StatelessWidget {
               child: ProfileSettings(),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, routeTermsConditions);
+              },
               child: Text(
                 "Terminos y condiciones",
                 style: TextStyle(

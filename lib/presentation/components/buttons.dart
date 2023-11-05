@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import 'package:gap/gap.dart';
 
 //ignore: must_be_immutable
 class CustomButton extends StatelessWidget {
@@ -22,11 +21,7 @@ class CustomButton extends StatelessWidget {
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          text,
-          const Gap(5),
-          Image.asset('assets/images/Next.png'),
-        ],
+        children: [text],
       ),
     );
   }

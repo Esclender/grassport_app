@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/services/auth_login.dart';
 import '../../styles/systemThemes.dart';
 
 class Login extends StatefulWidget {
@@ -37,7 +40,14 @@ class _LoginState extends State<Login> {
             ),
             const Gap(10),
             TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                final user = await signInWithGoogle();
+                // ignore: use_build_context_synchronously
+                context.read<LoggedUser>().setData(user);
+                if (mounted) {
+                  Navigator.pushNamed(context, routeAgreementLocation);
+                }
+              },
               style: TextButton.styleFrom(
                   maximumSize: btnSize,
                   side: BorderSide(

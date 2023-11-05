@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1069377112063",
+    "project_id": "grassportapp-7ccb1",
+    "storage_bucket": "grassportapp-7ccb1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1069377112063:android:3757816a6845e95c00c9ca",
+        "android_client_info": {
+          "package_name": "com.example.grassport_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1069377112063-5mbfc85duto9r0c6h8miufu7eo7ko134.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.grassport_app",
+            "certificate_hash": "5e670c5e3b1db4878e7c79328de873131f285dd5"
+          }
+        },
+        {
+          "client_id": "1069377112063-7c1cec3kk5h3ljt2lml7v1p8gsqgbnbv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAd6EioRAywoRPJlBwE7JumLWA5cSb8cg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1069377112063-7c1cec3kk5h3ljt2lml7v1p8gsqgbnbv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1069377112063-7l63c6vi1rl1g0cbminslnv1vbto2855.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.grassportApp.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

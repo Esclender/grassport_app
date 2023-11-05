@@ -71,7 +71,7 @@ class _AgreementLocationState extends State<AgreementLocation> {
                   children: [
                     CustomButton(
                       next: () {
-                        //APPLY ACTUAL LOCATION LOGIC
+                        Navigator.pushNamed(context, routeGpsLocation);
                       },
                       bg: c8,
                       text: Text(
@@ -82,9 +82,7 @@ class _AgreementLocationState extends State<AgreementLocation> {
                     const Gap(10),
                     CustomButton(
                       next: () {
-                        Future.delayed(const Duration(milliseconds: 500), () {
-                          Navigator.pushNamed(context, routeSelectLocation);
-                        });
+                        Navigator.pushNamed(context, routeSelectLocation);
                       },
                       bg: c1,
                       text: Text(
