@@ -18,3 +18,4 @@ Color c14 = HexColor('#7B37F3');
 Color c15 = HexColor('#00C841');
 Color c16 = HexColor("#111827");
 Color c17 = HexColor("#F2F2F3");
+Color c18 = HexColor("#8A8A8A");
