@@ -28,7 +28,7 @@ class _HomeAppState extends State<HomeApp> {
           const HomeSearchList(),
           const SecondLayer(),
           Positioned(
-            bottom: 50,
+            bottom: MediaQuery.of(context).size.height * 0.04,
             left: MediaQuery.of(context).size.width * 0.23,
             child: const HomeBadget(),
           ),
