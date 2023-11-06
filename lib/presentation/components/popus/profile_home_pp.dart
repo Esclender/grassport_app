@@ -56,6 +56,8 @@ class ProfileSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userLogged = context.read<LoggedUser>();
+
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.17,
@@ -88,12 +90,14 @@ class ProfileSettings extends StatelessWidget {
           ),
           IconSetting(
             fun: () async {
-              Navigator.pushNamed(context, routeLogin);
-              await logOutWithGoogle();
-              // ignore: use_build_context_synchronously
-              Timer(const Duration(seconds: 2), () {
-                context.read<LoggedUser>().setData(null);
-              });
+              if (userLogged.state != null) {
+                Navigator.pushNamed(context, routeLogin);
+                await logOutWithGoogle();
+                // ignore: use_build_context_synchronously
+                Timer(const Duration(seconds: 2), () {
+                  context.read<LoggedUser>().setData(null);
+                });
+              }
               // ignore: use_build_context_synchronously
             },
             text: "Cerrar sesion",
