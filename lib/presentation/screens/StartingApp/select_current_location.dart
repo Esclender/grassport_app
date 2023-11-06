@@ -22,6 +22,7 @@ class _SelectCurrentState extends State<SelectCurrentLocation> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemModifiers.overlayLigth,
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: c1,
           appBar: AppBar(
             surfaceTintColor: Colors.transparent,

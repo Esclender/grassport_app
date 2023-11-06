@@ -1,9 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:grassport_app/presentation/components/buttons.dart';
 import 'package:grassport_app/presentation/components/popus/activate_gps.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
+import 'package:grassport_app/services/location_ask.dart';
 
 class CurrentLocationByGps extends StatefulWidget {
   const CurrentLocationByGps({super.key});
@@ -20,8 +20,9 @@ class _CurrentLocationByGpsState extends State<CurrentLocationByGps> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Timer(const Duration(seconds: 1), () {
-        showDialog(context: context, builder: (context) => const ActivateGps());
+      Timer(const Duration(seconds: 1), () async {
+        BuildContext c = context;
+        await checkIsGpsEnabled(context: c);
       });
     });
   }
