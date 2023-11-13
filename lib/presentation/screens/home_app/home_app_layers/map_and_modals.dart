@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/presentation/bloc/nearCanchas/blocs.dart';
 import 'package:grassport_app/presentation/components/cancha_card.dart';
+import 'package:grassport_app/presentation/components/google_map.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
 class MainAppHomeLayer extends StatefulWidget {
@@ -15,17 +16,10 @@ class MainAppHomeLayer extends StatefulWidget {
 class _MainAppHomeLayerState extends State<MainAppHomeLayer> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return const Stack(
       children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Image.asset(
-            "assets/images/Street_bg.png",
-            fit: BoxFit.cover,
-          ),
-        ),
-        const BottomModal(),
+        GoogleMapBig(),
+        BottomModal(),
       ],
     );
   }

@@ -1,61 +1,85 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:grassport_app/presentation/components/buttons.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
+//import 'package:grassport_app/services/systems_settings.dart';
 
-class ActivateGps extends StatelessWidget {
-  const ActivateGps({super.key});
+class AlertGPS extends StatefulWidget {
+  const AlertGPS({super.key});
+
+  @override
+  State<AlertGPS> createState() => _AlertGPSState();
+}
+
+class _AlertGPSState extends State<AlertGPS> {
+  @override
+  void initState() {
+    super.initState();
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   Timer(const Duration(seconds: 2), () {
+    //     Navigator.pop(context);
+    //     Navigator.pop(context);
+    //   });
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: c1,
+      backgroundColor: c4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25.0),
-      ), //this right here
+      ),
       child: SizedBox(
         height: 220.0,
         width: 340.0,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Gap(10),
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Icon(
-                  Icons.close,
-                  color: c9,
-                ),
-              ),
+            Icon(
+              Icons.warning_amber_rounded,
+              color: c1,
+              size: 90.0,
             ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  CustomButton(
-                    next: () {},
-                    text: Text(
-                      "Permitir acceso a GPS",
-                      style: TextStyle(color: c1),
-                    ),
-                    bg: c8,
-                  ),
-                  const Gap(10),
-                  CustomButton(
-                    next: () {
-                      Navigator.pop(context);
-                    },
-                    text: Text(
-                      "Cancelar",
-                      style: TextStyle(color: c9),
-                    ),
-                    bg: c1,
-                  )
-                ],
-              ),
+            Text(
+              "Activa la ubicacion para usar este servicio!",
+              style: TextStyle(color: c1, fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class LocationTrack extends StatefulWidget {
+  const LocationTrack({
+    super.key,
+  });
+
+  @override
+  State<LocationTrack> createState() => _LocationTrackState();
+}
+
+class _LocationTrackState extends State<LocationTrack> {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: c4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(25.0),
+      ),
+      child: SizedBox(
+        height: 220.0,
+        width: 340.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Debe activar el GPS para seguir",
+              style: TextStyle(color: c1, fontWeight: FontWeight.bold),
             )
           ],
         ),

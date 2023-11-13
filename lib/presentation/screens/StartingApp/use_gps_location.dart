@@ -1,9 +1,13 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:grassport_app/presentation/bloc/charge/bloc.dart';
+import 'package:grassport_app/presentation/bloc/device_current_location/blocs.dart';
 import 'package:grassport_app/presentation/components/buttons.dart';
-import 'package:grassport_app/presentation/components/popus/activate_gps.dart';
+import 'package:grassport_app/presentation/components/google_map.dart';
+import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
-import 'package:grassport_app/services/location_ask.dart';
 
 class CurrentLocationByGps extends StatefulWidget {
   const CurrentLocationByGps({super.key});
@@ -18,13 +22,6 @@ class _CurrentLocationByGpsState extends State<CurrentLocationByGps> {
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Timer(const Duration(seconds: 1), () async {
-        BuildContext c = context;
-        await checkIsGpsEnabled(context: c);
-      });
-    });
   }
 
   @override
@@ -39,15 +36,9 @@ class _CurrentLocationByGpsState extends State<CurrentLocationByGps> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
       body: Stack(
+        alignment: AlignmentDirectional.center,
         children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Image.asset(
-              "assets/images/Street_bg.png",
-              fit: BoxFit.cover,
-            ),
-          ),
+          const GoogleMapBig(),
           Positioned(
             bottom: 0,
             child: Container(
@@ -69,36 +60,81 @@ class _CurrentLocationByGpsState extends State<CurrentLocationByGps> {
   }
 }
 
-class ConfirmLocation extends StatelessWidget {
-  const ConfirmLocation({super.key});
+class ConfirmLocation extends StatefulWidget {
+  const ConfirmLocation(
+      {super.key}); //List<Placemark> placemarks = await placemarkFromCoordinates(52.2165157, 6.9437819);
+
+  @override
+  State<ConfirmLocation> createState() => _ConfirmLocationState();
+}
+
+class _ConfirmLocationState extends State<ConfirmLocation> {
+  late List<Placemark> placemarks;
+  late LatLng? dataLocation;
+  late String streetName = "No defined";
+  late String localityName = "No defined";
+
+  @protected
+  @mustCallSuper
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    getPlaceMarks();
+  }
+
+  void getPlaceMarks() async {
+    dataLocation = context.watch<DeviceGpsLocation>().state;
+
+    if (dataLocation != null) {
+      placemarks = await placemarkFromCoordinates(
+          dataLocation?.latitude as double, dataLocation?.longitude as double);
+
+      setState(() {
+        int placeInd = 2;
+        streetName = placemarks[placeInd].street == null
+            ? "No defined"
+            : placemarks[placeInd].street as String;
+        localityName = placemarks[placeInd].subLocality == null
+            ? "No defined"
+            : placemarks[placeInd].locality as String;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          leading: const Icon(Icons.location_pin),
-          title: Text(
-            "Independecia",
-            style: TextStyle(color: c9),
-          ),
-          subtitle: Text(
-            "Independecia,Lima,Peru",
-            style: TextStyle(color: c10),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: CustomButton(
-            next: () {},
-            text: Text(
-              "Confirmar ubicacion",
-              style: TextStyle(color: c1),
-            ),
-            bg: c8,
-          ),
-        )
-      ],
-    );
+    context.read<ChargeRoute>().changeRoute(routeHomeApp);
+    return dataLocation != null
+        ? Column(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.location_pin),
+                title: Text(
+                  localityName,
+                  style: TextStyle(color: c9),
+                ),
+                subtitle: Text(
+                  streetName,
+                  style: TextStyle(color: c10),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: CustomButton(
+                  next: () {
+                    Navigator.pushNamed(context, routeCharge);
+                  },
+                  text: Text(
+                    "Confirmar ubicacion",
+                    style: TextStyle(color: c1),
+                  ),
+                  bg: c8,
+                ),
+              )
+            ],
+          )
+        : const Center(
+            child: CircularProgressIndicator(),
+          );
   }
 }

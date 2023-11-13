@@ -29,11 +29,8 @@ class _FavViewState extends State<FavView> {
           },
           icon: const Icon(Icons.arrow_back),
         ),
-        title: Padding(
-          padding:
-              EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.2),
-          child: const Text("Guardados"),
-        ),
+        title: const Text("Guardados"),
+        centerTitle: true,
       ),
       body: Stack(
         children: [

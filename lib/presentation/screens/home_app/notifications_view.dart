@@ -29,11 +29,8 @@ class _NotifViewState extends State<NotifView> {
           },
           icon: const Icon(Icons.arrow_back),
         ),
-        title: Padding(
-          padding:
-              EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.15),
-          child: const Text("Notificaciones"),
-        ),
+        title: const Text("Notificaciones"),
+        centerTitle: true,
       ),
       body: Stack(
         children: [

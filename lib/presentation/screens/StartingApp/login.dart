@@ -41,11 +41,15 @@ class _LoginState extends State<Login> {
             const Gap(10),
             TextButton(
               onPressed: () async {
-                final user = await signInWithGoogle();
-                // ignore: use_build_context_synchronously
-                context.read<LoggedUser>().setData(user);
-                if (mounted) {
-                  Navigator.pushNamed(context, routeAgreementLocation);
+                try {
+                  final user = await signInWithGoogle();
+                  // ignore: use_build_context_synchronously
+                  context.read<LoggedUser>().setData(user);
+                  if (mounted) {
+                    Navigator.pushNamed(context, routeAgreementLocation);
+                  }
+                } on Exception catch (e) {
+                  print(e);
                 }
               },
               style: TextButton.styleFrom(
