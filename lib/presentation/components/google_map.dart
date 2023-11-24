@@ -58,7 +58,7 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
     LocationSettings locationSettings = AndroidSettings(
       accuracy: LocationAccuracy.high,
       distanceFilter: 0,
-      intervalDuration: const Duration(seconds: 10),
+      intervalDuration: const Duration(seconds: 100),
     );
 
     Geolocator.getPositionStream(locationSettings: locationSettings)

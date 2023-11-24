@@ -16,23 +16,26 @@ class HomeApp extends StatefulWidget {
 class _HomeAppState extends State<HomeApp> {
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: c8,
-        systemNavigationBarIconBrightness: Brightness.light,
-      ),
-      child: Stack(
-        children: [
-          const MainAppHomeLayer(),
-          const HomeSearchList(),
-          const SecondLayer(),
-          Positioned(
-            bottom: MediaQuery.of(context).size.height * 0.04,
-            left: MediaQuery.of(context).size.width * 0.23,
-            child: const HomeBadget(),
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          statusBarIconBrightness: Brightness.dark,
+          systemNavigationBarColor: c8,
+          systemNavigationBarIconBrightness: Brightness.light,
+        ),
+        child: Stack(
+          children: [
+            const MainAppHomeLayer(),
+            const HomeSearchList(),
+            const SecondLayer(),
+            Positioned(
+              bottom: MediaQuery.of(context).size.height * 0.04,
+              left: MediaQuery.of(context).size.width * 0.23,
+              child: const HomeBadget(),
+            ),
+          ],
+        ),
       ),
     );
   }

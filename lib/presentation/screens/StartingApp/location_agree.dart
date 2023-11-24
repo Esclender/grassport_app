@@ -23,77 +23,80 @@ class _AgreementLocationState extends State<AgreementLocation> {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemModifiers.overlayLigth,
-      child: Scaffold(
-        backgroundColor: c1,
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemModifiers.overlayLigth,
+        child: Scaffold(
+          backgroundColor: c1,
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back),
+            ),
           ),
-        ),
-        body: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.location_on,
-                size: 140.0,
-                color: c8,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: Column(
-                  children: [
-                    Text(
-                      'Permisos de ubicacion',
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          color: c9),
-                    ),
-                    Text(
-                      'Esto nos mostrara las canchas de grass cercanos',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: c10),
-                    ),
-                  ],
+          body: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.location_on,
+                  size: 140.0,
+                  color: c8,
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 100.0),
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Column(
-                  children: [
-                    CustomButton(
-                      next: () {
-                        Navigator.pushNamed(context, routeGpsLocation);
-                      },
-                      bg: c8,
-                      text: Text(
-                        'Usar ubicacion actual',
-                        style: TextStyle(color: c1),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: Column(
+                    children: [
+                      Text(
+                        'Permisos de ubicacion',
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            color: c9),
                       ),
-                    ),
-                    const Gap(10),
-                    CustomButton(
-                      next: () {
-                        Navigator.pushNamed(context, routeSelectLocation);
-                      },
-                      bg: c1,
-                      text: Text(
-                        'Iniciar sesion manualmente',
-                        style: TextStyle(color: c8),
+                      Text(
+                        'Esto nos mostrara las canchas de grass cercanos',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: c10),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              )
-            ],
+                Container(
+                  margin: const EdgeInsets.only(top: 100.0),
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Column(
+                    children: [
+                      CustomButton(
+                        next: () {
+                          Navigator.pushNamed(context, routeGpsLocation);
+                        },
+                        bg: c8,
+                        text: Text(
+                          'Usar ubicacion actual',
+                          style: TextStyle(color: c1),
+                        ),
+                      ),
+                      const Gap(10),
+                      CustomButton(
+                        next: () {
+                          Navigator.pushNamed(context, routeSelectLocation);
+                        },
+                        bg: c1,
+                        text: Text(
+                          'Iniciar sesion manualmente',
+                          style: TextStyle(color: c8),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

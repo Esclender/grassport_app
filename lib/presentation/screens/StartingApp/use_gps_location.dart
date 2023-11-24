@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/presentation/bloc/charge/bloc.dart';
 import 'package:grassport_app/presentation/bloc/device_current_location/blocs.dart';
 import 'package:grassport_app/presentation/components/buttons.dart';
@@ -69,11 +69,11 @@ class ConfirmLocation extends StatefulWidget {
 }
 
 class _ConfirmLocationState extends State<ConfirmLocation> {
-  late List<Placemark> placemarks;
   late LatLng? dataLocation;
   late String streetName = "No defined";
   late String localityName = "No defined";
 
+  @override
   @protected
   @mustCallSuper
   void didChangeDependencies() {
@@ -86,17 +86,16 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
     dataLocation = context.watch<DeviceGpsLocation>().state;
 
     if (dataLocation != null) {
-      placemarks = await placemarkFromCoordinates(
-          dataLocation?.latitude as double, dataLocation?.longitude as double);
+      final resp = await ApiClient().reverseCode(
+          lat: dataLocation?.latitude, lon: dataLocation?.longitude);
 
       setState(() {
-        int placeInd = 2;
-        streetName = placemarks[placeInd].street == null
+        streetName = resp["response"]["street"] == null
             ? "No defined"
-            : placemarks[placeInd].street as String;
-        localityName = placemarks[placeInd].subLocality == null
+            : resp["response"]["street"] as String;
+        localityName = resp["response"]["locality"] == null
             ? "No defined"
-            : placemarks[placeInd].locality as String;
+            : resp["response"]["locality"] as String;
       });
     }
   }
@@ -105,7 +104,7 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
   Widget build(BuildContext context) {
     context.read<ChargeRoute>().changeRoute(routeHomeApp);
     return dataLocation != null
-        ? Column(
+        ? ListView(
             children: [
               ListTile(
                 leading: const Icon(Icons.location_pin),
