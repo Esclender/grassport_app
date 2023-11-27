@@ -38,12 +38,12 @@ class _CurrentLocationByGpsState extends State<CurrentLocationByGps> {
       body: Stack(
         alignment: AlignmentDirectional.center,
         children: [
-          const GoogleMapBig(),
+          GoogleMapBig(),
           Positioned(
             bottom: 0,
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: 140,
+              height: 170,
               decoration: BoxDecoration(
                 color: c1,
                 borderRadius: const BorderRadius.only(
@@ -108,14 +108,24 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
             children: [
               ListTile(
                 leading: const Icon(Icons.location_pin),
-                title: Text(
-                  localityName,
-                  style: TextStyle(color: c9),
-                ),
-                subtitle: Text(
-                  streetName,
-                  style: TextStyle(color: c10),
-                ),
+                title: localityName == "No defined"
+                    ? const Padding(
+                        padding: EdgeInsets.only(right: 140.0),
+                        child: ShimmeringBackground(),
+                      )
+                    : Text(
+                        localityName,
+                        style: TextStyle(color: c9),
+                      ),
+                subtitle: streetName == "No defined"
+                    ? const Padding(
+                        padding: EdgeInsets.only(right: 100.0, top: 5.0),
+                        child: ShimmeringBackground(),
+                      )
+                    : Text(
+                        streetName,
+                        style: TextStyle(color: c10),
+                      ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10),
@@ -137,3 +147,78 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
           );
   }
 }
+
+// ignore: must_be_immutable
+class ShimmeringBackground extends StatefulWidget {
+  const ShimmeringBackground({super.key});
+
+  @override
+  _ShimmeringBackgroundState createState() => _ShimmeringBackgroundState();
+}
+
+class _ShimmeringBackgroundState extends State<ShimmeringBackground>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+
+    _animation = Tween<double>(
+      begin: -2.0,
+      end: 1.0,
+    ).animate(_controller);
+
+    _controller.repeat(reverse: true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Container(
+          height: 30,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            gradient: LinearGradient(
+              colors: const [
+                Color.fromARGB(142, 185, 182, 182),
+                Color.fromARGB(145, 178, 176, 176),
+                Color(0xffffffff),
+              ],
+              begin: Alignment(_animation.value, -1.0),
+              end: Alignment(_animation.value + 3.0, 2.0),
+              stops: const [0.0, 0.5, 1.0],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+}
+
+/**
+ * ListTile(
+                leading: const Icon(Icons.location_pin),
+                title: Text(
+                  localityName,
+                  style: TextStyle(color: c9),
+                ),
+                subtitle: Text(
+                  streetName,
+                  style: TextStyle(color: c10),
+                ),
+              ),
+ */

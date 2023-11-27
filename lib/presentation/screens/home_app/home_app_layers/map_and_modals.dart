@@ -16,10 +16,12 @@ class MainAppHomeLayer extends StatefulWidget {
 class _MainAppHomeLayerState extends State<MainAppHomeLayer> {
   @override
   Widget build(BuildContext context) {
-    return const Stack(
+    return Stack(
       children: [
-        GoogleMapBig(),
-        BottomModal(),
+        GoogleMapBig(
+          isGps: false,
+        ),
+        const BottomModal(),
       ],
     );
   }

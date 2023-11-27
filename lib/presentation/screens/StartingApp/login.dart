@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
@@ -21,11 +19,6 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   Size btnSize = const Size(300, 70);
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,17 +45,16 @@ class _LoginState extends State<Login> {
               TextButton(
                 onPressed: () async {
                   try {
-                    final user = await signInWithGoogle();
+                    final data = await signInWithGoogle();
 
-                    print(user);
-                    final authHelper = GoogleSignInAuthentication;
+                    print(data.user);
                     // ignore: use_build_context_synchronously
-                    context.read<LoggedUser>().setData(user);
+                    context.read<LoggedUser>().setData(data.user);
                     if (mounted) {
                       Navigator.pushNamed(context, routeAgreementLocation);
                     }
                   } on Exception catch (e) {
-                    print(e);
+                    throw Exception(e);
                   }
                 },
                 style: TextButton.styleFrom(

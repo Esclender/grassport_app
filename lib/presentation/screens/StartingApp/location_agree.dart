@@ -29,14 +29,6 @@ class _AgreementLocationState extends State<AgreementLocation> {
         value: SystemModifiers.overlayLigth,
         child: Scaffold(
           backgroundColor: c1,
-          appBar: AppBar(
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back),
-            ),
-          ),
           body: SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Column(

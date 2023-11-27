@@ -1,128 +1,30 @@
 import 'package:bloc/bloc.dart';
+import 'package:grassport_app/api/api_client.dart';
 
 const historyLocations = [
   {
-    "leading": "history",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "history",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "history",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "history",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "history",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "history",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "history",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "history",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "history",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "history",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "history",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-];
-
-const searchLocations = [
-  {
     "leading": "place",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
+    "street": "Venezuela, Ate 15494, Peru",
+    "locality": "Venezuela",
+    "location": {"lat": -12.0433554, "lng": -76.9152919}
   },
   {
     "leading": "place",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
+    "street": "Venezuela, Ate 15494, Peru",
+    "locality": "Venezuela",
+    "location": {"lat": -12.0433554, "lng": -76.9152919}
   },
   {
     "leading": "place",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
+    "street": "Venezuela, Ate 15494, Peru",
+    "locality": "Venezuela",
+    "location": {"lat": -12.0433554, "lng": -76.9152919}
   },
   {
     "leading": "place",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "place",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "place",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "place",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "place",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "place",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "place",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "place",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "place",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
-  },
-  {
-    "leading": "place",
-    "department": "Los olivos",
-    "location": "Los olivos, independencia"
+    "street": "Venezuela, Ate 15494, Peru",
+    "locality": "Venezuela",
+    "location": {"lat": -12.0433554, "lng": -76.9152919}
   },
 ];
 
@@ -134,11 +36,12 @@ class SelectLocation extends Cubit<int> {
     emit(event);
   }
 
-  List getRegistros() {
+  getRegistros({address = ''}) async {
     if (state == 0) {
       return historyLocations;
     }
+    Map location = await ApiClient().searchByAddress(search: address);
 
-    return searchLocations; //change by the search places
+    return location['response']; //change by the search places
   }
 }

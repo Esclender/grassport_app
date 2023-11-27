@@ -14,10 +14,20 @@ class SelectCurrentLocation extends StatefulWidget {
 }
 
 class _SelectCurrentState extends State<SelectCurrentLocation> {
+  List registros = [];
+
+  void setRegistro(_) async {
+    final locationData = context.read<SelectLocation>();
+    List nuevosRegistros = await locationData.getRegistros(address: _);
+
+    setState(() {
+      registros = nuevosRegistros;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final locationData = context.read<SelectLocation>();
-    List registros = context.watch<SelectLocation>().getRegistros();
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemModifiers.overlayLigth,
@@ -44,11 +54,12 @@ class _SelectCurrentState extends State<SelectCurrentLocation> {
                   constraints:
                       const BoxConstraints(maxWidth: 330, minHeight: 50),
                   leading: const Icon(Icons.search),
-                  onChanged: (_) {
+                  onSubmitted: (_) async {
                     if (_ == "") {
                       locationData.toggleState(0);
                     } else {
                       locationData.toggleState(1);
+                      setRegistro(_);
                     }
                   },
                 ),
@@ -64,18 +75,7 @@ class _SelectCurrentState extends State<SelectCurrentLocation> {
                 //height: MediaQuery.of(context).size.height * .5,
                 child: Searching(
                   historyData: locationData,
-                  registros: const [
-                    {
-                      "leading": "place",
-                      "department": "Los olivos",
-                      "location": "Los olivos, independencia"
-                    },
-                    {
-                      "leading": "place",
-                      "department": "Los olivos",
-                      "location": "Los olivos, independencia"
-                    },
-                  ],
+                  registros: const [],
                   header: 2,
                 ),
               )

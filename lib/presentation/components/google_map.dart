@@ -6,8 +6,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:grassport_app/presentation/bloc/device_current_location/blocs.dart';
 import 'package:grassport_app/services/location_ask.dart';
 
+// ignore: must_be_immutable
 class GoogleMapBig extends StatefulWidget {
-  const GoogleMapBig({super.key});
+  GoogleMapBig({super.key, this.isGps = true});
+
+  bool isGps;
 
   @override
   State<GoogleMapBig> createState() => _GoogleMapBigState();
@@ -22,10 +25,15 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
 
   @override
   void initState() {
-    checkPermissions();
+    if (widget.isGps) {
+      checkPermissions();
+      _liveLocation();
+    } else {
+      _definedLocation();
+    }
+
     addCustomIcon();
     super.initState();
-    _liveLocation();
   }
 
   void checkPermissions() async {
@@ -71,6 +79,17 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
       setState(() {
         currentLocation = actualLoc;
       });
+    });
+  }
+
+  //USE LOCATION PROVIDED
+  void _definedLocation() {
+    BuildContext c = context;
+
+    LatLng? definedLocation = c.read<DeviceGpsLocation>().state;
+
+    setState(() {
+      currentLocation = definedLocation;
     });
   }
 

@@ -19,7 +19,7 @@ class ProfileTop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserCredential? userData = context.watch<LoggedUser>().state;
+    User? userData = context.watch<LoggedUser>().state;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -31,8 +31,7 @@ class ProfileTop extends StatelessWidget {
             style: TextStyle(color: c1, fontSize: 18, fontFamily: "blinker"),
             children: <TextSpan>[
               TextSpan(
-                text: userData?.additionalUserInfo?.profile?["given_name"] ??
-                    'Guest',
+                text: userData?.displayName ?? 'Guest',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
@@ -40,8 +39,7 @@ class ProfileTop extends StatelessWidget {
         ),
         userData != null
             ? CircleAvatar(
-                backgroundImage: NetworkImage(
-                    userData.additionalUserInfo?.profile?["picture"]),
+                backgroundImage: NetworkImage(userData.photoURL as String),
               )
             : CircleAvatar(
                 backgroundColor: c1,

@@ -24,17 +24,20 @@ class _HomeAppState extends State<HomeApp> {
           systemNavigationBarColor: c8,
           systemNavigationBarIconBrightness: Brightness.light,
         ),
-        child: Stack(
-          children: [
-            const MainAppHomeLayer(),
-            const HomeSearchList(),
-            const SecondLayer(),
-            Positioned(
-              bottom: MediaQuery.of(context).size.height * 0.04,
-              left: MediaQuery.of(context).size.width * 0.23,
-              child: const HomeBadget(),
-            ),
-          ],
+        child: const Scaffold(
+          body: Stack(
+            children: [
+              MainAppHomeLayer(),
+              HomeSearchList(),
+              SecondLayer(),
+            ],
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: Padding(
+            padding: EdgeInsets.only(bottom: 40),
+            child: HomeBadget(),
+          ),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:grassport_app/presentation/components/location_search_list_items.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
@@ -7,17 +8,22 @@ class Searching extends StatefulWidget {
   final int? header;
   final List registros;
 
-  const Searching(
-      {super.key,
-      required this.historyData,
-      this.header,
-      required this.registros});
+  const Searching({
+    super.key,
+    required this.historyData,
+    this.header,
+    required this.registros,
+  });
 
   @override
   State<Searching> createState() => _SearchingState();
 }
 
 class _SearchingState extends State<Searching> {
+  LatLng getLocation(location) {
+    return LatLng(location['lat'], location['lng']);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,13 +44,14 @@ class _SearchingState extends State<Searching> {
                   ? ListView.separated(
                       itemBuilder: (BuildContext context, int index) {
                         return LocationTag(
-                          ind: index,
+                          latLng:
+                              getLocation(widget.registros[index]['location']),
                           leading:
-                              widget.registros[index]["leading"] == 'history'
+                              widget.registros[index]['leading'] == 'history'
                                   ? const Icon(Icons.history)
                                   : const Icon(Icons.location_city),
-                          department: widget.registros[index]["department"],
-                          location: widget.registros[index]["location"],
+                          department: widget.registros[index]['locality'],
+                          location: widget.registros[index]['locality'],
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) =>
@@ -69,6 +76,20 @@ class _SearchingState extends State<Searching> {
         ],
       ),
     );
+  }
+}
+
+class ListOfResults extends StatefulWidget {
+  const ListOfResults({super.key});
+
+  @override
+  State<ListOfResults> createState() => _ListOfResultsState();
+}
+
+class _ListOfResultsState extends State<ListOfResults> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
 

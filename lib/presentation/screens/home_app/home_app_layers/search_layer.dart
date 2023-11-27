@@ -40,11 +40,24 @@ class HomeList extends StatefulWidget {
 }
 
 class _HomeListState extends State<HomeList> {
+  late List registros = [];
+
+  // @override
+  // void initState() {
+  //   setRegistros();
+  //   super.initState();
+  // }
+
+  void setRegistros() {
+    setState(() async {
+      registros = await context.watch<SelectLocation>().getRegistros();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     IsSearch showTopScreen = context.watch<IsSearch>();
     final locationData = context.read<SelectLocation>();
-    List registros = context.watch<SelectLocation>().getRegistros();
 
     return Opacity(
       opacity: showTopScreen.state ? 1.0 : 0.0,

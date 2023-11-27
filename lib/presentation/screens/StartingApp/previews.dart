@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/bloc/startAppBloc/blocs.dart';
+import 'package:grassport_app/services/auth_login.dart';
 import '../../styles/systemThemes.dart';
 import '../../styles/colors.dart';
 
@@ -122,6 +123,24 @@ class SwiperInfo extends StatelessWidget {
 class ButtonsSkipAndNext extends StatelessWidget {
   const ButtonsSkipAndNext({super.key});
 
+  void goToNextView(NextSwipers currentSwiperIndex, BuildContext c) async {
+    bool isLogged = await checkIfUserIsSignedIn(c);
+
+    if (currentSwiperIndex.state == 2) {
+      if (isLogged) {
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(c, routeAgreementLocation);
+      } else {
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(c, routeLogin);
+      }
+    } else {
+      currentSwiperIndex.incrementIndex();
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(c, routePreviews);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentSwiperIndex = context.watch<NextSwipers>();
@@ -136,12 +155,7 @@ class ButtonsSkipAndNext extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(15)),
               )),
           onPressed: () {
-            if (currentSwiperIndex.state == 2) {
-              Navigator.pushNamed(context, routeLogin);
-            } else {
-              currentSwiperIndex.incrementIndex();
-              Navigator.pushNamed(context, routePreviews);
-            }
+            goToNextView(currentSwiperIndex, context);
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -156,8 +170,15 @@ class ButtonsSkipAndNext extends StatelessWidget {
           ),
         ),
         TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, routeLogin);
+          onPressed: () async {
+            bool isLogged = await checkIfUserIsSignedIn(context);
+            if (isLogged) {
+              // ignore: use_build_context_synchronously
+              Navigator.pushNamed(context, routeAgreementLocation);
+            } else {
+              // ignore: use_build_context_synchronously
+              Navigator.pushNamed(context, routeLogin);
+            }
           },
           child: Text(
             'Saltar',

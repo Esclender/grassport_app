@@ -7,8 +7,6 @@ class ApiClient {
   final client = http.Client();
   // ignore: constant_identifier_names
   static const String API_URL_PROD = "grassportback.onrender.com";
-  // ignore: constant_identifier_names
-  static const String API_URL_DEV = "http://192.168.56.1:3000";
 
   //HERE WE DEFINE THE ENV WE ARE NOW
   // ignore: constant_identifier_names
@@ -16,7 +14,7 @@ class ApiClient {
 
   //ENPOINTS
   static const String locationPath = "/ubicacion/geocoding";
-  //https://$API_URL_PROD/ubicacion/geocoding?latLng=$lat,$lon
+  static const String addressSearchPath = "/ubicacion/geocoding/address";
 
   reverseCode({lat, lon}) async {
     try {
@@ -24,7 +22,29 @@ class ApiClient {
 
       final response = await client.get(uri);
 
-      print(jsonDecode(response.body));
+      return jsonDecode(response.body);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  searchByAddress({search}) async {
+    try {
+      final uri = Uri.https(API_URL, addressSearchPath, {'street': search});
+      final response = await client.get(uri);
+      //final data = ;
+
+      // List<LocationDesc> results = data['response'].map((item) {
+      //   LocationDesc mapped = LocationDesc(
+      //       leading: item['leading'],
+      //       locality: item['locality'],
+      //       location: item["location"],
+      //       street: item["street"]);
+
+      //   return mapped;
+      // });
+
+      // print(results);
 
       return jsonDecode(response.body);
     } catch (e) {
