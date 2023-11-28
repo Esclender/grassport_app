@@ -16,4 +16,13 @@ class LocationDesc {
   LatLng getLocation() {
     return LatLng(location['latitude'], location['longitude']);
   }
+
+  Map getObject() {
+    return {
+      "location": {"lat": location['lat'], "lng": location['lng']},
+      "locality": locality,
+      "street": street,
+      "leading": leading
+    };
+  }
 }
