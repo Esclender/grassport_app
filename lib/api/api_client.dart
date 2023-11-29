@@ -8,7 +8,7 @@ class ApiClient {
   // ignore: prefer_typing_uninitialized_variables
   final client = http.Client();
   // ignore: constant_identifier_names
-  static const String API_URL_PROD = "15.228.245.136:3000";
+  static const String API_URL_PROD = "15.229.111.65:3000";
 
   //HERE WE DEFINE THE ENV WE ARE NOW
   // ignore: constant_identifier_names
