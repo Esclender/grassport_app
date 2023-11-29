@@ -20,6 +20,12 @@ class _EffectIntroState extends State<EffectIntro>
   AlignmentGeometry alignment = Alignment.bottomCenter;
 
   @override
+  dispose() {
+    _controller.dispose(); // you need this
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
 

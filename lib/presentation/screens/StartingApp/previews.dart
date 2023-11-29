@@ -35,6 +35,7 @@ class _StartingPreviews extends State<Previews> {
               ),
               alignment: Alignment.topCenter,
               child: Row(
+                key: Key('Preview ${currentSwiperIndex.state}'),
                 children: [
                   Swipers(
                     colorSwiper: currentSwiperIndex.state >= 0 ? c8 : c10,
@@ -148,6 +149,7 @@ class ButtonsSkipAndNext extends StatelessWidget {
     return Column(
       children: [
         TextButton(
+          key: const Key('Previews - Next Preview btn'),
           style: TextButton.styleFrom(
               backgroundColor: c8,
               minimumSize: const Size(280, 50),

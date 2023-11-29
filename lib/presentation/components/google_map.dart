@@ -23,6 +23,8 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
   BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
   LatLng? currentLocation;
 
+  //Set<Marker> _markers = Set();
+
   @override
   void initState() {
     if (widget.isGps) {
