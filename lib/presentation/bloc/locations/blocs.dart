@@ -38,8 +38,11 @@ class SelectLocation extends Cubit<int> {
 
   getRegistros({address = ''}) async {
     if (state == 0) {
-      return historyLocations;
+      Map location = await ApiClient().getMyHistory();
+
+      return location['historial'];
     }
+
     Map location = await ApiClient().searchByAddress(search: address);
 
     return location['response']; //change by the search places

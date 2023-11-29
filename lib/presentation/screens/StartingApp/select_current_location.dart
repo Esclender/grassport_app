@@ -16,6 +16,22 @@ class SelectCurrentLocation extends StatefulWidget {
 class _SelectCurrentState extends State<SelectCurrentLocation> {
   List registros = [];
 
+  @override
+  void initState() {
+    setHistorial();
+
+    super.initState();
+  }
+
+  void setHistorial() async {
+    final locationData = context.read<SelectLocation>();
+    List nuevosRegistros = await locationData.getRegistros();
+
+    setState(() {
+      registros = nuevosRegistros;
+    });
+  }
+
   void setRegistro(_) async {
     final locationData = context.read<SelectLocation>();
     List nuevosRegistros = await locationData.getRegistros(address: _);

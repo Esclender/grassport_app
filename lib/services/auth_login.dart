@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 
 Future<UserCredential> signInWithGoogle() async {
@@ -19,9 +20,12 @@ Future<UserCredential> signInWithGoogle() async {
   );
 
   final auth = FirebaseAuth.instance;
+  UserCredential userInfo = await auth.signInWithCredential(credential);
+
+  await ApiClient().getToken(email: userInfo.user?.email ?? '');
 
   // Once signed in, return the UserCredential
-  return await auth.signInWithCredential(credential);
+  return userInfo;
 }
 
 Future<void> logOutWithGoogle() async {
@@ -57,6 +61,8 @@ Future<bool> checkIfUserIsSignedIn(BuildContext context) async {
     final auth = FirebaseAuth.instance;
 
     final authCredencials = await auth.signInWithCredential(credential);
+
+    await ApiClient().getToken(email: authCredencials.user?.email ?? '');
 
     // ignore: use_build_context_synchronously
     context.read<LoggedUser>().setData(authCredencials.user);

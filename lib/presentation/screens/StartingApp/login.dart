@@ -47,7 +47,6 @@ class _LoginState extends State<Login> {
                   try {
                     final data = await signInWithGoogle();
 
-                    print(data.user);
                     // ignore: use_build_context_synchronously
                     context.read<LoggedUser>().setData(data.user);
                     if (mounted) {

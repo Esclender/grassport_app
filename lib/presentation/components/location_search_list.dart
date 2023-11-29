@@ -51,7 +51,7 @@ class _SearchingState extends State<Searching> {
                                   ? const Icon(Icons.history)
                                   : const Icon(Icons.location_city),
                           department: widget.registros[index]['locality'],
-                          location: widget.registros[index]['locality'],
+                          location: widget.registros[index]['street'],
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) =>
