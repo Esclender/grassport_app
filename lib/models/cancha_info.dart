@@ -1,19 +1,34 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class CanchaInfo {
+  LatLng location;
   String nombre;
   int rating;
-  String owner;
-  String direccion;
-  double price;
-  Map horario;
-  String img;
+  String address;
+  bool isOpen;
 
   CanchaInfo({
     required this.nombre,
-    required this.direccion,
+    required this.address,
     required this.rating,
-    required this.owner,
-    required this.horario,
-    required this.img,
-    required this.price,
+    required this.isOpen,
+    required this.location,
   });
+
+  static List<CanchaInfo> transformResponse(body) {
+    List<CanchaInfo> canchas = [];
+
+    for (Map cancha in body['response']) {
+      CanchaInfo canchaInfo = CanchaInfo(
+          nombre: cancha['name'],
+          address: cancha['address'],
+          rating: cancha['rating'],
+          isOpen: cancha['isOpen'],
+          location: LatLng(
+              cancha['location']['latitude'], cancha['location']['longitude']));
+      canchas.add(canchaInfo);
+    }
+
+    return canchas;
+  }
 }

@@ -33,6 +33,7 @@ class _StartingPreviews extends State<Previews> {
               ),
               alignment: Alignment.topCenter,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 key: Key('Preview ${currentSwiperIndex.state}'),
                 children: [
                   Swipers(

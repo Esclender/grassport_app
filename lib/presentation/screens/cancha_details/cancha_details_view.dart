@@ -32,10 +32,11 @@ class _CanchaDetailsState extends State<CanchaDetails> {
               Container(
                 height: MediaQuery.of(context).size.height * 0.27,
                 width: MediaQuery.of(context).size.width * 0.95,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   image: DecorationImage(
-                      image: NetworkImage(widget.cancha.img),
+                      image: NetworkImage(
+                          'https://ichef.bbci.co.uk/news/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg'),
                       fit: BoxFit.cover),
                 ),
               ),
@@ -49,7 +50,7 @@ class _CanchaDetailsState extends State<CanchaDetails> {
               ),
               const Gap(10),
               Text(
-                widget.cancha.direccion,
+                widget.cancha.address,
                 style: const TextStyle(fontSize: 18),
               ),
               const StreetMap(),
@@ -81,10 +82,6 @@ class DetailsTitles extends StatelessWidget {
               data.nombre,
               style: TextStyle(color: c9, fontSize: 20),
             ),
-            Text(
-              data.owner,
-              style: TextStyle(color: c11, fontSize: 16),
-            ),
             StarsRating(
               canchaUpdate: () {},
               rate: data.rating,
@@ -96,11 +93,7 @@ class DetailsTitles extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "S/ ${data.price}",
-              style: TextStyle(color: c9, fontSize: 20),
-            ),
-            Text(
-              "${data.horario["start"]} a ${data.horario["end"]}",
+              data.isOpen ? "Abierto" : 'Cerrado',
               style: TextStyle(color: c11, fontSize: 16),
             )
           ],
