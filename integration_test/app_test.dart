@@ -58,6 +58,12 @@ testBuscar(WidgetTester tester) async {
   await tester.testTextInput.receiveAction(TextInputAction.done);
   await tester.pumpAndSettle();
 
+  await tester.pumpAndSettle();
+
+  await Future.delayed(const Duration(seconds: 5));
+
+  await tester.pumpAndSettle();
+
   expect(find.text("La Pascana, Comas, Peru"), findsOneWidget);
 
   await tester.pumpAndSettle();

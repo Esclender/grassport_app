@@ -25,10 +25,10 @@ class _SelectCurrentState extends State<SelectCurrentLocation> {
 
   void setHistorial() async {
     final locationData = context.read<SelectLocation>();
-    List nuevosRegistros = await locationData.getRegistros();
+    List? nuevosRegistros = await locationData.getRegistros();
 
     setState(() {
-      registros = nuevosRegistros;
+      registros = nuevosRegistros ?? [];
     });
   }
 
