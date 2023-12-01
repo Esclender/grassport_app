@@ -25,10 +25,10 @@ class _SelectCurrentState extends State<SelectCurrentLocation> {
 
   void setHistorial() async {
     final locationData = context.read<SelectLocation>();
-    List nuevosRegistros = await locationData.getRegistros();
+    List? nuevosRegistros = await locationData.getRegistros();
 
     setState(() {
-      registros = nuevosRegistros;
+      registros = nuevosRegistros ?? [];
     });
   }
 
@@ -65,6 +65,7 @@ class _SelectCurrentState extends State<SelectCurrentLocation> {
             children: [
               Center(
                 child: SearchBar(
+                  key: const Key("buscar"),
                   backgroundColor: MaterialStateProperty.all(c2),
                   elevation: MaterialStateProperty.all(2.0),
                   constraints:
