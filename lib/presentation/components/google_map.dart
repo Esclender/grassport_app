@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/models/cancha_info.dart';
 import 'package:grassport_app/presentation/bloc/device_current_location/blocs.dart';
+import 'package:grassport_app/presentation/bloc/nearCanchas/blocs.dart';
 import 'package:grassport_app/services/location_ask.dart';
 
 // ignore: must_be_immutable
@@ -37,14 +38,22 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
     } else {
       _definedLocation();
     }
+
     addCustomIcon();
     setMakers();
     super.initState();
+
+    Timer(const Duration(milliseconds: 2000), () {
+      showMarkerInfoWindow();
+    });
   }
 
   void setMakers() async {
     List<CanchaInfo> dataCanchas = await ApiClient().getNearLocations(
         lat: currentLocation?.latitude, lon: currentLocation?.longitude);
+
+    // ignore: use_build_context_synchronously
+    context.read<NearCanchas>().setNearCanchas(dataCanchas);
 
     for (CanchaInfo cancha in dataCanchas) {
       markers.add(
@@ -143,9 +152,6 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
 
   @override
   Widget build(BuildContext context) {
-    Timer(Duration(milliseconds: 2000), () {
-      showMarkerInfoWindow();
-    });
     return currentLocation != null
         ? GoogleMap(
             mapType: MapType.normal,

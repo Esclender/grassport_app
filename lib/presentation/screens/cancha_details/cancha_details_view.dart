@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/models/cancha_info.dart';
 import 'package:grassport_app/presentation/components/map.dart';
+import 'package:grassport_app/presentation/components/popus/must_be_logged_pp.dart';
 import 'package:grassport_app/presentation/components/stars_rating.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
+import 'package:grassport_app/services/auth_login.dart';
 
 // ignore: must_be_immutable
 class CanchaDetails extends StatefulWidget {
   CanchaInfo cancha;
-
   CanchaDetails({super.key, required this.cancha});
 
   @override
@@ -53,7 +53,9 @@ class _CanchaDetailsState extends State<CanchaDetails> {
                 widget.cancha.address,
                 style: const TextStyle(fontSize: 18),
               ),
-              const StreetMap(),
+              StreetMap(
+                location: widget.cancha.location,
+              ),
               const Gap(15),
               const ActionBtns()
             ],
@@ -85,7 +87,7 @@ class DetailsTitles extends StatelessWidget {
             StarsRating(
               canchaUpdate: () {},
               rate: data.rating,
-              isDetails: true,
+              isDetails: false,
             )
           ],
         ),
@@ -94,7 +96,17 @@ class DetailsTitles extends StatelessWidget {
           children: [
             Text(
               data.isOpen ? "Abierto" : 'Cerrado',
-              style: TextStyle(color: c11, fontSize: 16),
+              style: data.isOpen
+                  ? TextStyle(
+                      color: c8,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    )
+                  : TextStyle(
+                      color: c4,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
             )
           ],
         ),
@@ -109,10 +121,28 @@ class ActionBtns extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            bool isUserSigned = await checkIfUserIsSignedIn(context);
+            if (isUserSigned) {
+              print(
+                  '******************************************************************************SI LO PUEDE GUARDAR');
+            } else {
+              // ignore: use_build_context_synchronously
+              showDialog(
+                barrierColor: Colors.transparent,
+                context: context,
+                builder: (context) => const MustBeLoggedPopup(),
+              );
+
+              // Close the dialog after a delay
+              Future.delayed(const Duration(seconds: 2), () {
+                Navigator.of(context).pop();
+              });
+            }
+          },
           style: ElevatedButton.styleFrom(
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
@@ -128,23 +158,23 @@ class ActionBtns extends StatelessWidget {
             size: 35.0,
           ),
         ),
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-            backgroundColor: c15,
-            foregroundColor: c1,
-            padding: const EdgeInsets.all(0.0),
-          ),
-          child: SvgPicture.asset(
-            "assets/app_icons/whatsapp.svg",
-            width: 30,
-          ),
-        )
+        // ElevatedButton(
+        //   onPressed: () {},
+        //   style: ElevatedButton.styleFrom(
+        //     shape: const RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.all(
+        //         Radius.circular(10),
+        //       ),
+        //     ),
+        //     backgroundColor: c15,
+        //     foregroundColor: c1,
+        //     padding: const EdgeInsets.all(0.0),
+        //   ),
+        //   child: SvgPicture.asset(
+        //     "assets/app_icons/whatsapp.svg",
+        //     width: 30,
+        //   ),
+        // )
       ],
     );
   }

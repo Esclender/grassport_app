@@ -37,15 +37,16 @@ class CanchaCard extends StatelessWidget {
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   image: DecorationImage(
-                      image: NetworkImage(
-                          'https://ichef.bbci.co.uk/news/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg'),
-                      fit: BoxFit.cover),
+                    image: NetworkImage(
+                        'https://ichef.bbci.co.uk/news/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
             CardInfo(
               data: data,
-            )
+            ),
           ],
         ),
       ),
@@ -64,11 +65,9 @@ class CardInfo extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: Container(
-        margin: const EdgeInsets.only(left: 30, bottom: 10, right: 20),
+        margin: const EdgeInsets.only(left: 20, bottom: 10, right: 20),
         width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Wrap(
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,18 +86,6 @@ class CardInfo extends StatelessWidget {
                   style: TextStyle(color: c9),
                 )
               ],
-            ),
-            SizedBox(
-              width: 100,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    data.isOpen ? "Abierto" : 'Cerrado',
-                    style: TextStyle(color: c11),
-                  )
-                ],
-              ),
             ),
           ],
         ),

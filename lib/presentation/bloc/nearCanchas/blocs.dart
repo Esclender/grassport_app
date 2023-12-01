@@ -3,10 +3,10 @@ import 'package:grassport_app/models/cancha_info.dart';
 
 var nearCanchas = [];
 
-class NearCanchas extends Cubit<List> {
-  NearCanchas() : super(nearCanchas);
+class NearCanchas extends Cubit<List<CanchaInfo>> {
+  NearCanchas() : super([]);
 
-  getNearCanchas(List<CanchaInfo> data) {
-    emit(state);
+  setNearCanchas(List<CanchaInfo> data) {
+    emit([...data]);
   }
 }
