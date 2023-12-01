@@ -44,6 +44,7 @@ class _SearchingState extends State<Searching> {
                   ? ListView.separated(
                       itemBuilder: (BuildContext context, int index) {
                         return LocationTag(
+                          key: const Key("LocationTag"),
                           latLng:
                               getLocation(widget.registros[index]['location']),
                           leading:
