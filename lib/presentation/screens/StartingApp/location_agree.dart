@@ -80,6 +80,7 @@ class _AgreementLocationState extends State<AgreementLocation> {
                         },
                         bg: c1,
                         text: Text(
+                          key: const Key("manualmente"),
                           'Iniciar sesion manualmente',
                           style: TextStyle(color: c8),
                         ),

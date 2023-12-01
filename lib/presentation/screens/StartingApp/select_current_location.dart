@@ -70,6 +70,7 @@ class _SelectCurrentState extends State<SelectCurrentLocation> {
                   constraints:
                       const BoxConstraints(maxWidth: 330, minHeight: 50),
                   leading: const Icon(Icons.search),
+                  //key: const Key("buscar"),
                   onSubmitted: (_) async {
                     if (_ == "") {
                       locationData.toggleState(0);

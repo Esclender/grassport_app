@@ -85,6 +85,7 @@ class _LoginState extends State<Login> {
                   Navigator.pushNamed(context, routeAgreementLocation);
                 },
                 child: Text(
+                  key: const Key("iniciaDespues"),
                   'Iniciar sesion despues',
                   style: TextStyle(
                     color: c1,

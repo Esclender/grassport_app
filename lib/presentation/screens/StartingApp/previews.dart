@@ -28,6 +28,7 @@ class _StartingPreviews extends State<Previews> {
         body: Column(
           children: [
             Container(
+              key: Key("VistaPrevius"),
               margin: const EdgeInsets.only(
                 top: 50.0,
               ),
@@ -181,6 +182,7 @@ class ButtonsSkipAndNext extends StatelessWidget {
             }
           },
           child: Text(
+            key: const Key("saltar"),
             'Saltar',
             style: TextStyle(
               decorationThickness: 2.0,
