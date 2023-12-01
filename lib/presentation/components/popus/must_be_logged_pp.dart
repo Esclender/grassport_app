@@ -3,7 +3,9 @@ import 'package:grassport_app/presentation/styles/colors.dart';
 
 // ignore: must_be_immutable
 class MustBeLoggedPopup extends StatelessWidget {
-  const MustBeLoggedPopup({super.key});
+  String warningMessage;
+
+  MustBeLoggedPopup({super.key, this.warningMessage = ' Inicia sesion para seguir'});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class MustBeLoggedPopup extends StatelessWidget {
                 ),
               ),
               TextSpan(
-                text: " Inicia sesion para guardar",
+                text: warningMessage,
                 style: TextStyle(fontSize: 20, color: c1),
               ),
             ],

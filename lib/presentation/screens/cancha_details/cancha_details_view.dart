@@ -134,7 +134,9 @@ class ActionBtns extends StatelessWidget {
               showDialog(
                 barrierColor: Colors.transparent,
                 context: context,
-                builder: (context) => const MustBeLoggedPopup(),
+                builder: (context) => MustBeLoggedPopup(
+                  warningMessage: " Inicia sesion para guardar",
+                ),
               );
 
               // Close the dialog after a delay

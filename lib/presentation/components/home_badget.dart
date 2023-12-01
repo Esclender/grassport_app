@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_is_search/bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_view_selected/bloc.dart';
+import 'package:grassport_app/presentation/components/popus/must_be_logged_pp.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
+import 'package:grassport_app/services/auth_login.dart';
 
 // ignore: must_be_immutable
 class HomeBadget extends StatefulWidget {
@@ -59,13 +61,23 @@ class _HomeBadgetState extends State<HomeBadget> {
                   ),
           ),
           IconButton(
-            onPressed: () {
-              if (selectedIcon.state != 1) {
+            onPressed: () async {
+              bool isUserSigned = await checkIfUserIsSignedIn(context);
+              if (isUserSigned && selectedIcon.state != 1) {
+                // ignore: use_build_context_synchronously
                 if (selectedIcon.state != 0) Navigator.pop(context);
                 setState(() {
                   selectedIcon.changeView(1);
                 });
+                // ignore: use_build_context_synchronously
                 Navigator.pushNamed(context, routeFavView);
+              } else {
+                // ignore: use_build_context_synchronously
+                showDialog(
+                  barrierColor: Colors.transparent,
+                  context: context,
+                  builder: (context) => MustBeLoggedPopup(),
+                );
               }
             },
             icon: selectedIcon.state == 1
@@ -79,13 +91,23 @@ class _HomeBadgetState extends State<HomeBadget> {
                   ),
           ),
           IconButton(
-            onPressed: () {
-              if (selectedIcon.state != 2) {
+            onPressed: () async {
+              bool isUserSigned = await checkIfUserIsSignedIn(context);
+              if (isUserSigned && selectedIcon.state != 2) {
+                // ignore: use_build_context_synchronously
                 if (selectedIcon.state != 0) Navigator.pop(context);
                 setState(() {
                   selectedIcon.changeView(2);
                 });
+                // ignore: use_build_context_synchronously
                 Navigator.pushNamed(context, routeNotifView);
+              } else {
+                // ignore: use_build_context_synchronously
+                showDialog(
+                  barrierColor: Colors.transparent,
+                  context: context,
+                  builder: (context) => MustBeLoggedPopup(),
+                );
               }
             },
             icon: selectedIcon.state == 2
