@@ -65,12 +65,13 @@ class _SelectCurrentState extends State<SelectCurrentLocation> {
             children: [
               Center(
                 child: SearchBar(
+                  key: const Key("buscar"),
                   backgroundColor: MaterialStateProperty.all(c2),
                   elevation: MaterialStateProperty.all(2.0),
                   constraints:
                       const BoxConstraints(maxWidth: 330, minHeight: 50),
                   leading: const Icon(Icons.search),
-                  //key: const Key("buscar"),
+                  
                   onSubmitted: (_) async {
                     if (_ == "") {
                       locationData.toggleState(0);
