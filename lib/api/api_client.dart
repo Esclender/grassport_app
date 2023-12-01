@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:grassport_app/models/cancha_info.dart';
 import 'package:grassport_app/models/location_descrp.dart';
 import 'package:grassport_app/services/save_preferens.dart';
 import 'package:http/http.dart' as http;
@@ -8,7 +9,7 @@ class ApiClient {
   // ignore: prefer_typing_uninitialized_variables
   final client = http.Client();
   // ignore: constant_identifier_names
-  static const String API_URL_PROD = "15.229.111.65:3000";
+  static const String API_URL_PROD = "15.228.163.12:3000";
 
   //HERE WE DEFINE THE ENV WE ARE NOW
   // ignore: constant_identifier_names
@@ -19,6 +20,8 @@ class ApiClient {
   static const String getMyHistoryPath = "/usuarios/mis-datos/historial";
 
   static const String locationPath = "/ubicacion/geocoding";
+  static const String nearLocationsPath =
+      "/ubicacion/geocoding/nearbyLocations";
   static const String addressSearchPath = "/ubicacion/geocoding/address";
   static const String userHistoryLocation = "/ubicacion/user-history";
 
@@ -28,6 +31,19 @@ class ApiClient {
       final response = await client.get(uri);
 
       return jsonDecode(response.body);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  getNearLocations({lat, lon}) async {
+    try {
+      final uri = Uri.http(API_URL, nearLocationsPath, {'latLng': "$lat,$lon"});
+      final response = await client.get(uri);
+      final dataNoMapped = jsonDecode(response.body);
+      List<CanchaInfo> canchas = CanchaInfo.transformResponse(dataNoMapped);
+
+      return canchas;
     } catch (e) {
       throw Exception(e);
     }

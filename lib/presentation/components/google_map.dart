@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:grassport_app/api/api_client.dart';
+import 'package:grassport_app/models/cancha_info.dart';
 import 'package:grassport_app/presentation/bloc/device_current_location/blocs.dart';
+import 'package:grassport_app/presentation/bloc/nearCanchas/blocs.dart';
 import 'package:grassport_app/services/location_ask.dart';
 
 // ignore: must_be_immutable
@@ -21,9 +24,11 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
       Completer<GoogleMapController>();
 
   BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor markerCancha = BitmapDescriptor.defaultMarker;
+
   LatLng? currentLocation;
 
-  //Set<Marker> _markers = Set();
+  Set<Marker> markers = {};
 
   @override
   void initState() {
@@ -35,7 +40,45 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
     }
 
     addCustomIcon();
+    setMakers();
     super.initState();
+
+    Timer(const Duration(milliseconds: 2000), () {
+      showMarkerInfoWindow();
+    });
+  }
+
+  void setMakers() async {
+    List<CanchaInfo> dataCanchas = await ApiClient().getNearLocations(
+        lat: currentLocation?.latitude, lon: currentLocation?.longitude);
+
+    // ignore: use_build_context_synchronously
+    context.read<NearCanchas>().setNearCanchas(dataCanchas);
+
+    for (CanchaInfo cancha in dataCanchas) {
+      markers.add(
+        Marker(
+          markerId: MarkerId(cancha.address),
+          position: LatLng(cancha.location.latitude, cancha.location.longitude),
+          icon: markerCancha,
+          infoWindow: InfoWindow(
+            title: cancha.nombre,
+            anchor: const Offset(0.5, 0.1),
+          ),
+        ),
+      );
+    }
+
+    setState(() {});
+  }
+
+  void showMarkerInfoWindow() async {
+    if (_controller.isCompleted) {
+      final GoogleMapController controller = await _controller.future;
+      for (Marker marker in markers) {
+        controller.showMarkerInfoWindow(marker.markerId);
+      }
+    }
   }
 
   void checkPermissions() async {
@@ -52,12 +95,24 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
   }
 
   void addCustomIcon() {
-    BitmapDescriptor.fromAssetImage(const ImageConfiguration(),
-            "assets/app_icons/Current_Location_Marker.png")
-        .then(
+    BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(),
+      "assets/app_icons/Current_Location_Marker.png",
+    ).then(
       (icon) {
         setState(() {
           markerIcon = icon;
+        });
+      },
+    );
+
+    BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(),
+      "assets/app_icons/cancha_icon_location.png",
+    ).then(
+      (icon) {
+        setState(() {
+          markerCancha = icon;
         });
       },
     );
@@ -113,7 +168,8 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
                 position: LatLng(currentLocation?.latitude as double,
                     currentLocation?.longitude as double),
                 icon: markerIcon,
-              ), // Marker
+              ),
+              ...markers
             },
           )
         : const Center(

@@ -28,7 +28,7 @@ class _SavedListState extends State<SavedList> {
               SavedOne(
                 icon: widget.icon,
                 title: widget.data[ind].nombre,
-                direccion: widget.data[ind].direccion,
+                direccion: widget.data[ind].address,
               ),
               const Gap(100),
             ],
@@ -37,7 +37,7 @@ class _SavedListState extends State<SavedList> {
           return SavedOne(
             icon: widget.icon,
             title: widget.data[ind].nombre,
-            direccion: widget.data[ind].direccion,
+            direccion: widget.data[ind].address,
           );
         }
       },

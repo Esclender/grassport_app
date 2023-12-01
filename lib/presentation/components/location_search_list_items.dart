@@ -33,9 +33,6 @@ class LocationTag extends StatelessWidget {
             street: location,
           );
 
-          print('*********************************************HISTORY');
-          print(latLng);
-
           await ApiClient().saveHistoryLocation(lugar: savedLocation);
 
           // ignore: use_build_context_synchronously
