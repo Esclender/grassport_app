@@ -68,7 +68,6 @@ class ApiClient {
       final response = await client.post(uri, body: {'email': email});
 
       Map data = jsonDecode(response.body);
-
       await Cookies().save(key: 'userToken', value: data['token']);
     } catch (e) {
       throw Exception(e);

@@ -5,6 +5,7 @@ import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/models/location_descrp.dart';
 import 'package:grassport_app/presentation/bloc/charge/bloc.dart';
 import 'package:grassport_app/presentation/bloc/device_current_location/blocs.dart';
+import 'package:grassport_app/presentation/bloc/locations/blocs.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
@@ -37,6 +38,8 @@ class LocationTag extends StatelessWidget {
 
           // ignore: use_build_context_synchronously
           context.read<DeviceGpsLocation>().setGpsLocation(latLng);
+          // ignore: use_build_context_synchronously
+          context.read<SelectLocation>().toggleState(0);
           // ignore: use_build_context_synchronously
           Navigator.pushNamed(context, routeCharge);
         },

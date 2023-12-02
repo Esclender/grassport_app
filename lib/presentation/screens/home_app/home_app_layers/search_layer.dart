@@ -40,17 +40,24 @@ class HomeList extends StatefulWidget {
 }
 
 class _HomeListState extends State<HomeList> {
-  late List registros = [];
+  late List registros;
 
-  // @override
-  // void initState() {
-  //   setRegistros();
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    setHistorial();
+    super.initState();
+  }
 
-  void setRegistros() {
-    setState(() async {
-      registros = await context.watch<SelectLocation>().getRegistros();
+  void setHistorial() async {
+    final locationData = context.read<SelectLocation>();
+    List? nuevosRegistros = await locationData.getRegistros();
+
+    print(
+        '**************************************************************************SERCH LAYER');
+    print(nuevosRegistros);
+
+    setState(() {
+      registros = nuevosRegistros ?? [];
     });
   }
 
