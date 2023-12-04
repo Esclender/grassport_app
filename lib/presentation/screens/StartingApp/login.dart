@@ -8,6 +8,7 @@ import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/services/auth_login.dart';
+import 'package:grassport_app/services/clear_data.dart';
 import '../../styles/systemThemes.dart';
 
 class Login extends StatefulWidget {
@@ -45,6 +46,7 @@ class _LoginState extends State<Login> {
               TextButton(
                 onPressed: () async {
                   try {
+                    clearDataLoggedUser(context);
                     final data = await signInWithGoogle();
 
                     // ignore: use_build_context_synchronously
@@ -82,6 +84,7 @@ class _LoginState extends State<Login> {
               ),
               TextButton(
                 onPressed: () {
+                  clearDataLoggedUser(context);
                   Navigator.pushNamed(context, routeAgreementLocation);
                 },
                 child: Text(

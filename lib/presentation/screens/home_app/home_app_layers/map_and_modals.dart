@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/presentation/bloc/nearCanchas/blocs.dart';
 import 'package:grassport_app/presentation/components/cancha_card.dart';
+import 'package:grassport_app/presentation/components/focus_my_location.dart';
 import 'package:grassport_app/presentation/components/google_map.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
@@ -20,6 +21,11 @@ class _MainAppHomeLayerState extends State<MainAppHomeLayer> {
       children: [
         GoogleMapBig(
           isGps: false,
+        ),
+        Positioned(
+          bottom: MediaQuery.of(context).size.height * 0.18,
+          right: 10,
+          child: const MyLocationFocusButton(),
         ),
         const BottomModal(),
       ],

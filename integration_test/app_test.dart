@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grassport_app/main.dart' as app;
 
@@ -7,8 +9,6 @@ testPreviews(WidgetTester tester) async {
   await tester.pumpAndSettle();
   expect(find.text('Saltar'), findsOneWidget);
   await Future.delayed(const Duration(seconds: 2));
-<<<<<<< Updated upstream
-=======
   Finder button = find.byKey(const Key('Previews - Next Preview btn'));
   await tester.tap(button);
 
@@ -66,7 +66,6 @@ testBuscar(WidgetTester tester) async {
   await tester.pumpAndSettle();
 
   expect(find.text("La Pascana, Comas, Peru"), findsOneWidget);
->>>>>>> Stashed changes
 
   await tester.pumpAndSettle();
 }

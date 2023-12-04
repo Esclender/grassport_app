@@ -44,10 +44,6 @@ class _CanchaDetailsState extends State<CanchaDetails> {
               DetailsTitles(
                 data: widget.cancha,
               ),
-              Text(
-                "Lorem ipsum dolor sit amet consectetur. Eu eget a urna id varius urna. Aliquet ornare bibendum blandit et. Congue quis malesuada quam velit sed sed. Cursus maecenas lectus ridiculus porttitor.",
-                style: TextStyle(color: c11),
-              ),
               const Gap(10),
               Text(
                 widget.cancha.address,

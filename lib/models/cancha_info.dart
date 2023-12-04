@@ -10,7 +10,7 @@ class CanchaInfo {
   CanchaInfo({
     required this.nombre,
     required this.address,
-    required this.rating,
+    this.rating = 0,
     required this.isOpen,
     required this.location,
   });
@@ -26,6 +26,22 @@ class CanchaInfo {
           isOpen: cancha['isOpen'],
           location: LatLng(
               cancha['location']['latitude'], cancha['location']['longitude']));
+      canchas.add(canchaInfo);
+    }
+
+    return canchas;
+  }
+
+  static List<CanchaInfo> transformResponseInCanchas(body) {
+    List<CanchaInfo> canchas = [];
+
+    for (Map cancha in body['response']) {
+      CanchaInfo canchaInfo = CanchaInfo(
+          nombre: cancha['locality'],
+          address: cancha['street'],
+          isOpen: true,
+          location:
+              LatLng(cancha['location']['lat'], cancha['location']['lng']));
       canchas.add(canchaInfo);
     }
 

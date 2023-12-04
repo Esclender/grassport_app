@@ -17,7 +17,6 @@ class SelectLocation extends Cubit<int> {
     }
 
     Map location = await ApiClient().searchByAddress(search: address);
-
     return location['response']; //change by the search places
   }
 }
