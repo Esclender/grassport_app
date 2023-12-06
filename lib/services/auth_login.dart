@@ -90,9 +90,8 @@ Future<void> registerUser(
       'numero': numero
     };
 
-    print('usuario ');
 
-    //await ApiClient().registerUser();
+    await ApiClient().registerUser(datosUser);
   } catch (e) {
     print('Error registering user: $e');
   }
