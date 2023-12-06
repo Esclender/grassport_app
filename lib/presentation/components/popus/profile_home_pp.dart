@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/models/logged_user.dart';
+import 'package:grassport_app/presentation/bloc/isAdmin/bloc.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
@@ -19,10 +20,6 @@ class ProfileTop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserDisplayed? userData = context.watch<LoggedUser>().state;
-
-    print('***********************************************************USER');
-    print(userData?.displayName);
-    print(userData?.photoURL);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,6 +55,7 @@ class ProfileSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userLogged = context.read<LoggedUser>();
+    final isAdmin = context.watch<IsAdmin>().state;
 
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -67,10 +65,14 @@ class ProfileSettings extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconSetting(
-            fun: () {
-              Navigator.pushNamed(context, routeEditProfile);
-            },
-            text: "Mi perfil",
+            fun: isAdmin
+                ? () {
+                    Navigator.pushNamed(context, routeToAdminPanel);
+                  }
+                : () {
+                    Navigator.pushNamed(context, routeEditProfile);
+                  },
+            text: isAdmin ? "Panel administrador" : "Mi perfil",
             icon: "assets/app_icons/profile_icon.svg",
           ),
           IconSetting(

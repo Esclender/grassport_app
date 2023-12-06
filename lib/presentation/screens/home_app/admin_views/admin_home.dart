@@ -71,13 +71,13 @@ class _AdminViewState extends State<AdminView> {
             ),
             // Main Content
             AnimatedPositioned(
-              duration: Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
               left: _isLeftBarVisible ? leftBarWidth : 0.0,
-              child: Container(
+              child: SizedBox(
                 width: _isLeftBarVisible
                     ? MediaQuery.of(context).size.width - leftBarWidth
                     : MediaQuery.of(context).size.width,
-                child: Expanded(
+                child: SizedBox(
                   child: _contentWidgets[_selectedTabIndex],
                 ),
               ),
@@ -107,11 +107,12 @@ class _AdminViewState extends State<AdminView> {
                         });
                       },
                       child: Container(
+                        margin: const EdgeInsets.only(top: 15.0),
                         width: leftBarWidth,
                         height: 60.0,
                         decoration: BoxDecoration(
                           color: c19,
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(20.0),
                           ),
                         ),
@@ -128,6 +129,28 @@ class _AdminViewState extends State<AdminView> {
                     buildFloatingButton(1, leftBarWidth),
                     buildFloatingButton(2, leftBarWidth),
                     Spacer(),
+
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 15.0),
+                        width: leftBarWidth,
+                        height: 60.0,
+                        decoration: BoxDecoration(
+                          color: c19,
+                          borderRadius: const BorderRadius.only(
+                            bottomRight: Radius.circular(20.0),
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.home_filled,
+                          color: Colors.white,
+                          size: 35,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
