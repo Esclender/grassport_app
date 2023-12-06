@@ -16,4 +16,11 @@ class SystemModifiers {
     systemNavigationBarColor: c8,
     systemNavigationBarIconBrightness: Brightness.light,
   );
+
+  static SystemUiOverlayStyle overlayDarkAdmin = SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+    systemNavigationBarColor: c19,
+    systemNavigationBarIconBrightness: Brightness.light,
+  );
 }

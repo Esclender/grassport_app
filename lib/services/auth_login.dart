@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
+import 'package:grassport_app/services/save_preferens.dart';
 
 Future<UserCredential> signInWithGoogle() async {
   // Trigger the authentication flow
@@ -31,6 +32,7 @@ Future<UserCredential> signInWithGoogle() async {
 Future<void> logOutWithGoogle() async {
   // Trigger the authentication flow
   final GoogleSignIn googleUser = GoogleSignIn();
+  await Cookies().save(key: 'userToken', value: '');
   await googleUser.signOut();
 }
 
@@ -70,4 +72,28 @@ Future<bool> checkIfUserIsSignedIn(BuildContext context) async {
   }
 
   return false;
+}
+
+Future<void> registerUser(
+  String email,
+  String password,
+  String nombre,
+  String apellido,
+  String numero,
+) async {
+  try {
+    Map datosUser = {
+      'email': email,
+      'clave': password,
+      'nombre': nombre,
+      'apellido': apellido,
+      'numero': numero
+    };
+
+    print('usuario ');
+
+    //await ApiClient().registerUser();
+  } catch (e) {
+    print('Error registering user: $e');
+  }
 }

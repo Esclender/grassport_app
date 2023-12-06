@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grassport_app/models/cancha_info.dart';
 import 'package:grassport_app/presentation/bloc/home_view_selected/bloc.dart';
-import 'package:grassport_app/presentation/bloc/savedLocations/blocs.dart';
 import 'package:grassport_app/presentation/components/fav_notif_list.dart';
-import 'package:grassport_app/presentation/components/home_badget.dart';
 
 class FavView extends StatefulWidget {
   const FavView({super.key});
@@ -17,7 +14,6 @@ class _FavViewState extends State<FavView> {
   @override
   Widget build(BuildContext context) {
     HomeView selectedIcon = context.watch<HomeView>();
-    List<CanchaInfo> listSaved = context.watch<SavedLocations>().state;
 
     return Scaffold(
       appBar: AppBar(
@@ -36,15 +32,7 @@ class _FavViewState extends State<FavView> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50.0),
-            child: SavedList(
-              data: listSaved,
-              icon: const Icon(Icons.bookmark),
-            ),
-          ),
-          Positioned(
-            bottom: 50,
-            left: MediaQuery.of(context).size.width * 0.23,
-            child: const HomeBadget(),
+            child: SavedList(),
           ),
         ],
       ),

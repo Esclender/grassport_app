@@ -15,6 +15,14 @@ class CanchaInfo {
     required this.location,
   });
 
+  Map getObjectForFavorites() {
+    return {
+      "location": {"lat": location.latitude, "lng": location.longitude},
+      "locality": nombre,
+      "street": address,
+    };
+  }
+
   static List<CanchaInfo> transformResponse(body) {
     List<CanchaInfo> canchas = [];
 

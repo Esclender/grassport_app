@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/models/cancha_info.dart';
 import 'package:grassport_app/presentation/components/map.dart';
 import 'package:grassport_app/presentation/components/popus/must_be_logged_pp.dart';
+import 'package:grassport_app/presentation/components/popus/succesfull_pp.dart';
 import 'package:grassport_app/presentation/components/stars_rating.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:grassport_app/services/auth_login.dart';
@@ -17,6 +19,22 @@ class CanchaDetails extends StatefulWidget {
 }
 
 class _CanchaDetailsState extends State<CanchaDetails> {
+  bool isUserSigned = false;
+
+  @override
+  void initState() {
+    checkLogging();
+    super.initState();
+  }
+
+  void checkLogging() async {
+    bool isLogged = await checkIfUserIsSignedIn(context);
+
+    setState(() {
+      isUserSigned = isLogged;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +71,10 @@ class _CanchaDetailsState extends State<CanchaDetails> {
                 location: widget.cancha.location,
               ),
               const Gap(15),
-              const ActionBtns()
+              ActionBtns(
+                dataCancha: widget.cancha,
+                isSigned: isUserSigned,
+              )
             ],
           ),
         ),
@@ -111,8 +132,12 @@ class DetailsTitles extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class ActionBtns extends StatelessWidget {
-  const ActionBtns({super.key});
+  CanchaInfo dataCancha;
+  bool isSigned;
+
+  ActionBtns({super.key, required this.dataCancha, required this.isSigned});
 
   @override
   Widget build(BuildContext context) {
@@ -121,10 +146,15 @@ class ActionBtns extends StatelessWidget {
       children: [
         ElevatedButton(
           onPressed: () async {
-            bool isUserSigned = await checkIfUserIsSignedIn(context);
-            if (isUserSigned) {
-              print(
-                  '******************************************************************************SI LO PUEDE GUARDAR');
+            if (isSigned) {
+              await ApiClient().saveFavorite(lugar: dataCancha);
+
+              // ignore: use_build_context_synchronously
+              showDialog(
+                barrierColor: Colors.transparent,
+                context: context,
+                builder: (context) => SuccesfullPopup(),
+              );
             } else {
               // ignore: use_build_context_synchronously
               showDialog(
@@ -156,23 +186,6 @@ class ActionBtns extends StatelessWidget {
             size: 35.0,
           ),
         ),
-        // ElevatedButton(
-        //   onPressed: () {},
-        //   style: ElevatedButton.styleFrom(
-        //     shape: const RoundedRectangleBorder(
-        //       borderRadius: BorderRadius.all(
-        //         Radius.circular(10),
-        //       ),
-        //     ),
-        //     backgroundColor: c15,
-        //     foregroundColor: c1,
-        //     padding: const EdgeInsets.all(0.0),
-        //   ),
-        //   child: SvgPicture.asset(
-        //     "assets/app_icons/whatsapp.svg",
-        //     width: 30,
-        //   ),
-        // )
       ],
     );
   }

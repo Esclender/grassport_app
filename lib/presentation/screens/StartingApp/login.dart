@@ -22,6 +22,12 @@ class _LoginState extends State<Login> {
   Size btnSize = const Size(300, 70);
 
   @override
+  void initState() {
+    clearDataLoggedUser(context);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
@@ -46,7 +52,6 @@ class _LoginState extends State<Login> {
               TextButton(
                 onPressed: () async {
                   try {
-                    clearDataLoggedUser(context);
                     final data = await signInWithGoogle();
 
                     // ignore: use_build_context_synchronously
@@ -84,7 +89,6 @@ class _LoginState extends State<Login> {
               ),
               TextButton(
                 onPressed: () {
-                  clearDataLoggedUser(context);
                   Navigator.pushNamed(context, routeAgreementLocation);
                 },
                 child: Text(
@@ -101,5 +105,19 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+}
+
+class AdminsLogin extends StatefulWidget {
+  const AdminsLogin({super.key});
+
+  @override
+  State<AdminsLogin> createState() => _AdminsLoginState();
+}
+
+class _AdminsLoginState extends State<AdminsLogin> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

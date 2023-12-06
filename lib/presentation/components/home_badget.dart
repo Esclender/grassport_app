@@ -1,11 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_is_search/bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_view_selected/bloc.dart';
+import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/components/popus/must_be_logged_pp.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
-import 'package:grassport_app/services/auth_login.dart';
 
 // ignore: must_be_immutable
 class HomeBadget extends StatefulWidget {
@@ -17,6 +18,20 @@ class HomeBadget extends StatefulWidget {
 
 class _HomeBadgetState extends State<HomeBadget> {
   //int selectedIcon = 0;
+  bool isSigned = false;
+
+  @override
+  void initState() {
+    checkUser();
+    super.initState();
+  }
+
+  void checkUser() async {
+    User? isUser = context.read<LoggedUser>().state;
+    setState(() {
+      isSigned = isUser != null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +77,8 @@ class _HomeBadgetState extends State<HomeBadget> {
           ),
           IconButton(
             onPressed: () async {
-              bool isUserSigned = await checkIfUserIsSignedIn(context);
-              if (isUserSigned && selectedIcon.state != 1) {
+              print(isSigned);
+              if (isSigned && selectedIcon.state != 1) {
                 // ignore: use_build_context_synchronously
                 if (selectedIcon.state != 0) Navigator.pop(context);
                 setState(() {
@@ -87,36 +102,6 @@ class _HomeBadgetState extends State<HomeBadget> {
                   )
                 : const Icon(
                     Icons.bookmark_border,
-                    color: Colors.white,
-                  ),
-          ),
-          IconButton(
-            onPressed: () async {
-              bool isUserSigned = await checkIfUserIsSignedIn(context);
-              if (isUserSigned && selectedIcon.state != 2) {
-                // ignore: use_build_context_synchronously
-                if (selectedIcon.state != 0) Navigator.pop(context);
-                setState(() {
-                  selectedIcon.changeView(2);
-                });
-                // ignore: use_build_context_synchronously
-                Navigator.pushNamed(context, routeNotifView);
-              } else {
-                // ignore: use_build_context_synchronously
-                showDialog(
-                  barrierColor: Colors.transparent,
-                  context: context,
-                  builder: (context) => MustBeLoggedPopup(),
-                );
-              }
-            },
-            icon: selectedIcon.state == 2
-                ? const Icon(
-                    Icons.notifications,
-                    color: Colors.white,
-                  )
-                : const Icon(
-                    Icons.notifications_none_outlined,
                     color: Colors.white,
                   ),
           ),

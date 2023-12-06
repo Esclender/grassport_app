@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
-import 'package:grassport_app/presentation/components/popus/canchas_filters.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:grassport_app/services/auth_login.dart';
@@ -69,15 +68,6 @@ class ProfileSettings extends StatelessWidget {
             },
             text: "Mi perfil",
             icon: "assets/app_icons/profile_icon.svg",
-          ),
-          IconSetting(
-            fun: () {
-              Navigator.of(context).pop();
-              showDialog(
-                  context: context, builder: (context) => const FliterPopup());
-            },
-            text: "Filtros",
-            icon: "assets/app_icons/filter_icon.svg",
           ),
           IconSetting(
             fun: () {
