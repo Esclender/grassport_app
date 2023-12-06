@@ -20,6 +20,8 @@ class ApiClient {
 
   //ENPOINTS
   static const String getTokenPath = "/usuarios";
+  static const String registerPath = "/usuarios/registro";
+  static const String loginPath = "/usuarios/login";
   static const String getMyHistoryPath = "/usuarios/mis-datos/historial";
   static const String saveFavoritesPath = "/usuarios/favoritos";
   static const String getFavoritesPath = "/usuarios/mis-datos/favoritos";
@@ -91,6 +93,25 @@ class ApiClient {
 
       Map data = jsonDecode(response.body);
       await Cookies().save(key: 'userToken', value: data['token']);
+
+      return data['token'];
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  login({email, clave}) async {
+    try {
+      final uri = Uri.http(API_URL, loginPath);
+      final response = await client.post(uri, body: {
+        'email': email,
+        'clave': clave,
+      });
+
+      Map data = jsonDecode(response.body);
+      await Cookies().save(key: 'userToken', value: data['token']);
+
+      return data['token'];
     } catch (e) {
       throw Exception(e);
     }
@@ -99,8 +120,7 @@ class ApiClient {
   registerUser(fields) async {
     try {
       final Map params = fields ?? {};
-
-      final uri = Uri.http(API_URL, getTokenPath);
+      final uri = Uri.http(API_URL, registerPath);
       await client.post(uri, body: {...params});
     } catch (e) {
       throw Exception(e);

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grassport_app/models/logged_user.dart';
 import 'package:grassport_app/presentation/bloc/google_map_markers/bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_is_search/bloc.dart';
+import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/components/popus/profile_home_pp.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
-import 'package:grassport_app/services/auth_login.dart';
 
 // ignore: must_be_immutable
 class SecondLayer extends StatefulWidget {
@@ -17,30 +18,15 @@ class SecondLayer extends StatefulWidget {
 
 class _SecondLayerState extends State<SecondLayer> {
   final TextEditingController _searchController = TextEditingController();
-  bool isSigned = false;
-
-  @override
-  void initState() {
-    checkUser();
-    super.initState();
-  }
 
   void searchCanchas({search}) async {
-    print(
-        '*********************************************************************************************SEARCHING CANCHAS NEAR');
     final locationData = context.read<CanchasByInout>();
     await locationData.getCanchasByInput(query: search);
   }
 
-  void checkUser() async {
-    bool isUser = await checkIfUserIsSignedIn(context);
-    setState(() {
-      isSigned = isUser;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    UserDisplayed? isSigned = context.watch<LoggedUser>().state;
     IsSearch toggle = context.watch<IsSearch>();
 
     return BlocBuilder<IsSearch, bool>(
@@ -75,7 +61,7 @@ class _SecondLayerState extends State<SecondLayer> {
                     },
                   ),
                 ),
-                isSigned
+                isSigned != null
                     ? showTopScreen
                         ? const Offstage()
                         : const Avatar()

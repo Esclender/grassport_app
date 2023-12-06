@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/models/logged_user.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
@@ -18,7 +18,11 @@ class ProfileTop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User? userData = context.watch<LoggedUser>().state;
+    UserDisplayed? userData = context.watch<LoggedUser>().state;
+
+    print('***********************************************************USER');
+    print(userData?.displayName);
+    print(userData?.photoURL);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

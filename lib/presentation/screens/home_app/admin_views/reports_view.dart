@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:grassport_app/presentation/styles/colors.dart';
 
 class ReportView extends StatelessWidget {
   @override

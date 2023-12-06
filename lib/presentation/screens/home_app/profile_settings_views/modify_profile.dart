@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/api/api_client.dart';
+import 'package:grassport_app/models/logged_user.dart';
 import 'package:grassport_app/models/user_profile.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/components/buttons.dart';
@@ -48,7 +48,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    User? userData = context.watch<LoggedUser>().state;
+    UserDisplayed? userData = context.watch<LoggedUser>().state;
 
     return Scaffold(
       appBar: AppBar(),

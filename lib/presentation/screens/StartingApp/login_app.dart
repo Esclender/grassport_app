@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:grassport_app/models/logged_user.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
@@ -17,9 +17,34 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  // Function to show "Verifique los datos" alert
+  void _showErrorAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Verifique los datos'),
+          content: Text('Por favor, ingrese un correo y clave validos.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Aceptar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  bool _areInputsValid() {
+    return _emailController.text.trim().isNotEmpty &&
+        _passwordController.text.trim().isNotEmpty;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: 300, // Specify the desired width
                         child: TextField(
                           controller: _emailController,
+                          style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
                             labelText: 'Email',
                             labelStyle: TextStyle(color: Colors.white),
@@ -76,8 +102,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: 300, // Specify the desired width
                         child: TextField(
                           controller: _passwordController,
+                          style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
-                            labelText: 'Password',
+                            labelText: 'Clave',
                             labelStyle: TextStyle(color: Colors.white),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
@@ -93,20 +120,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 16.0),
                       ElevatedButton.icon(
                         onPressed: () async {
-                          // String email = _emailController.text.trim();
-                          // String password = _passwordController.text.trim();
+                          if (_areInputsValid()) {
+                            String email = _emailController.text.trim();
+                            String password = _passwordController.text.trim();
 
-                          // try {
-                          //   UserCredential userCredential =
-                          //       await _auth.signInWithEmailAndPassword(
-                          //     email: email,
-                          //     password: password,
-                          //   );
+                            try {
+                              await loginWithCredentials(
+                                email: email,
+                                password: password,
+                                context: context,
+                              );
 
-                          //   print('User logged in: ${userCredential.user!.uid}');
-                          // } catch (e) {
-                          //   print('Login failed: $e');
-                          // }
+                              // ignore: use_build_context_synchronously
+                              Navigator.pushNamed(
+                                  context, routeAgreementLocation);
+                            } catch (e) {
+                              _showErrorAlert();
+                            }
+                          } else {
+                            // Show "Verifique los datos" alert
+                            _showErrorAlert();
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -131,12 +165,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           // Custom widget for Iniciar sesión con Google
                           InkWell(
+                            splashColor: Colors.transparent,
                             onTap: () async {
                               try {
                                 final data = await signInWithGoogle();
 
+                                UserDisplayed userData = UserDisplayed(
+                                  displayName: data.user?.displayName,
+                                  photoURL: data.user?.photoURL,
+                                );
+
                                 // ignore: use_build_context_synchronously
-                                context.read<LoggedUser>().setData(data.user);
+                                context.read<LoggedUser>().setData(userData);
                                 if (mounted) {
                                   Navigator.pushNamed(
                                       context, routeAgreementLocation);
@@ -166,6 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           InkWell(
+                            splashColor: Colors.transparent,
                             onTap: () async {
                               Navigator.pushNamed(context, routeRegister);
                             },

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:grassport_app/presentation/styles/systemThemes.dart';
+import 'package:grassport_app/services/auth_login.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -14,7 +12,6 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _apellidoController = TextEditingController();
@@ -148,10 +145,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       const SizedBox(width: 16.0),
                       // Confirmar Clave TextField
                       Expanded(
-                        child: Container(
+                        child: SizedBox(
                           child: TextField(
                             controller: _confirmarClaveController,
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                             decoration: const InputDecoration(
                               labelText: 'Confirmar Clave',
                               labelStyle: TextStyle(color: Colors.white),
@@ -217,13 +214,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
   }
 
-  void _verifyPasswordsAndRegister() {
+  void _verifyPasswordsAndRegister() async {
     String email = _emailController.text.trim();
     String password = _claveController.text.trim();
     String nombre = _nombreController.text.trim();
     String apellido = _apellidoController.text.trim();
     String numeroTlf = _numeroTlfController.text.trim();
-    String clave = _claveController.text.trim();
     String confirmarClave = _confirmarClaveController.text.trim();
 
     if (password != confirmarClave) {
@@ -236,6 +232,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       _numeroTlfController.clear();
       _claveController.clear();
       _confirmarClaveController.clear();
+
+      await registerUser(
+        email: email,
+        password: password,
+        nombre: nombre,
+        apellido: apellido,
+        numero: numeroTlf,
+      );
 
       _showSuccessDialog();
     }
@@ -274,7 +278,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Text('Alerta', style: TextStyle(color: Colors.green)),
             ],
           ),
-          content: Text(message, style: TextStyle(color: Colors.green)),
+          content: Text(message, style: const TextStyle(color: Colors.green)),
           actions: [
             TextButton(
               onPressed: () {

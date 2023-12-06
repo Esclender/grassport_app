@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grassport_app/models/logged_user.dart';
 import 'package:grassport_app/presentation/bloc/home_is_search/bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_view_selected/bloc.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
@@ -27,7 +27,7 @@ class _HomeBadgetState extends State<HomeBadget> {
   }
 
   void checkUser() async {
-    User? isUser = context.read<LoggedUser>().state;
+    UserDisplayed? isUser = context.read<LoggedUser>().state;
     setState(() {
       isSigned = isUser != null;
     });
@@ -77,7 +77,6 @@ class _HomeBadgetState extends State<HomeBadget> {
           ),
           IconButton(
             onPressed: () async {
-              print(isSigned);
               if (isSigned && selectedIcon.state != 1) {
                 // ignore: use_build_context_synchronously
                 if (selectedIcon.state != 0) Navigator.pop(context);

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/models/cancha_info.dart';
+import 'package:grassport_app/models/logged_user.dart';
+import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/components/map.dart';
 import 'package:grassport_app/presentation/components/popus/must_be_logged_pp.dart';
 import 'package:grassport_app/presentation/components/popus/succesfull_pp.dart';
 import 'package:grassport_app/presentation/components/stars_rating.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
-import 'package:grassport_app/services/auth_login.dart';
 
 // ignore: must_be_immutable
 class CanchaDetails extends StatefulWidget {
@@ -19,24 +21,10 @@ class CanchaDetails extends StatefulWidget {
 }
 
 class _CanchaDetailsState extends State<CanchaDetails> {
-  bool isUserSigned = false;
-
-  @override
-  void initState() {
-    checkLogging();
-    super.initState();
-  }
-
-  void checkLogging() async {
-    bool isLogged = await checkIfUserIsSignedIn(context);
-
-    setState(() {
-      isUserSigned = isLogged;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    UserDisplayed? isUserSigned = context.watch<LoggedUser>().state;
+
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
@@ -73,7 +61,7 @@ class _CanchaDetailsState extends State<CanchaDetails> {
               const Gap(15),
               ActionBtns(
                 dataCancha: widget.cancha,
-                isSigned: isUserSigned,
+                isSigned: isUserSigned != null,
               )
             ],
           ),

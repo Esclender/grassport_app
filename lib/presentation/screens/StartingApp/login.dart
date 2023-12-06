@@ -55,7 +55,7 @@ class _LoginState extends State<Login> {
                     final data = await signInWithGoogle();
 
                     // ignore: use_build_context_synchronously
-                    context.read<LoggedUser>().setData(data.user);
+                    //context.read<LoggedUser>().setData(data.user);
                     if (mounted) {
                       Navigator.pushNamed(context, routeAgreementLocation);
                     }
