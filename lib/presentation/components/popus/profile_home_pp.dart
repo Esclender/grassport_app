@@ -55,7 +55,6 @@ class ProfileSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userLogged = context.read<LoggedUser>();
-    final isAdmin = context.watch<IsAdmin>().state;
 
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -65,14 +64,10 @@ class ProfileSettings extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconSetting(
-            fun: isAdmin
-                ? () {
-                    Navigator.pushNamed(context, routeToAdminPanel);
-                  }
-                : () {
-                    Navigator.pushNamed(context, routeEditProfile);
-                  },
-            text: isAdmin ? "Panel administrador" : "Mi perfil",
+            fun: () {
+              Navigator.pushNamed(context, routeEditProfile);
+            },
+            text: "Mi perfil",
             icon: "assets/app_icons/profile_icon.svg",
           ),
           IconSetting(

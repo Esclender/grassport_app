@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
+import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/screens/home_app/admin_views/reports_view.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:grassport_app/presentation/styles/systemThemes.dart';
+import 'package:grassport_app/services/auth_login.dart';
 
 class AdminView extends StatefulWidget {
   const AdminView({Key? key}) : super(key: key);
@@ -20,9 +24,9 @@ class _AdminViewState extends State<AdminView> {
     double hamburgerButtonWidth = 60.0;
 
     List<Widget> _contentWidgets = [
-      Text('Dashboard Content Goes Here'),
-      Text('People Content Goes Here'),
-      Container(
+      Text(''),
+      Text(''),
+      SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: ReportView(),
@@ -123,16 +127,17 @@ class _AdminViewState extends State<AdminView> {
                         ),
                       ),
                     ),
-                    // Centered Buttons
                     Spacer(),
                     buildFloatingButton(0, leftBarWidth),
                     buildFloatingButton(1, leftBarWidth),
                     buildFloatingButton(2, leftBarWidth),
                     Spacer(),
-
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
+                      onTap: () async {
+                        Navigator.pushNamed(context, routeLogin);
+                        await logOutWithGoogle();
+                        // ignore: use_build_context_synchronously
+                        context.read<LoggedUser>().setData(null);
                       },
                       child: Container(
                         margin: const EdgeInsets.only(top: 15.0),
@@ -145,7 +150,7 @@ class _AdminViewState extends State<AdminView> {
                           ),
                         ),
                         child: const Icon(
-                          Icons.home_filled,
+                          Icons.logout,
                           color: Colors.white,
                           size: 35,
                         ),
@@ -169,11 +174,11 @@ class _AdminViewState extends State<AdminView> {
                   child: Container(
                     width: hamburgerButtonWidth,
                     height: 60.0,
-                    child: Padding(
+                    child: const Padding(
                       padding: EdgeInsets.only(top: 15.0, left: 5.0),
                       child: Icon(
                         Icons.menu_outlined,
-                        color: c9,
+                        color: Colors.white,
                         size: 35,
                       ),
                     ),

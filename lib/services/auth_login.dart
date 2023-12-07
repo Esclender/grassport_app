@@ -9,7 +9,7 @@ import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/services/save_preferens.dart';
 import 'package:grassport_app/services/session_manager.dart';
 
-Future<UserCredential> signInWithGoogle() async {
+Future<UserDisplayed> signInWithGoogle() async {
   // Trigger the authentication flow
   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -26,10 +26,18 @@ Future<UserCredential> signInWithGoogle() async {
   final auth = FirebaseAuth.instance;
   UserCredential userInfo = await auth.signInWithCredential(credential);
 
-  await ApiClient().getToken(email: userInfo.user?.email ?? '');
+  String jwtToken =
+      await ApiClient().getToken(email: userInfo.user?.email ?? '');
+
+  bool isAdmin = SessionManager.extractIsAdmin(jwtToken);
+
+  UserDisplayed userData = UserDisplayed(
+      displayName: userInfo.user?.displayName,
+      photoURL: userInfo.user?.photoURL,
+      isAdmin: isAdmin);
 
   // Once signed in, return the UserCredential
-  return userInfo;
+  return userData;
 }
 
 Future<void> logOutWithGoogle() async {
@@ -42,11 +50,9 @@ Future<void> logOutWithGoogle() async {
 Future<bool> checkIfUserIsSignedIn(BuildContext context) async {
   GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
 
-  print(
-      '/*****************************************************************************/');
-
   bool isSignedIn = await googleSignIn.isSignedIn();
 
+  print('********************************************************isLoggedUser');
   print(isSignedIn);
 
   if (isSignedIn) {
@@ -71,9 +77,6 @@ Future<bool> checkIfUserIsSignedIn(BuildContext context) async {
     final auth = FirebaseAuth.instance;
 
     final authCredencials = await auth.signInWithCredential(credential);
-
-    print('*******************************************************USER DATA');
-    print(authCredencials.user);
 
     UserDisplayed userData = UserDisplayed(
       displayName: authCredencials.user?.displayName,
@@ -145,7 +148,7 @@ Future<void> registerUser({
   }
 }
 
-Future<void> loginWithCredentials({
+Future<bool> loginWithCredentials({
   String? email,
   String? password,
   BuildContext? context,
@@ -164,4 +167,6 @@ Future<void> loginWithCredentials({
 
   context?.read<LoggedUser>().setData(userData);
   context?.read<IsAdmin>().setIsAdmin(isAdmin);
+
+  return isAdmin;
 }

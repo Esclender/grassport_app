@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:grassport_app/models/logged_user.dart';
+import 'package:grassport_app/presentation/bloc/isAdmin/bloc.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
@@ -26,14 +27,14 @@ class _LoginScreenState extends State<LoginScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Verifique los datos'),
-          content: Text('Por favor, ingrese un correo y clave validos.'),
+          title: const Text('Verifique los datos'),
+          content: const Text('Por favor, ingrese un correo y clave validos.'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Aceptar'),
+              child: const Text('Aceptar'),
             ),
           ],
         );
@@ -125,20 +126,31 @@ class _LoginScreenState extends State<LoginScreen> {
                             String password = _passwordController.text.trim();
 
                             try {
-                              await loginWithCredentials(
+                              bool isAdmin = await loginWithCredentials(
                                 email: email,
                                 password: password,
                                 context: context,
                               );
 
-                              // ignore: use_build_context_synchronously
-                              Navigator.pushNamed(
-                                  context, routeAgreementLocation);
+                              if (!isAdmin) {
+                                // ignore: use_build_context_synchronously
+                                Navigator.pushNamed(
+                                  context,
+                                  routeAgreementLocation,
+                                );
+                              } else {
+                                // ignore: use_build_context_synchronously
+                                Navigator.pushNamed(
+                                  context,
+                                  routeToAdminPanel,
+                                );
+                              }
+                              // // ignore: use_build_context_synchronously
+                              //
                             } catch (e) {
                               _showErrorAlert();
                             }
                           } else {
-                            // Show "Verifique los datos" alert
                             _showErrorAlert();
                           }
                         },
@@ -168,18 +180,22 @@ class _LoginScreenState extends State<LoginScreen> {
                             splashColor: Colors.transparent,
                             onTap: () async {
                               try {
-                                final data = await signInWithGoogle();
-
-                                UserDisplayed userData = UserDisplayed(
-                                  displayName: data.user?.displayName,
-                                  photoURL: data.user?.photoURL,
-                                );
-
+                                UserDisplayed data = await signInWithGoogle();
+                                print(
+                                    '****************************************ALL DATA USER');
                                 // ignore: use_build_context_synchronously
-                                context.read<LoggedUser>().setData(userData);
+                                context.read<LoggedUser>().setData(data);
+
                                 if (mounted) {
-                                  Navigator.pushNamed(
-                                      context, routeAgreementLocation);
+                                  print(data);
+                                  if (data.isAdmin != null &&
+                                      data.isAdmin == true) {
+                                    Navigator.pushNamed(
+                                        context, routeToAdminPanel);
+                                  } else {
+                                    Navigator.pushNamed(
+                                        context, routeAgreementLocation);
+                                  }
                                 }
                               } on Exception catch (e) {
                                 throw Exception(e);

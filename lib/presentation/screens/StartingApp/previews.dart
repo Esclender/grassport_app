@@ -133,12 +133,12 @@ class ButtonsSkipAndNext extends StatefulWidget {
 
 class _ButtonsSkipAndNextState extends State<ButtonsSkipAndNext> {
   @override
-  void initState() {
-    super.initState();
+  @protected
+  @mustCallSuper
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-    Future.delayed(const Duration(seconds: 2), () async {
-      await setIsLogged(context);
-    });
+    //setIsLogged();
   }
 
   void goToNextView(
@@ -155,11 +155,11 @@ class _ButtonsSkipAndNextState extends State<ButtonsSkipAndNext> {
     }
   }
 
-  setIsLogged(BuildContext c) async {
-    bool isGoogleLogged = await checkIfUserIsSignedIn(c);
+  setIsLogged() async {
+    bool isGoogleLogged = await checkIfUserIsSignedIn(context);
     if (!isGoogleLogged) {
       // ignore: use_build_context_synchronously
-      await checkIfUserIsSignedInJWT(c);
+      await checkIfUserIsSignedInJWT(context);
     }
   }
 
@@ -195,11 +195,12 @@ class _ButtonsSkipAndNextState extends State<ButtonsSkipAndNext> {
         ),
         TextButton(
           onPressed: () {
-            if (isLogged != null) {
-              Navigator.pushNamed(context, routeAgreementLocation);
-            } else {
-              Navigator.pushNamed(context, routeLogin);
-            }
+            Navigator.pushNamed(context, routeToAdminPanel);
+            // if (isLogged != null) {
+            //   Navigator.pushNamed(context, routeAgreementLocation);
+            // } else {
+            //   Navigator.pushNamed(context, routeLogin);
+            // }
           },
           child: Text(
             'Saltar',
