@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
+import 'package:grassport_app/presentation/screens/home_app/admin_views/admin_panel.dart';
 import 'package:grassport_app/presentation/screens/home_app/admin_views/reports_view.dart';
+import 'package:grassport_app/presentation/screens/home_app/admin_views/users_registered.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:grassport_app/presentation/styles/systemThemes.dart';
 import 'package:grassport_app/services/auth_login.dart';
@@ -24,8 +26,16 @@ class _AdminViewState extends State<AdminView> {
     double hamburgerButtonWidth = 60.0;
 
     List<Widget> _contentWidgets = [
-      Text(''),
-      Text(''),
+      SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: AdminPanelView(),
+      ),
+      SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: UserListScreen(),
+      ),
       SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -172,6 +182,7 @@ class _AdminViewState extends State<AdminView> {
                     });
                   },
                   child: Container(
+                    margin: const EdgeInsets.only(top: 18.0),
                     width: hamburgerButtonWidth,
                     height: 60.0,
                     child: const Padding(

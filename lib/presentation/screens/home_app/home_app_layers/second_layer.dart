@@ -82,6 +82,8 @@ class Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserDisplayed? userData = context.watch<LoggedUser>().state;
+
     return Padding(
       padding: const EdgeInsets.only(top: 60),
       child: GestureDetector(
@@ -99,10 +101,7 @@ class Avatar extends StatelessWidget {
             child: CircleAvatar(
               radius: 15.0,
               backgroundColor: c1,
-              child: Icon(
-                Icons.person_2_outlined,
-                color: c8,
-              ),
+              backgroundImage: NetworkImage(userData?.photoURL as String),
             ),
           ),
         ),

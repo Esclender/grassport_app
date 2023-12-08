@@ -1,10 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/models/logged_user.dart';
+import 'package:grassport_app/presentation/bloc/isAdmin/bloc.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/bloc/startAppBloc/blocs.dart';
@@ -133,12 +132,9 @@ class ButtonsSkipAndNext extends StatefulWidget {
 
 class _ButtonsSkipAndNextState extends State<ButtonsSkipAndNext> {
   @override
-  @protected
-  @mustCallSuper
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    //setIsLogged();
+  void initState() {
+    setIsLogged();
+    super.initState();
   }
 
   void goToNextView(
@@ -167,6 +163,7 @@ class _ButtonsSkipAndNextState extends State<ButtonsSkipAndNext> {
   Widget build(BuildContext context) {
     final currentSwiperIndex = context.watch<NextSwipers>();
     UserDisplayed? isLogged = context.watch<LoggedUser>().state;
+    bool isAdmin = context.watch<IsAdmin>().state;
 
     return Column(
       children: [
@@ -195,12 +192,15 @@ class _ButtonsSkipAndNextState extends State<ButtonsSkipAndNext> {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, routeToAdminPanel);
-            // if (isLogged != null) {
-            //   Navigator.pushNamed(context, routeAgreementLocation);
-            // } else {
-            //   Navigator.pushNamed(context, routeLogin);
-            // }
+            if (!isAdmin) {
+              if (isLogged != null) {
+                Navigator.pushNamed(context, routeAgreementLocation);
+              } else {
+                Navigator.pushNamed(context, routeLogin);
+              }
+            } else {
+              Navigator.pushNamed(context, routeToAdminPanel);
+            }
           },
           child: Text(
             'Saltar',
