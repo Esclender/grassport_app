@@ -2,25 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/api/api_client.dart';
+import 'package:grassport_app/models/report_model.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-
-class ReportInfo {
-  final String userName;
-  final String description;
-  final String imageUrl;
-  final String email;
-  String number;
-
-  ReportInfo({
-    required this.userName,
-    required this.description,
-    required this.imageUrl,
-    required this.email,
-    this.number = '',
-  });
-}
 
 class ReportView extends StatefulWidget {
   const ReportView({super.key});
@@ -31,35 +17,36 @@ class ReportView extends StatefulWidget {
 
 class _ReportViewState extends State<ReportView> {
   ReportInfo? selectedReport;
+  final ApiClient _myClient = ApiClient();
 
-  List<ReportInfo> reportData = [
-    ReportInfo(
-      userName: 'User 1',
-      email: 'elesclenderlugo@gmail.com',
-      description:
-          "Modify the code below in order for the cards in the carrousel to contain an Icon size big and below of the icon must be a a title and description, when a card is selected below must appear big card with border radius, a white background that contains and Image whic url is getted from the card selected, the content of each one of the cards is gonna be getted from a class named ReportInfo, that class will contain userName, email, reportImgURL and description. In the view of the selected card below must appear the big card with image the user name and description but in the carrousel cards just appear the username and description with an icon above",
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/1701797301754.jpg?alt=media&token=82a5e285-4c9c-493f-8d35-4c65febfd967',
-    ),
-    ReportInfo(
-      userName: 'User 2',
-      description: 'Description for Card 2',
-      number: '928590695',
-      email: 'elesclenderlugo@gmail.com',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/1701797399519.jpg?alt=media&token=3e1523b4-dc2d-4129-9b41-573a9d432eb2',
-    ),
-    ReportInfo(
-      userName: 'User 3',
-      email: 'elesclenderlugo@gmail.com',
-      description: 'Description for Card 3',
-      imageUrl:
-          'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/1701797301754.jpg?alt=media&token=82a5e285-4c9c-493f-8d35-4c65febfd967',
-    ),
-  ];
+  List<ReportInfo> reportData = [];
+
+  @override
+  void initState() {
+    setReportData();
+
+    super.initState();
+  }
+
+  void setReportData() async {
+    List<ReportInfo> data = await _myClient.getAllReports();
+
+    setState(() {
+      reportData = data;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (reportData.isEmpty) {
+      return const Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(

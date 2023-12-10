@@ -1,26 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:grassport_app/models/bar_graphic_model.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
-class _BarData {
-  const _BarData(this.color, this.value, this.shadowValue, this.name,
-      {this.imageURL =
-          'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/profile-ddefault.png?alt=media&token=36401350-8ef2-4483-b277-c3a17461e780'});
-  final Color color;
-  final double value;
-  final double shadowValue;
-  final String name;
-  final String imageURL;
-}
-
+// ignore: must_be_immutable
 class BarGraphic extends StatefulWidget {
-  BarGraphic({Key? key}) : super(key: key);
+  List<BarData> dataList;
+  double max;
 
-  final dataList = [
-    _BarData(c5, 18, 18, 'Esclender'),
-    _BarData(c13, 17, 8, 'Esclender'),
-    _BarData(c2, 10, 15, 'Esclender'),
-  ];
+  BarGraphic({
+    Key? key,
+    required this.dataList,
+    required this.max,
+  }) : super(key: key);
 
   @override
   State<BarGraphic> createState() => _BarGraphicState();
@@ -36,7 +28,7 @@ class _BarGraphicState extends State<BarGraphic> {
       appBar: AppBar(
         title: Text(
           'Top usuarios',
-          style: TextStyle(color: c1),
+          style: TextStyle(color: c1, fontWeight: FontWeight.bold),
         ),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
@@ -112,10 +104,9 @@ class _BarGraphicState extends State<BarGraphic> {
                     index,
                     data.color,
                     data.value,
-                    data.shadowValue,
                   );
                 }).toList(),
-                maxY: 50,
+                maxY: widget.max as double,
                 barTouchData: BarTouchData(
                   enabled: true,
                   handleBuiltInTouches: false,
@@ -128,7 +119,7 @@ class _BarGraphicState extends State<BarGraphic> {
                       int rodIndex,
                     ) {
                       return BarTooltipItem(
-                        'Esclender',
+                        "${widget.dataList[groupIndex].name} ${widget.dataList[groupIndex].value.toInt()}",
                         TextStyle(
                           fontWeight: FontWeight.bold,
                           color: rod.color,
@@ -174,7 +165,6 @@ class _BarGraphicState extends State<BarGraphic> {
     int x,
     Color color,
     double value,
-    double shadowValue,
   ) {
     return BarChartGroupData(x: x, barRods: [
       BarChartRodData(

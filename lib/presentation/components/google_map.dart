@@ -21,21 +21,21 @@ class GoogleMapBig extends StatefulWidget {
 class _GoogleMapBigState extends State<GoogleMapBig> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
-  BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
   LatLng? currentLocation;
   Set<Marker> markersNearCanchas = {};
+  late Marker myPosicion = Marker(markerId: MarkerId('Posicion'));
 
   @override
   void initState() {
     if (widget.isGps) {
       checkPermissions();
-      _liveLocation();
+      //_liveLocation();
     } else {
       _definedLocation();
+      setMakers();
     }
 
-    addCustomIcon();
-    setMakers();
+    setMyPosicion();
     super.initState();
   }
 
@@ -45,6 +45,22 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
       final GoogleMapController controller = await _controller.future;
       controller.animateCamera(CameraUpdate.newLatLng(latLng));
     }
+  }
+
+  void setMyPosicion({LatLng? posLocation}) async {
+    BitmapDescriptor markerIcon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(),
+      "assets/app_icons/Current_Location_Marker.png",
+    );
+
+    setState(() {
+      myPosicion = Marker(
+        markerId: const MarkerId("Posicion"),
+        position: LatLng(currentLocation?.latitude as double,
+            currentLocation?.longitude as double),
+        icon: markerIcon,
+      );
+    });
   }
 
   void setMakers() async {
@@ -77,27 +93,16 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
   void checkPermissions() async {
     BuildContext c = context;
     var location = await checkIsGpsEnabled(context: c);
+
     LatLng data = LatLng(location.latitude, location.longitude);
     // ignore: use_build_context_synchronously
     var loc = c.read<DeviceGpsLocation>();
     loc.setGpsLocation(data);
+    setMyPosicion();
 
     setState(() {
       currentLocation = data;
     });
-  }
-
-  void addCustomIcon() {
-    BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(),
-      "assets/app_icons/Current_Location_Marker.png",
-    ).then(
-      (icon) {
-        setState(() {
-          markerIcon = icon;
-        });
-      },
-    );
   }
 
   //LISTEN
@@ -156,14 +161,9 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
                   _controller.complete(controller);
                 },
                 markers: {
-                  Marker(
-                    markerId: const MarkerId("Posicion"),
-                    position: LatLng(currentLocation?.latitude as double,
-                        currentLocation?.longitude as double),
-                    icon: markerIcon,
-                  ),
+                  myPosicion,
                   ...markers,
-                  ...markersNearCanchas
+                  ...markersNearCanchas,
                 },
               )
             : const Center(

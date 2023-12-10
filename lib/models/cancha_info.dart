@@ -6,6 +6,7 @@ class CanchaInfo {
   int rating;
   String address;
   bool isOpen;
+  String photoURL;
 
   CanchaInfo({
     required this.nombre,
@@ -13,6 +14,7 @@ class CanchaInfo {
     this.rating = 0,
     required this.isOpen,
     required this.location,
+    this.photoURL = '',
   });
 
   Map getObjectForFavorites() {
@@ -28,12 +30,14 @@ class CanchaInfo {
 
     for (Map cancha in body['response']) {
       CanchaInfo canchaInfo = CanchaInfo(
-          nombre: cancha['name'],
-          address: cancha['address'],
-          rating: cancha['rating'],
-          isOpen: cancha['isOpen'],
-          location: LatLng(
-              cancha['location']['latitude'], cancha['location']['longitude']));
+        nombre: cancha['name'],
+        photoURL: cancha['photoURL'],
+        address: cancha['address'],
+        rating: cancha['rating'],
+        isOpen: cancha['isOpen'] ?? false,
+        location: LatLng(
+            cancha['location']['latitude'], cancha['location']['longitude']),
+      );
       canchas.add(canchaInfo);
     }
 
@@ -45,11 +49,12 @@ class CanchaInfo {
 
     for (Map cancha in body['response']) {
       CanchaInfo canchaInfo = CanchaInfo(
-          nombre: cancha['locality'],
-          address: cancha['street'],
-          isOpen: true,
-          location:
-              LatLng(cancha['location']['lat'], cancha['location']['lng']));
+        nombre: cancha['locality'],
+        photoURL: cancha['photoURL'],
+        address: cancha['street'],
+        isOpen: true,
+        location: LatLng(cancha['location']['lat'], cancha['location']['lng']),
+      );
       canchas.add(canchaInfo);
     }
 

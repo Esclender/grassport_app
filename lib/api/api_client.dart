@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:grassport_app/models/admin_panel_model.dart';
+import 'package:grassport_app/models/report_model.dart';
+import 'package:grassport_app/models/user_registered_model.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:grassport_app/models/cancha_info.dart';
 import 'package:grassport_app/models/location_descrp.dart';
@@ -34,6 +37,11 @@ class ApiClient {
   static const String searchCanchasPath = "/ubicacion/geocoding/canchas";
   static const String addressSearchPath = "/ubicacion/geocoding/address";
   static const String userHistoryLocation = "/ubicacion/user-history";
+
+  //ADMINS
+  static const String getAllReportsPath = "/admins/report";
+  static const String getUsersListPath = "/admins/usuarios";
+  static const String adminPanelPath = "/admins/panel";
 
   reverseCode({lat, lon}) async {
     try {
@@ -86,10 +94,14 @@ class ApiClient {
     }
   }
 
-  getToken({email}) async {
+  getToken({email, nombre, photoURL}) async {
     try {
       final uri = Uri.http(API_URL, getTokenPath);
-      final response = await client.post(uri, body: {'email': email});
+      final response = await client.post(uri, body: {
+        'email': email,
+        'nombre': nombre,
+        'photoURL': photoURL,
+      });
 
       Map data = jsonDecode(response.body);
       await Cookies().save(key: 'userToken', value: data['token']);
@@ -181,7 +193,9 @@ class ApiClient {
       String isToken = await Cookies().load(key: 'userToken');
       final uri = Uri.http(API_URL, userHistoryLocation);
 
-      await client.post(
+      print(lugar?.getObject());
+
+      final response = await client.post(
         uri,
         body: json.encode(
           {"data": lugar?.getObject()},
@@ -192,6 +206,8 @@ class ApiClient {
           "Accept": "application/json",
         },
       );
+      print('**********************************************LOCATION RESPONSE');
+      print(response.body);
     } catch (e) {
       throw Exception(e);
     }
@@ -220,7 +236,7 @@ class ApiClient {
       String token = await Cookies().load(key: 'userToken');
       final uri = Uri.http(API_URL, saveFavoritesPath);
 
-      await client.post(
+      final response = await client.post(
         uri,
         body: json.encode(
           {"data": lugar?.getObjectForFavorites()},
@@ -231,6 +247,8 @@ class ApiClient {
           "Accept": "application/json",
         },
       );
+      print('/***************************************SAVED FAVORITE');
+      print(response.body);
     } catch (e) {
       throw Exception(e);
     }
@@ -249,6 +267,9 @@ class ApiClient {
       );
 
       final dataNoMapped = jsonDecode(userFavorites.body);
+
+      print('/*************************************** FAVORITE');
+      print(dataNoMapped);
       List<CanchaInfo> favoritos =
           CanchaInfo.transformResponseInCanchas(dataNoMapped);
 
@@ -280,6 +301,93 @@ class ApiClient {
       request.fields['descripcion'] = description;
 
       await request.send();
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+  //ADMIN ENPOINTS
+
+  getAdminPanel() async {
+    try {
+      String token = await Cookies().load(key: 'userToken');
+      final uri = Uri.http(API_URL, adminPanelPath);
+
+      final panelData = await client.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      final docJson = jsonDecode(panelData.body);
+
+      AdminPanel panel = AdminPanel.transformBody(docJson);
+
+      return panel;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  getAllReports() async {
+    try {
+      String token = await Cookies().load(key: 'userToken');
+      final uri = Uri.http(API_URL, getAllReportsPath);
+
+      final listOfReports = await client.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      final docJson = jsonDecode(listOfReports.body);
+
+      List<ReportInfo> reports = ReportInfo.transformBodyArray(docJson);
+
+      return reports;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  getUsersRegisteredList() async {
+    try {
+      String token = await Cookies().load(key: 'userToken');
+      final uri = Uri.http(API_URL, getUsersListPath);
+
+      final listOfUsers = await client.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      final docJson = jsonDecode(listOfUsers.body);
+
+      List<UsersInApp> listUsers =
+          UsersInApp.transformBodyArray(docJson['response']['lista_usuarios']);
+
+      return listUsers;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  getTopUsersRegistered() async {
+    try {
+      String token = await Cookies().load(key: 'userToken');
+      final uri = Uri.http(API_URL, getUsersListPath);
+
+      final listOfUsers = await client.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      final docJson = jsonDecode(listOfUsers.body);
+
+      List<UsersInApp> listUsers =
+          UsersInApp.transformBodyArray(docJson['response']['topIngresos']);
+
+      return listUsers;
     } catch (e) {
       throw Exception(e);
     }

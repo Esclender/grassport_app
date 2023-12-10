@@ -21,13 +21,14 @@ class LocationTag extends StatelessWidget {
   final String location;
   final bool isHomeSearch;
 
-  const LocationTag(
-      {super.key,
-      required this.leading,
-      required this.department,
-      required this.location,
-      required this.latLng,
-      this.isHomeSearch = false});
+  const LocationTag({
+    super.key,
+    required this.leading,
+    required this.department,
+    required this.location,
+    required this.latLng,
+    this.isHomeSearch = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +53,6 @@ class LocationTag extends StatelessWidget {
             // ignore: use_build_context_synchronously
             Navigator.pushNamed(context, routeCharge);
           } else {
-            print(
-                '*****************************************************************SEARCHED CANCHAS');
-            print(latLng);
-
             CanchaInfo data = CanchaInfo(
               nombre: department,
               address: location,

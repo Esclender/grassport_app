@@ -1,64 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/api/api_client.dart';
+import 'package:grassport_app/models/user_registered_model.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
-class UsersInApp {
-  final String nombre;
-  final String email;
-  final String numero;
-  final String fecha_ultimo_ingreso;
-  final String fecha_creacion;
-  final int conteo_ingresos;
-  final String photoURL;
+class UserListScreen extends StatefulWidget {
+  const UserListScreen({Key? key}) : super(key: key);
 
-  UsersInApp({
-    required this.nombre,
-    required this.email,
-    required this.numero,
-    required this.fecha_ultimo_ingreso,
-    required this.fecha_creacion,
-    required this.conteo_ingresos,
-    this.photoURL =
-        'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/profile-ddefault.png?alt=media&token=36401350-8ef2-4483-b277-c3a17461e780',
-  });
+  @override
+  State<UserListScreen> createState() => _UserListScreenState();
 }
 
-class UserListScreen extends StatelessWidget {
-  final List<UsersInApp> userList = [
-    UsersInApp(
-      nombre: 'User 1',
-      email: 'user1@example.com',
-      numero: '123456789',
-      fecha_ultimo_ingreso: '2022-12-07',
-      fecha_creacion: '2022-12-07',
-      conteo_ingresos: 5,
-    ),
-    // Add more UsersInApp objects as needed
-  ];
+class _UserListScreenState extends State<UserListScreen> {
+  List<UsersInApp> userList = [];
+  List<UsersInApp> topUsersList = [];
 
-  final List<UsersInApp> topUsersList = [
-    UsersInApp(
-      nombre: 'Esclender Lugo',
-      email: 'user1@example.com',
-      numero: '123456789',
-      fecha_ultimo_ingreso: '2022-12-07',
-      fecha_creacion: '2022-12-07',
-      conteo_ingresos: 25,
-    ),
-    UsersInApp(
-      nombre: 'Esclender Lugo',
-      email: 'user1@example.com',
-      numero: '123456789',
-      fecha_ultimo_ingreso: '2022-12-07',
-      fecha_creacion: '2022-12-07',
-      conteo_ingresos: 25,
-    ),
-  ];
+  final ApiClient _myClient = ApiClient();
 
-  UserListScreen({Key? key}) : super(key: key);
+  @override
+  void initState() {
+    setUserList();
+    setTopUsers();
+
+    super.initState();
+  }
+
+  void setUserList() async {
+    List<UsersInApp> data = await _myClient.getUsersRegisteredList();
+
+    setState(() {
+      userList = data;
+    });
+  }
+
+  void setTopUsers() async {
+    List<UsersInApp> data = await _myClient.getTopUsersRegistered();
+
+    setState(() {
+      topUsersList = data;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (userList.isEmpty || topUsersList.isEmpty) {
+      return const Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(

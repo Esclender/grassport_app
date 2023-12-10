@@ -152,11 +152,7 @@ class _ButtonsSkipAndNextState extends State<ButtonsSkipAndNext> {
   }
 
   setIsLogged() async {
-    bool isGoogleLogged = await checkIfUserIsSignedIn(context);
-    if (!isGoogleLogged) {
-      // ignore: use_build_context_synchronously
-      await checkIfUserIsSignedInJWT(context);
-    }
+    await checkIfUserIsSignedInJWT(context);
   }
 
   @override
@@ -192,6 +188,9 @@ class _ButtonsSkipAndNextState extends State<ButtonsSkipAndNext> {
         ),
         TextButton(
           onPressed: () {
+            print(
+                '***********************************************CHECKING LOGGED USER');
+            print(isLogged);
             if (!isAdmin) {
               if (isLogged != null) {
                 Navigator.pushNamed(context, routeAgreementLocation);

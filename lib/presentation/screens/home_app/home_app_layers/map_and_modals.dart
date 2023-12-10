@@ -45,6 +45,10 @@ class _BottomModalState extends State<BottomModal> {
   Widget build(BuildContext context) {
     var nearCanchas = context.watch<NearCanchas>();
 
+    print(
+        '*****************************************************NEAR CANCHAS LISTADO');
+    print(nearCanchas);
+
     return DraggableScrollableSheet(
       initialChildSize: 0.15,
       minChildSize: 0.15,
@@ -86,11 +90,13 @@ class _BottomModalState extends State<BottomModal> {
 // ignore: must_be_immutable
 class ListCanchas extends StatelessWidget {
   ScrollController scrollController;
-
   List canchasArray;
 
-  ListCanchas(
-      {super.key, required this.scrollController, required this.canchasArray});
+  ListCanchas({
+    super.key,
+    required this.scrollController,
+    required this.canchasArray,
+  });
 
   @override
   Widget build(BuildContext context) {

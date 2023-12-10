@@ -13,6 +13,14 @@ class NearCanchas extends Cubit<List<CanchaInfo>> {
     emit([...data]);
   }
 
+  setDefintive(data) {
+    emit(data);
+
+    print('**********************************************CANCHAS');
+
+    print(state);
+  }
+
   Future<Set<Marker>> getNearCanchas({LatLng? currentLocation}) async {
     List<CanchaInfo> dataCanchas = await ApiClient().getNearLocations(
         lat: currentLocation?.latitude, lon: currentLocation?.longitude);

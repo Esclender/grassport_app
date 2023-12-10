@@ -85,9 +85,14 @@ class DetailsTitles extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              data.nombre,
-              style: TextStyle(color: c9, fontSize: 20),
+            SizedBox(
+              width: 200,
+              child: Text(
+                data.nombre,
+                style: TextStyle(color: c9, fontSize: 20),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
             ),
             StarsRating(
               canchaUpdate: () {},

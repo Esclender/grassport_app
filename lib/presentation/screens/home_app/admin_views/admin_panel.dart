@@ -1,47 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:grassport_app/api/api_client.dart';
+import 'package:grassport_app/models/admin_panel_model.dart';
+import 'package:grassport_app/models/bar_graphic_model.dart';
 import 'package:grassport_app/presentation/components/bars_graphic.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
-
-class AdminPanel {
-  final String adminName;
-  final String adminEmail;
-  final String photoURL;
-  final int totalUsers;
-  final int totalReports;
-  final int totalReportsOfWeek;
-
-  AdminPanel({
-    required this.adminName,
-    required this.adminEmail,
-    required this.photoURL,
-    required this.totalUsers,
-    required this.totalReports,
-    required this.totalReportsOfWeek,
-  });
-}
 
 class AdminPanelView extends StatefulWidget {
   const AdminPanelView({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _AdminPanelViewState createState() => _AdminPanelViewState();
 }
 
 class _AdminPanelViewState extends State<AdminPanelView> {
-  final AdminPanel adminPanel = AdminPanel(
-    adminName: 'Esclender',
-    adminEmail: 'admin@example.com',
-    photoURL:
-        'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/profile-ddefault.png?alt=media&token=36401350-8ef2-4483-b277-c3a17461e780', // Replace with actual URL
-    totalUsers: 100,
-    totalReports: 500,
-    totalReportsOfWeek: 50,
-  );
-
+  AdminPanel? adminPanel;
   late PageController _pageController;
+
+  final ApiClient _myClient = ApiClient();
 
   @override
   void initState() {
+    setDataPanel();
+
     super.initState();
     _pageController = PageController();
   }
@@ -52,11 +33,31 @@ class _AdminPanelViewState extends State<AdminPanelView> {
     super.dispose();
   }
 
+  void setDataPanel() async {
+    AdminPanel data = await _myClient.getAdminPanel();
+
+    setState(() {
+      adminPanel = data;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (adminPanel == null) {
+      return const Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     List<Widget> _widgets = [
       _buildWrap(),
-      BarGraphic(),
+      BarGraphic(
+        dataList: adminPanel?.topUsers as List<BarData>,
+        max: adminPanel?.maxPlusTen as double,
+      ),
     ];
 
     return Scaffold(
@@ -79,11 +80,11 @@ class _AdminPanelViewState extends State<AdminPanelView> {
               children: [
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage: NetworkImage(adminPanel.photoURL),
+                  backgroundImage: NetworkImage(adminPanel?.photoURL as String),
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Bienvenido ${adminPanel.adminName}',
+                  'Bienvenido ${adminPanel?.adminName as String}',
                   style: TextStyle(
                       fontSize: 18, fontWeight: FontWeight.bold, color: c1),
                 ),
@@ -118,17 +119,17 @@ class _AdminPanelViewState extends State<AdminPanelView> {
           _buildCircularStat(
             context,
             'Total usuarios',
-            adminPanel.totalUsers,
+            adminPanel?.totalUsers as int,
           ),
           _buildCircularStat(
             context,
             'Total Reportes',
-            adminPanel.totalReports,
+            adminPanel?.totalReports as int,
           ),
           _buildCircularStat(
             context,
             'Reportes \nde la semana',
-            adminPanel.totalReportsOfWeek,
+            adminPanel?.totalReportsOfWeek as int,
           ),
         ],
       ),
