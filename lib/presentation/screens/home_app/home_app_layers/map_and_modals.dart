@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/presentation/bloc/nearCanchas/blocs.dart';
 import 'package:grassport_app/presentation/components/cancha_card.dart';
+import 'package:grassport_app/presentation/components/focus_my_location.dart';
 import 'package:grassport_app/presentation/components/google_map.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
@@ -21,6 +22,11 @@ class _MainAppHomeLayerState extends State<MainAppHomeLayer> {
         GoogleMapBig(
           isGps: false,
         ),
+        Positioned(
+          bottom: MediaQuery.of(context).size.height * 0.18,
+          right: 10,
+          child: const MyLocationFocusButton(),
+        ),
         const BottomModal(),
       ],
     );
@@ -38,6 +44,10 @@ class _BottomModalState extends State<BottomModal> {
   @override
   Widget build(BuildContext context) {
     var nearCanchas = context.watch<NearCanchas>();
+
+    print(
+        '*****************************************************NEAR CANCHAS LISTADO');
+    print(nearCanchas);
 
     return DraggableScrollableSheet(
       initialChildSize: 0.15,
@@ -80,11 +90,13 @@ class _BottomModalState extends State<BottomModal> {
 // ignore: must_be_immutable
 class ListCanchas extends StatelessWidget {
   ScrollController scrollController;
-
   List canchasArray;
 
-  ListCanchas(
-      {super.key, required this.scrollController, required this.canchasArray});
+  ListCanchas({
+    super.key,
+    required this.scrollController,
+    required this.canchasArray,
+  });
 
   @override
   Widget build(BuildContext context) {

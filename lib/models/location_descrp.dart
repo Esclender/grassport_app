@@ -21,8 +21,7 @@ class LocationDesc {
     return {
       "location": {"lat": location['lat'], "lng": location['lng']},
       "locality": locality,
-      "street": street,
-      "leading": leading
+      "street": street
     };
   }
 }

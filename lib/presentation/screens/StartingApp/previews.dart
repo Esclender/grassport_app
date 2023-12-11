@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/models/logged_user.dart';
+import 'package:grassport_app/presentation/bloc/isAdmin/bloc.dart';
+import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/bloc/startAppBloc/blocs.dart';
 import 'package:grassport_app/services/auth_login.dart';
@@ -121,30 +124,43 @@ class SwiperInfo extends StatelessWidget {
   }
 }
 
-class ButtonsSkipAndNext extends StatelessWidget {
+class ButtonsSkipAndNext extends StatefulWidget {
   const ButtonsSkipAndNext({super.key});
 
-  void goToNextView(NextSwipers currentSwiperIndex, BuildContext c) async {
-    bool isLogged = await checkIfUserIsSignedIn(c);
+  @override
+  State<ButtonsSkipAndNext> createState() => _ButtonsSkipAndNextState();
+}
 
+class _ButtonsSkipAndNextState extends State<ButtonsSkipAndNext> {
+  @override
+  void initState() {
+    setIsLogged();
+    super.initState();
+  }
+
+  void goToNextView(
+      NextSwipers currentSwiperIndex, BuildContext c, bool isLogged) {
     if (currentSwiperIndex.state == 2) {
       if (isLogged) {
-        // ignore: use_build_context_synchronously
         Navigator.pushNamed(c, routeAgreementLocation);
       } else {
-        // ignore: use_build_context_synchronously
         Navigator.pushNamed(c, routeLogin);
       }
     } else {
       currentSwiperIndex.incrementIndex();
-      // ignore: use_build_context_synchronously
       Navigator.pushNamed(c, routePreviews);
     }
+  }
+
+  setIsLogged() async {
+    await checkIfUserIsSignedInJWT(context);
   }
 
   @override
   Widget build(BuildContext context) {
     final currentSwiperIndex = context.watch<NextSwipers>();
+    UserDisplayed? isLogged = context.watch<LoggedUser>().state;
+    bool isAdmin = context.watch<IsAdmin>().state;
 
     return Column(
       children: [
@@ -157,7 +173,7 @@ class ButtonsSkipAndNext extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(15)),
               )),
           onPressed: () {
-            goToNextView(currentSwiperIndex, context);
+            goToNextView(currentSwiperIndex, context, isLogged != null);
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -172,14 +188,18 @@ class ButtonsSkipAndNext extends StatelessWidget {
           ),
         ),
         TextButton(
-          onPressed: () async {
-            bool isLogged = await checkIfUserIsSignedIn(context);
-            if (isLogged) {
-              // ignore: use_build_context_synchronously
-              Navigator.pushNamed(context, routeAgreementLocation);
+          onPressed: () {
+            print(
+                '***********************************************CHECKING LOGGED USER');
+            print(isLogged);
+            if (!isAdmin) {
+              if (isLogged != null) {
+                Navigator.pushNamed(context, routeAgreementLocation);
+              } else {
+                Navigator.pushNamed(context, routeLogin);
+              }
             } else {
-              // ignore: use_build_context_synchronously
-              Navigator.pushNamed(context, routeLogin);
+              Navigator.pushNamed(context, routeToAdminPanel);
             }
           },
           child: Text(

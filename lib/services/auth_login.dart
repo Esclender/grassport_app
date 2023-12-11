@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:grassport_app/api/api_client.dart';
+import 'package:grassport_app/models/logged_user.dart';
+import 'package:grassport_app/presentation/bloc/isAdmin/bloc.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
+import 'package:grassport_app/services/save_preferens.dart';
+import 'package:grassport_app/services/session_manager.dart';
 
-Future<UserCredential> signInWithGoogle() async {
+Future<UserDisplayed> signInWithGoogle(BuildContext context) async {
   // Trigger the authentication flow
   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -22,52 +26,105 @@ Future<UserCredential> signInWithGoogle() async {
   final auth = FirebaseAuth.instance;
   UserCredential userInfo = await auth.signInWithCredential(credential);
 
-  await ApiClient().getToken(email: userInfo.user?.email ?? '');
+  String jwtToken = await ApiClient().getToken(
+    email: userInfo.user?.email ?? '',
+    nombre: userInfo.user?.displayName ?? '',
+    photoURL: userInfo.user?.photoURL ?? '',
+  );
+
+  bool isAdmin = SessionManager.extractIsAdmin(jwtToken);
+
+  UserDisplayed userData = UserDisplayed(
+    displayName: userInfo.user?.displayName,
+    photoURL: userInfo.user?.photoURL,
+    isAdmin: isAdmin,
+  );
+
+  if (isAdmin) {
+    userData.account = "admin";
+  }
+
+  // ignore: use_build_context_synchronously
+  context.read<LoggedUser>().setData(userData);
 
   // Once signed in, return the UserCredential
-  return userInfo;
+  return userData;
 }
 
 Future<void> logOutWithGoogle() async {
   // Trigger the authentication flow
   final GoogleSignIn googleUser = GoogleSignIn();
+  await Cookies().save(key: 'userToken', value: '');
   await googleUser.signOut();
 }
 
-Future<bool> checkIfUserIsSignedIn(BuildContext context) async {
-  GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
+Future<bool> checkIfUserIsSignedInJWT(BuildContext context) async {
+  String jwtToken = await Cookies().load(key: 'userToken');
 
-  bool isSignedIn = await googleSignIn.isSignedIn();
-
-  if (isSignedIn) {
-    try {
-      await googleSignIn.signInSilently();
-    } catch (error) {
-      print('Error signing in silently: $error');
-    }
-
-    GoogleSignInAccount? googleUser = googleSignIn.currentUser;
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    final auth = FirebaseAuth.instance;
-
-    final authCredencials = await auth.signInWithCredential(credential);
-
-    await ApiClient().getToken(email: authCredencials.user?.email ?? '');
-
-    // ignore: use_build_context_synchronously
-    context.read<LoggedUser>().setData(authCredencials.user);
-    return true;
+  if (SessionManager.isTokenExpired(jwtToken)) {
+    return false;
   }
 
-  return false;
+  bool isAdmin = SessionManager.extractIsAdmin(jwtToken);
+  String nombre = SessionManager.extractNombre(jwtToken);
+  String photoURL = SessionManager.extractPhotoURL(jwtToken);
+
+  UserDisplayed userData = UserDisplayed(
+    displayName: nombre,
+    photoURL: photoURL,
+  );
+
+  // ignore: use_build_context_synchronously
+  context.read<LoggedUser>().setData(userData);
+  // ignore: use_build_context_synchronously
+  context.read<IsAdmin>().setIsAdmin(isAdmin);
+
+  return true;
+}
+
+Future<void> registerUser({
+  String? email,
+  String? password,
+  String? nombre,
+  String? apellido,
+  String? numero,
+}) async {
+  try {
+    Map datosUser = {
+      'email': email,
+      'clave': password,
+      'nombre': nombre,
+      'apellido': apellido,
+      'numero': numero
+    };
+
+    await ApiClient().registerUser(datosUser);
+  } catch (e) {
+    print('Error registering user: $e');
+  }
+}
+
+Future<bool> loginWithCredentials({
+  String? email,
+  String? password,
+  BuildContext? context,
+}) async {
+  final data = await ApiClient().login(
+    email: email,
+    clave: password,
+  );
+
+  bool isAdmin = SessionManager.extractIsAdmin(data);
+  String nombre = SessionManager.extractNombre(data);
+  String photoURL = SessionManager.extractPhotoURL(data);
+
+  UserDisplayed userData = UserDisplayed(
+    displayName: nombre,
+    photoURL: photoURL,
+  );
+
+  context?.read<LoggedUser>().setData(userData);
+  context?.read<IsAdmin>().setIsAdmin(isAdmin);
+
+  return isAdmin;
 }

@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/models/logged_user.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
-import 'package:grassport_app/presentation/components/popus/canchas_filters.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:grassport_app/services/auth_login.dart';
@@ -19,31 +18,28 @@ class ProfileTop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User? userData = context.watch<LoggedUser>().state;
+    UserDisplayed? userData = context.watch<LoggedUser>().state;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        RichText(
-          maxLines: 1,
-          text: TextSpan(
-            text: 'Hola ',
-            style: TextStyle(color: c1, fontSize: 18, fontFamily: "blinker"),
-            children: <TextSpan>[
-              TextSpan(
-                text: userData?.displayName ?? 'Guest',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
+        SizedBox(
+          width: 150, // Set the desired width
+          child: RichText(
+            maxLines: 1,
+            text: TextSpan(
+              text: 'Hola ',
+              style: TextStyle(color: c1, fontSize: 18, fontFamily: "blinker"),
+              children: <TextSpan>[
+                TextSpan(
+                  text: userData?.displayName, //
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
-        userData != null
-            ? CircleAvatar(
-                backgroundImage: NetworkImage(userData.photoURL as String),
-              )
-            : CircleAvatar(
-                backgroundColor: c1,
-              )
       ],
     );
   }
@@ -69,15 +65,6 @@ class ProfileSettings extends StatelessWidget {
             },
             text: "Mi perfil",
             icon: "assets/app_icons/profile_icon.svg",
-          ),
-          IconSetting(
-            fun: () {
-              Navigator.of(context).pop();
-              showDialog(
-                  context: context, builder: (context) => const FliterPopup());
-            },
-            text: "Filtros",
-            icon: "assets/app_icons/filter_icon.svg",
           ),
           IconSetting(
             fun: () {

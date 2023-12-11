@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grassport_app/presentation/bloc/google_map_markers/bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_is_search/bloc.dart';
 import 'package:grassport_app/presentation/bloc/locations/blocs.dart';
 import 'package:grassport_app/presentation/components/location_search_list.dart';
@@ -32,47 +33,33 @@ class _HomeSearchListState extends State<HomeSearchList> {
   }
 }
 
-class HomeList extends StatefulWidget {
+class HomeList extends StatelessWidget {
   const HomeList({super.key});
 
   @override
-  State<HomeList> createState() => _HomeListState();
-}
-
-class _HomeListState extends State<HomeList> {
-  late List registros = [];
-
-  // @override
-  // void initState() {
-  //   setRegistros();
-  //   super.initState();
-  // }
-
-  void setRegistros() {
-    setState(() async {
-      registros = await context.watch<SelectLocation>().getRegistros();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    IsSearch showTopScreen = context.watch<IsSearch>();
-    final locationData = context.read<SelectLocation>();
+    return BlocBuilder<CanchasByInout, List>(
+      builder: (context, registros) {
+        final showTopScreen = context.watch<IsSearch>().state;
+        final locationData = context.read<SelectLocation>();
 
-    return Opacity(
-      opacity: showTopScreen.state ? 1.0 : 0.0,
-      child: Material(
-        child: AnimatedContainer(
-          margin: const EdgeInsets.only(top: 100, bottom: 100),
-          height: MediaQuery.of(context).size.height * .70,
-          duration: const Duration(milliseconds: 2000),
-          color: c1,
-          child: Searching(
-            historyData: locationData,
-            registros: registros,
+        return Opacity(
+          opacity: showTopScreen ? 1.0 : 0.0,
+          child: Material(
+            child: AnimatedContainer(
+              margin: const EdgeInsets.only(top: 100, bottom: 100),
+              height: MediaQuery.of(context).size.height * .70,
+              duration: const Duration(milliseconds: 2000),
+              color: c1,
+              child: Searching(
+                historyData: locationData,
+                registros: registros,
+                isHomeSearch: true,
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

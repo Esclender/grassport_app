@@ -17,13 +17,6 @@ class CurrentLocationByGps extends StatefulWidget {
 }
 
 class _CurrentLocationByGpsState extends State<CurrentLocationByGps> {
-  //INITIALIZE THE INIT STATE AND CALL DE DIALOG IN THAT MOMENT
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +80,9 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
 
     if (dataLocation != null) {
       final resp = await ApiClient().reverseCode(
-          lat: dataLocation?.latitude, lon: dataLocation?.longitude);
+        lat: dataLocation?.latitude,
+        lon: dataLocation?.longitude,
+      );
 
       setState(() {
         streetName = resp["response"]["street"] == null
@@ -103,6 +98,7 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
   @override
   Widget build(BuildContext context) {
     context.read<ChargeRoute>().changeRoute(routeHomeApp);
+
     return dataLocation != null
         ? ListView(
             children: [
@@ -208,17 +204,3 @@ class _ShimmeringBackgroundState extends State<ShimmeringBackground>
     super.dispose();
   }
 }
-
-/**
- * ListTile(
-                leading: const Icon(Icons.location_pin),
-                title: Text(
-                  localityName,
-                  style: TextStyle(color: c9),
-                ),
-                subtitle: Text(
-                  streetName,
-                  style: TextStyle(color: c10),
-                ),
-              ),
- */

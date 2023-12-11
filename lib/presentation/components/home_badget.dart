@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grassport_app/models/logged_user.dart';
 import 'package:grassport_app/presentation/bloc/home_is_search/bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_view_selected/bloc.dart';
+import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
+import 'package:grassport_app/presentation/components/popus/must_be_logged_pp.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
@@ -15,6 +18,20 @@ class HomeBadget extends StatefulWidget {
 
 class _HomeBadgetState extends State<HomeBadget> {
   //int selectedIcon = 0;
+  bool isSigned = false;
+
+  @override
+  void initState() {
+    checkUser();
+    super.initState();
+  }
+
+  void checkUser() async {
+    UserDisplayed? isUser = context.read<LoggedUser>().state;
+    setState(() {
+      isSigned = isUser != null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,13 +76,22 @@ class _HomeBadgetState extends State<HomeBadget> {
                   ),
           ),
           IconButton(
-            onPressed: () {
-              if (selectedIcon.state != 1) {
+            onPressed: () async {
+              if (isSigned && selectedIcon.state != 1) {
+                // ignore: use_build_context_synchronously
                 if (selectedIcon.state != 0) Navigator.pop(context);
                 setState(() {
                   selectedIcon.changeView(1);
                 });
+                // ignore: use_build_context_synchronously
                 Navigator.pushNamed(context, routeFavView);
+              } else {
+                // ignore: use_build_context_synchronously
+                showDialog(
+                  barrierColor: Colors.transparent,
+                  context: context,
+                  builder: (context) => MustBeLoggedPopup(),
+                );
               }
             },
             icon: selectedIcon.state == 1
@@ -75,26 +101,6 @@ class _HomeBadgetState extends State<HomeBadget> {
                   )
                 : const Icon(
                     Icons.bookmark_border,
-                    color: Colors.white,
-                  ),
-          ),
-          IconButton(
-            onPressed: () {
-              if (selectedIcon.state != 2) {
-                if (selectedIcon.state != 0) Navigator.pop(context);
-                setState(() {
-                  selectedIcon.changeView(2);
-                });
-                Navigator.pushNamed(context, routeNotifView);
-              }
-            },
-            icon: selectedIcon.state == 2
-                ? const Icon(
-                    Icons.notifications,
-                    color: Colors.white,
-                  )
-                : const Icon(
-                    Icons.notifications_none_outlined,
                     color: Colors.white,
                   ),
           ),

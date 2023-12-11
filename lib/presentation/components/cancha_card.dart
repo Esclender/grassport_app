@@ -34,11 +34,10 @@ class CanchaCard extends StatelessWidget {
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.25,
                 width: MediaQuery.of(context).size.width * 0.85,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   image: DecorationImage(
-                    image: NetworkImage(
-                        'https://ichef.bbci.co.uk/news/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg'),
+                    image: NetworkImage(data.photoURL),
                     fit: BoxFit.cover,
                   ),
                 ),

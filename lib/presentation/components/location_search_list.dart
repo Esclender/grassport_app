@@ -7,13 +7,14 @@ class Searching extends StatefulWidget {
   final dynamic historyData;
   final int? header;
   final List registros;
+  final bool isHomeSearch;
 
-  const Searching({
-    super.key,
-    required this.historyData,
-    this.header,
-    required this.registros,
-  });
+  const Searching(
+      {super.key,
+      required this.historyData,
+      this.header,
+      required this.registros,
+      this.isHomeSearch = false});
 
   @override
   State<Searching> createState() => _SearchingState();
@@ -44,6 +45,7 @@ class _SearchingState extends State<Searching> {
                   ? ListView.separated(
                       itemBuilder: (BuildContext context, int index) {
                         return LocationTag(
+                          isHomeSearch: widget.isHomeSearch,
                           latLng:
                               getLocation(widget.registros[index]['location']),
                           leading:

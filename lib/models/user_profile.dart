@@ -4,8 +4,16 @@ class UserProfile {
   String numero;
 
   UserProfile({
-    required this.nombre,
-    required this.apellido,
-    this.numero = "",
+    this.nombre = '',
+    this.apellido = '',
+    this.numero = '',
   });
+
+  getObject() {
+    return {
+      "nombre": nombre,
+      "apellido": apellido,
+      "numero": numero,
+    };
+  }
 }

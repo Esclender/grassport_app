@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/presentation/components/buttons.dart';
+import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 class ReportProblem extends StatefulWidget {
   const ReportProblem({super.key});
@@ -10,6 +16,35 @@ class ReportProblem extends StatefulWidget {
 }
 
 class _ReportProblemState extends State<ReportProblem> {
+  TextEditingController textAreaController = TextEditingController();
+  ProgressDialog? pr;
+
+  @override
+  void initState() {
+    setPr();
+    super.initState();
+  }
+
+  ImagePicker imagePicker = ImagePicker();
+  File? imageFile;
+
+  Future selectImage(ImageSource imageSource) async {
+    XFile? image = await imagePicker.pickImage(source: imageSource);
+    if (image != null) {
+      imageFile = File(image.path);
+      return image.name;
+    }
+  }
+
+  setPr() {
+    setState(() {
+      pr = pr = ProgressDialog(context, showLogs: true, isDismissible: false);
+      pr?.style(
+        message: 'Subiendo reporte...',
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,11 +56,14 @@ class _ReportProblemState extends State<ReportProblem> {
             alignment: WrapAlignment.end,
             runSpacing: 10.0,
             children: [
-              const Field(),
-              const Field(),
-              const Field(),
+              Field(
+                imageController: selectImage,
+              ),
+              // const Field(),
+              // const Field(),
               TextField(
-                maxLines: 8, //or null
+                maxLines: 8,
+                controller: textAreaController,
                 decoration: InputDecoration(
                   hintText: "Describe tu problema",
                   filled: true,
@@ -39,7 +77,27 @@ class _ReportProblemState extends State<ReportProblem> {
               SizedBox(
                 width: 150,
                 child: CustomButton(
-                  next: () {},
+                  next: () async {
+                    pr?.show();
+                    Future.delayed(const Duration(seconds: 4)).then((value) {
+                      pr?.update(message: 'Reporte subido!');
+
+                      Future.delayed(const Duration(seconds: 2), () {
+                        pr?.hide().whenComplete(() {
+                          Future.delayed(
+                            const Duration(seconds: 1),
+                          ).then((v) {
+                            Navigator.pushNamed(context, routeHomeApp);
+                          });
+                        });
+                      });
+                    });
+
+                    await ApiClient().reportProblem(
+                      imageFile as File,
+                      textAreaController.value.text,
+                    );
+                  },
                   text: Text(
                     "Enviar",
                     style: TextStyle(color: c1),
@@ -55,17 +113,32 @@ class _ReportProblemState extends State<ReportProblem> {
   }
 }
 
-class Field extends StatelessWidget {
-  const Field({super.key});
+// ignore: must_be_immutable
+class Field extends StatefulWidget {
+  Function imageController;
+  Field({super.key, required this.imageController});
+
+  @override
+  State<Field> createState() => _FieldState();
+}
+
+class _FieldState extends State<Field> {
+  String text = "Sube una foto de tu problema";
 
   @override
   Widget build(BuildContext context) {
     return CustomButton(
-      next: () {},
+      next: () async {
+        var imageName = await widget.imageController(ImageSource.gallery);
+
+        setState(() {
+          text = imageName;
+        });
+      },
       text: Row(
         children: [
           Text(
-            "Sube una foto de tu problema",
+            text,
             style: TextStyle(color: c18),
           ),
           Icon(

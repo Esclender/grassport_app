@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grassport_app/main.dart' as app;
 
@@ -56,7 +60,10 @@ testBuscar(WidgetTester tester) async {
   final textField = find.byKey(const Key("buscar"));
   await tester.enterText(textField, 'La Pascana');
   await tester.pumpAndSettle();
+<<<<<<< HEAD
   //buscar por texto iniciar sesion con google
+=======
+>>>>>>> dev
   await tester.testTextInput.receiveAction(TextInputAction.done);
 
   await tester.pumpAndSettle();

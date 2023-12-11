@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/models/cancha_info.dart';
+import 'package:grassport_app/models/logged_user.dart';
+import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/components/map.dart';
 import 'package:grassport_app/presentation/components/popus/must_be_logged_pp.dart';
+import 'package:grassport_app/presentation/components/popus/succesfull_pp.dart';
 import 'package:grassport_app/presentation/components/stars_rating.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
-import 'package:grassport_app/services/auth_login.dart';
 
 // ignore: must_be_immutable
 class CanchaDetails extends StatefulWidget {
@@ -19,6 +23,8 @@ class CanchaDetails extends StatefulWidget {
 class _CanchaDetailsState extends State<CanchaDetails> {
   @override
   Widget build(BuildContext context) {
+    UserDisplayed? isUserSigned = context.watch<LoggedUser>().state;
+
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
@@ -32,21 +38,16 @@ class _CanchaDetailsState extends State<CanchaDetails> {
               Container(
                 height: MediaQuery.of(context).size.height * 0.27,
                 width: MediaQuery.of(context).size.width * 0.95,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   image: DecorationImage(
-                      image: NetworkImage(
-                          'https://ichef.bbci.co.uk/news/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg'),
+                      image: NetworkImage(widget.cancha.photoURL),
                       fit: BoxFit.cover),
                 ),
               ),
               const Gap(10),
               DetailsTitles(
                 data: widget.cancha,
-              ),
-              Text(
-                "Lorem ipsum dolor sit amet consectetur. Eu eget a urna id varius urna. Aliquet ornare bibendum blandit et. Congue quis malesuada quam velit sed sed. Cursus maecenas lectus ridiculus porttitor.",
-                style: TextStyle(color: c11),
               ),
               const Gap(10),
               Text(
@@ -57,7 +58,10 @@ class _CanchaDetailsState extends State<CanchaDetails> {
                 location: widget.cancha.location,
               ),
               const Gap(15),
-              const ActionBtns()
+              ActionBtns(
+                dataCancha: widget.cancha,
+                isSigned: isUserSigned != null,
+              )
             ],
           ),
         ),
@@ -80,9 +84,14 @@ class DetailsTitles extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              data.nombre,
-              style: TextStyle(color: c9, fontSize: 20),
+            SizedBox(
+              width: 200,
+              child: Text(
+                data.nombre,
+                style: TextStyle(color: c9, fontSize: 20),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
             ),
             StarsRating(
               canchaUpdate: () {},
@@ -115,8 +124,12 @@ class DetailsTitles extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class ActionBtns extends StatelessWidget {
-  const ActionBtns({super.key});
+  CanchaInfo dataCancha;
+  bool isSigned;
+
+  ActionBtns({super.key, required this.dataCancha, required this.isSigned});
 
   @override
   Widget build(BuildContext context) {
@@ -125,16 +138,23 @@ class ActionBtns extends StatelessWidget {
       children: [
         ElevatedButton(
           onPressed: () async {
-            bool isUserSigned = await checkIfUserIsSignedIn(context);
-            if (isUserSigned) {
-              print(
-                  '******************************************************************************SI LO PUEDE GUARDAR');
+            if (isSigned) {
+              await ApiClient().saveFavorite(lugar: dataCancha);
+
+              // ignore: use_build_context_synchronously
+              showDialog(
+                barrierColor: Colors.transparent,
+                context: context,
+                builder: (context) => SuccesfullPopup(),
+              );
             } else {
               // ignore: use_build_context_synchronously
               showDialog(
                 barrierColor: Colors.transparent,
                 context: context,
-                builder: (context) => const MustBeLoggedPopup(),
+                builder: (context) => MustBeLoggedPopup(
+                  warningMessage: " Inicia sesion para guardar",
+                ),
               );
 
               // Close the dialog after a delay
@@ -158,23 +178,6 @@ class ActionBtns extends StatelessWidget {
             size: 35.0,
           ),
         ),
-        // ElevatedButton(
-        //   onPressed: () {},
-        //   style: ElevatedButton.styleFrom(
-        //     shape: const RoundedRectangleBorder(
-        //       borderRadius: BorderRadius.all(
-        //         Radius.circular(10),
-        //       ),
-        //     ),
-        //     backgroundColor: c15,
-        //     foregroundColor: c1,
-        //     padding: const EdgeInsets.all(0.0),
-        //   ),
-        //   child: SvgPicture.asset(
-        //     "assets/app_icons/whatsapp.svg",
-        //     width: 30,
-        //   ),
-        // )
       ],
     );
   }

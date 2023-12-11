@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grassport_app/presentation/bloc/charge/bloc.dart';
 import 'package:grassport_app/presentation/bloc/device_current_location/blocs.dart';
+import 'package:grassport_app/presentation/bloc/google_map_markers/bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_is_search/bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_profile/bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_view_selected/bloc.dart';
+import 'package:grassport_app/presentation/bloc/isAdmin/bloc.dart';
 import 'package:grassport_app/presentation/bloc/locations/blocs.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/bloc/nearCanchas/blocs.dart';
@@ -39,6 +41,9 @@ class BlocsProvider extends StatelessWidget {
         BlocProvider(create: (context) => Notifications()),
         BlocProvider(create: (context) => LoggedUser()),
         BlocProvider(create: (context) => DeviceGpsLocation()),
+        BlocProvider(create: (context) => CanchasByInout()),
+        BlocProvider(create: (context) => GoogleMapMarkers()),
+        BlocProvider(create: (context) => IsAdmin()),
       ],
       child: const MyApp(),
     );
