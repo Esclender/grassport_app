@@ -94,9 +94,13 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
     BuildContext c = context;
     var location = await checkIsGpsEnabled(context: c);
 
+    //TODO: MANAGE WHEN USE DOESN'T AGREE
+
     LatLng data = LatLng(location.latitude, location.longitude);
     // ignore: use_build_context_synchronously
     var loc = c.read<DeviceGpsLocation>();
+    print('*******************************************PRINT DATA');
+    print(data);
     loc.setGpsLocation(data);
     setMyPosicion();
 

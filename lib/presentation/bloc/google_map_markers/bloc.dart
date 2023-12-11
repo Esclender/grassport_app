@@ -43,7 +43,7 @@ class GoogleMapMarkers extends Cubit<Set<Marker>> {
     );
 
     emit({
-      ...state,
+      ...state, //TODO: CHECK THIS PART THIS SOULD CHECK TWO
       Marker(
         markerId: MarkerId(cancha.address),
         position: LatLng(cancha.location.latitude, cancha.location.longitude),

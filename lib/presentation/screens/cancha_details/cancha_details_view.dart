@@ -38,11 +38,10 @@ class _CanchaDetailsState extends State<CanchaDetails> {
               Container(
                 height: MediaQuery.of(context).size.height * 0.27,
                 width: MediaQuery.of(context).size.width * 0.95,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   image: DecorationImage(
-                      image: NetworkImage(
-                          'https://ichef.bbci.co.uk/news/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg'),
+                      image: NetworkImage(widget.cancha.photoURL),
                       fit: BoxFit.cover),
                 ),
               ),

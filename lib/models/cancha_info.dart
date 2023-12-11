@@ -50,7 +50,6 @@ class CanchaInfo {
     for (Map cancha in body['response']) {
       CanchaInfo canchaInfo = CanchaInfo(
         nombre: cancha['locality'],
-        photoURL: cancha['photoURL'],
         address: cancha['street'],
         isOpen: true,
         location: LatLng(cancha['location']['lat'], cancha['location']['lng']),

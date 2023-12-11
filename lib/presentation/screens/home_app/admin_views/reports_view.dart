@@ -19,7 +19,7 @@ class _ReportViewState extends State<ReportView> {
   ReportInfo? selectedReport;
   final ApiClient _myClient = ApiClient();
 
-  List<ReportInfo> reportData = [];
+  List<ReportInfo>? reportData;
 
   @override
   void initState() {
@@ -38,13 +38,27 @@ class _ReportViewState extends State<ReportView> {
 
   @override
   Widget build(BuildContext context) {
-    if (reportData.isEmpty) {
+    if (reportData == null) {
       return const Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
           child: CircularProgressIndicator(),
         ),
       );
+    }
+
+    if (reportData != null) {
+      if (reportData?.isEmpty as bool) {
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: Text(
+              'Sin reportes!',
+              style: TextStyle(color: c1),
+            ),
+          ),
+        );
+      }
     }
 
     return Scaffold(
@@ -66,12 +80,13 @@ class _ReportViewState extends State<ReportView> {
               height: 250.0,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: reportData.length,
+                itemCount: reportData?.length,
                 itemBuilder: (context, index) {
                   return CardWidget(
                     color: c8,
-                    report: reportData[index],
-                    onTap: () => _showCardDetails(reportData[index]),
+                    report: reportData?[index] as ReportInfo,
+                    onTap: () =>
+                        _showCardDetails(reportData?[index] as ReportInfo),
                     borderRadius: BorderRadius.circular(10.0),
                   );
                 },
@@ -263,7 +278,7 @@ class DetailedView extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  '20-12-2023',
+                  report.fechaCreacion,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w100,

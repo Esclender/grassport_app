@@ -101,6 +101,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   Container(
                     width: 300,
                     child: TextField(
+                      maxLength: 9,
                       controller: _numeroTlfController,
                       style: TextStyle(color: Colors.white),
                       keyboardType: TextInputType.phone,

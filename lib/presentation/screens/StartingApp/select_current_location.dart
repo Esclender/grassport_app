@@ -80,21 +80,12 @@ class _SelectCurrentState extends State<SelectCurrentLocation> {
                   },
                 ),
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .47,
+              Expanded(
                 child: Searching(
                   historyData: locationData,
                   registros: registros,
                 ),
               ),
-              Expanded(
-                //height: MediaQuery.of(context).size.height * .5,
-                child: Searching(
-                  historyData: locationData,
-                  registros: const [],
-                  header: 2,
-                ),
-              )
             ],
           ),
         ));

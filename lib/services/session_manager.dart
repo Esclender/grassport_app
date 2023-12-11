@@ -71,6 +71,8 @@ class SessionManager {
         Navigator.pushNamed(context, routeToAdminPanel);
         break;
       default:
+        Navigator.pushNamed(context, routeAgreementLocation);
+        break;
     }
   }
 }

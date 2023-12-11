@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/models/user_registered_model.dart';
@@ -15,6 +16,12 @@ class _UserListScreenState extends State<UserListScreen> {
   List<UsersInApp> userList = [];
   List<UsersInApp> topUsersList = [];
 
+  //SORITNG
+  String filterByName = '';
+  List<String> options = ['Nombre', 'Fecha creacion'];
+  String orderBy = "Nombre";
+  String isAscendingOrder = 'asc';
+
   final ApiClient _myClient = ApiClient();
 
   @override
@@ -30,6 +37,51 @@ class _UserListScreenState extends State<UserListScreen> {
 
     setState(() {
       userList = data;
+    });
+  }
+
+  sortList({orderBy, orden}) async {
+    switch (orderBy) {
+      case 'Nombre':
+        List<UsersInApp> sortedData = await _myClient.getUsersRegisteredList(
+          orderBy: 'nombre',
+          orden: orden,
+        );
+
+        setState(() {
+          userList = sortedData;
+        });
+        break;
+      case 'Fecha creacion':
+        List<UsersInApp> sortedData = await _myClient.getUsersRegisteredList(
+          orderBy: 'fecha_creacion',
+          orden: orden,
+        );
+
+        setState(() {
+          userList = sortedData;
+        });
+        break;
+      default:
+    }
+  }
+
+  filterList({filtro}) async {
+    List<UsersInApp> filteredData = await _myClient.getUsersRegisteredList(
+      filtroName: filtro,
+    );
+
+    setState(() {
+      userList = filteredData;
+    });
+  }
+
+  clearFilter() async {
+    List<UsersInApp> filteredData = await _myClient.getUsersRegisteredList();
+
+    setState(() {
+      userList = filteredData;
+      filterByName = '';
     });
   }
 
@@ -79,10 +131,10 @@ class _UserListScreenState extends State<UserListScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    margin: EdgeInsets.all(10.0),
+                    margin: const EdgeInsets.all(10.0),
                     child: Container(
                       width: 80,
-                      margin: EdgeInsets.all(5.0),
+                      margin: const EdgeInsets.all(5.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -127,25 +179,150 @@ class _UserListScreenState extends State<UserListScreen> {
           ),
         ],
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              // Add action for the first floating button
-            },
-            child: const Icon(Icons.filter_alt_outlined),
-          ),
-          const SizedBox(height: 16),
-          FloatingActionButton(
-            onPressed: () {
-              // Add action for the second floating button
-            },
-            child: const Icon(Icons.compare_arrows_rounded),
-          ),
-        ],
+      floatingActionButton: SpeedDial(
+        renderOverlay: false,
+        animatedIcon: AnimatedIcons.menu_close,
+        backgroundColor: c8,
+        children: _buildSpeedChild(),
       ),
+    );
+  }
+
+  List<SpeedDialChild> _buildSpeedChild() {
+    return [
+      SpeedDialChild(
+        child: const Icon(Icons.filter_alt_outlined),
+        backgroundColor: c8,
+        label: 'Filtro',
+        labelStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: c8,
+        ),
+        onTap: () {
+          _showFilterDialog(context);
+        },
+      ),
+      SpeedDialChild(
+        child: const Icon(Icons.compare_arrows_rounded),
+        backgroundColor: c8,
+        label: 'Ordenar',
+        labelStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: c8,
+        ),
+        onTap: () {
+          _showOrderDialog(context);
+        },
+      ),
+      SpeedDialChild(
+        child: const Icon(Icons.cleaning_services),
+        backgroundColor: c8,
+        label: 'Limpiar',
+        labelStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: c8,
+        ),
+        onTap: () {
+          clearFilter();
+        },
+      ),
+    ];
+  }
+
+  void _showFilterDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Filtro por nombre'),
+          content: TextField(
+            onChanged: (value) {
+              setState(() {
+                filterByName = value;
+              });
+            },
+            decoration: const InputDecoration(
+              hintText: 'Ingresa el filtro',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await filterList(filtro: filterByName);
+              },
+              child: const Text('Filtrar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showOrderDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Opciones de orden'),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DropdownButton<String>(
+                    value: orderBy,
+                    onChanged: (value) {
+                      setState(() {
+                        orderBy = value!;
+                      });
+                    },
+                    items: options
+                        .map((String value) => DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            ))
+                        .toList(),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Orden ascendente'),
+                      StatefulBuilder(builder: ((context, setState) {
+                        return Checkbox(
+                          value: isAscendingOrder == 'asc',
+                          onChanged: (value) {
+                            //ORDEN TYPE
+                            if (isAscendingOrder == 'asc') {
+                              setState(() {
+                                isAscendingOrder = 'desc';
+                              });
+                            } else {
+                              setState(() {
+                                isAscendingOrder = 'asc';
+                              });
+                            }
+                          },
+                        );
+                      }))
+                    ],
+                  ),
+                ],
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                await sortList(orderBy: orderBy, orden: isAscendingOrder);
+              },
+              child: const Text('Ordenar'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -162,7 +339,7 @@ class _UserListScreenState extends State<UserListScreen> {
           backgroundColor: c1,
           child: Container(
             height: 300, // Set the height of the dialog
-            padding: EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -208,6 +385,10 @@ class _UserListScreenState extends State<UserListScreen> {
                                   user.email,
                                   style: TextStyle(color: textColor),
                                 ),
+                                Text(
+                                  user.numero,
+                                  style: TextStyle(color: textColor),
+                                ),
                               ],
                             ),
                           ),
@@ -235,9 +416,8 @@ class _UserListScreenState extends State<UserListScreen> {
                     ),
                   ],
                 ),
-                const Spacer(), // Add space between left and right
-                // Right side (conteo_ingresos inside a circle)
-                const Spacer(), // Add space between left and right
+                const Spacer(),
+                const Spacer(),
                 Container(
                   width: 60,
                   height: 60,

@@ -193,9 +193,7 @@ class ApiClient {
       String isToken = await Cookies().load(key: 'userToken');
       final uri = Uri.http(API_URL, userHistoryLocation);
 
-      print(lugar?.getObject());
-
-      final response = await client.post(
+      await client.post(
         uri,
         body: json.encode(
           {"data": lugar?.getObject()},
@@ -206,8 +204,6 @@ class ApiClient {
           "Accept": "application/json",
         },
       );
-      print('**********************************************LOCATION RESPONSE');
-      print(response.body);
     } catch (e) {
       throw Exception(e);
     }
@@ -236,7 +232,7 @@ class ApiClient {
       String token = await Cookies().load(key: 'userToken');
       final uri = Uri.http(API_URL, saveFavoritesPath);
 
-      final response = await client.post(
+      await client.post(
         uri,
         body: json.encode(
           {"data": lugar?.getObjectForFavorites()},
@@ -247,8 +243,6 @@ class ApiClient {
           "Accept": "application/json",
         },
       );
-      print('/***************************************SAVED FAVORITE');
-      print(response.body);
     } catch (e) {
       throw Exception(e);
     }
@@ -268,8 +262,6 @@ class ApiClient {
 
       final dataNoMapped = jsonDecode(userFavorites.body);
 
-      print('/*************************************** FAVORITE');
-      print(dataNoMapped);
       List<CanchaInfo> favoritos =
           CanchaInfo.transformResponseInCanchas(dataNoMapped);
 
@@ -349,10 +341,17 @@ class ApiClient {
     }
   }
 
-  getUsersRegisteredList() async {
+  getUsersRegisteredList({
+    filtroName = '',
+    orderBy = 'fecha_creacion',
+    orden = 'asc',
+  }) async {
     try {
       String token = await Cookies().load(key: 'userToken');
-      final uri = Uri.http(API_URL, getUsersListPath);
+      final uri = Uri.http(API_URL, getUsersListPath, {
+        'nombre': filtroName,
+        'orden': "$orderBy,$orden",
+      });
 
       final listOfUsers = await client.get(
         uri,

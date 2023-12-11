@@ -40,9 +40,6 @@ class HomeList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CanchasByInout, List>(
       builder: (context, registros) {
-        print('*************************************************REGISTROS');
-        print(registros);
-
         final showTopScreen = context.watch<IsSearch>().state;
         final locationData = context.read<SelectLocation>();
 

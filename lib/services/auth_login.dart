@@ -61,9 +61,8 @@ Future<void> logOutWithGoogle() async {
 Future<bool> checkIfUserIsSignedInJWT(BuildContext context) async {
   String jwtToken = await Cookies().load(key: 'userToken');
 
-  // Check if the JWT token is expired
   if (SessionManager.isTokenExpired(jwtToken)) {
-    return false; // Token is expired
+    return false;
   }
 
   bool isAdmin = SessionManager.extractIsAdmin(jwtToken);

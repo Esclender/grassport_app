@@ -4,6 +4,7 @@ class ReportInfo {
   final String imageUrl;
   final String email;
   String number;
+  String fechaCreacion;
 
   ReportInfo({
     this.userName = '',
@@ -11,6 +12,7 @@ class ReportInfo {
     this.imageUrl = '',
     this.email = '',
     this.number = '',
+    this.fechaCreacion = '',
   });
 
   static transformBodyArray(body) {
@@ -23,6 +25,7 @@ class ReportInfo {
         imageUrl: reporte['imageURL'],
         email: reporte['email'],
         number: reporte['numero'] ?? '',
+        fechaCreacion: reporte['fecha_creacion'] ?? '',
       );
       reportes.add(reportInfo);
     }
