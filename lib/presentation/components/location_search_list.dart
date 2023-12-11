@@ -46,6 +46,7 @@ class _SearchingState extends State<Searching> {
                       itemBuilder: (BuildContext context, int index) {
                         return LocationTag(
                           isHomeSearch: widget.isHomeSearch,
+                          key: const Key("LocationTag"),
                           latLng:
                               getLocation(widget.registros[index]['location']),
                           leading:

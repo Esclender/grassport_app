@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-=======
 
->>>>>>> dev
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grassport_app/main.dart' as app;
 
@@ -36,7 +33,6 @@ testIniciaDespues(WidgetTester tester) async {
   Finder button = find.byKey(const Key("iniciaDespues"));
   await tester.tap(button);
   await tester.pumpAndSettle();
-  //buscar por texto iniciar sesion con google
   expect(find.text("Permisos de ubicacion"), findsOneWidget);
   await tester.pumpAndSettle();
 }
@@ -47,7 +43,6 @@ testSesionManualmente(WidgetTester tester) async {
   Finder button = find.byKey(const Key("manualmente"));
   await tester.tap(button);
   await tester.pumpAndSettle();
-  //buscar por texto iniciar sesion con google
   expect(find.text("Busquedas recientes"), findsOneWidget);
 
   expect(find.text("Direcciones guardadas"), findsOneWidget);
@@ -57,14 +52,12 @@ testSesionManualmente(WidgetTester tester) async {
 testBuscar(WidgetTester tester) async {
   await tester.pumpAndSettle();
   await Future.delayed(const Duration(seconds: 2));
-  final textField = find.byKey(const Key("buscar"));
-  await tester.enterText(textField, 'La Pascana');
-  await tester.pumpAndSettle();
-<<<<<<< HEAD
-  //buscar por texto iniciar sesion con google
-=======
->>>>>>> dev
+  final textFieldFinder = find.byKey(const Key("buscar"));
+
+  await tester.enterText(textFieldFinder, 'La Pascana');
+
   await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
 
   await tester.pumpAndSettle();
 
