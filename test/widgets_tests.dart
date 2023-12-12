@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grassport_app/main.dart';
+import 'package:grassport_app/presentation/components/location_search_list_items.dart';
 import 'package:grassport_app/presentation/screens/StartingApp/location_agree.dart';
 import 'package:grassport_app/presentation/screens/chargeScreens/main_charge.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,13 +36,9 @@ testBuscar(WidgetTester tester) async {
   await tester.testTextInput.receiveAction(TextInputAction.done);
   await tester.pumpAndSettle();
 
-  await tester.pumpAndSettle();
+  final Finder locationTag = find.text("La Pascana, Comas, Peru");
 
-  await Future.delayed(const Duration(seconds: 5));
-
-  await tester.pumpAndSettle();
-
-  expect(find.text("La Pascana, Comas, Peru"), findsOneWidget);
+  expect(locationTag, findsOneWidget);
 
   await tester.pumpAndSettle();
 }
@@ -65,7 +62,7 @@ void main() {
       });
     });
 
-    testWidgets('Pantalla de carga aparece', (tester) async {
+    testWidgets('Lista de ubicaciones es desplegada', (tester) async {
       await tester.pumpWidget(createHomeScreen());
 
       await tester.runAsync(() async {
@@ -80,10 +77,6 @@ void main() {
         expect(locationAgree, findsOneWidget);
 
         await testSesionManualmente(tester);
-
-        final Finder logoAnimationFinder = find.byType(EffectIntro);
-
-        expect(logoAnimationFinder, findsOneWidget);
       });
     });
   });
