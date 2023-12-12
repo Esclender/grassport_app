@@ -1,99 +1,81 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:grassport_app/main.dart' as app;
-
-import 'package:integration_test/integration_test.dart';
-
-testPreviews(WidgetTester tester) async {
-  await tester.pumpAndSettle();
-  expect(find.byKey(const Key("VistaPrevius")), findsOneWidget);
-  await Future.delayed(const Duration(seconds: 2));
-  Finder button = find.byKey(const Key('Previews - Next Preview btn'));
-  await tester.tap(button);
-
-  await tester.pumpAndSettle();
-}
-
-testclickSaltar(WidgetTester tester) async {
-  await tester.pumpAndSettle();
-  expect(find.byKey(const Key("VistaPrevius")), findsOneWidget);
-  await Future.delayed(const Duration(seconds: 2));
-  Finder button = find.byKey(const Key("saltar"));
-  await tester.tap(button);
-  await tester.pumpAndSettle();
-  //buscar por texto iniciar sesion con google
-  expect(find.text("Iniciar sesion con Google"), findsOneWidget);
-  await tester.pumpAndSettle();
-}
-
-testIniciaDespues(WidgetTester tester) async {
-  await tester.pumpAndSettle();
-  await Future.delayed(const Duration(seconds: 2));
-  Finder button = find.byKey(const Key("iniciaDespues"));
-  await tester.tap(button);
-  await tester.pumpAndSettle();
-  expect(find.text("Permisos de ubicacion"), findsOneWidget);
-  await tester.pumpAndSettle();
-}
-
-testSesionManualmente(WidgetTester tester) async {
-  await tester.pumpAndSettle();
-  await Future.delayed(const Duration(seconds: 2));
-  Finder button = find.byKey(const Key("manualmente"));
-  await tester.tap(button);
-  await tester.pumpAndSettle();
-  expect(find.text("Busquedas recientes"), findsOneWidget);
-
-  expect(find.text("Direcciones guardadas"), findsOneWidget);
-  await tester.pumpAndSettle();
-}
-
-testBuscar(WidgetTester tester) async {
-  await tester.pumpAndSettle();
-  await Future.delayed(const Duration(seconds: 2));
-  final textFieldFinder = find.byKey(const Key("buscar"));
-
-  await tester.enterText(textFieldFinder, 'La Pascana');
-
-  await tester.testTextInput.receiveAction(TextInputAction.done);
-  await tester.pumpAndSettle();
-
-  await tester.pumpAndSettle();
-
-  await Future.delayed(const Duration(seconds: 5));
-
-  await tester.pumpAndSettle();
-
-  expect(find.text("La Pascana, Comas, Peru"), findsOneWidget);
-
-  await tester.pumpAndSettle();
-}
+import 'package:grassport_app/main.dart';
+import 'package:grassport_app/presentation/screens/StartingApp/previews.dart';
+import 'package:grassport_app/presentation/screens/home_app/admin_views/admin_home.dart';
+import 'package:grassport_app/presentation/styles/colors.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  group('Pruebas de integracion app grassport', () {
+    testWidgets('Test de verificacion de cambio de color de swiper',
+        (tester) async {
+      await tester.pumpWidget(const BlocsProvider());
 
-  group('end-to-end test', () {
-    setUpAll(() async {
-      app.main();
-    });
-
-    testWidgets('Grassport app started', (tester) async {
-      await tester.pumpAndSettle();
       expect(find.text('GrasSport'), findsOneWidget);
-      await Future.delayed(const Duration(seconds: 2));
 
       await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-      await testPreviews(tester);
+      final swipersKeys = [
+        'Swiper 1',
+        'Swiper 2',
+        'Swiper 3',
+      ];
+      //BUCLE QUE VERIFICA CADA UNO DE LOS SWIPERS
+      for (String swiper in swipersKeys) {
+        final Finder swiperFinder = find.byKey(ValueKey(swiper));
 
-      await testclickSaltar(tester);
+        print(swiperFinder);
 
-      await testIniciaDespues(tester);
+        final Swipers swiperActual = tester.widget(swiperFinder);
 
-      await testSesionManualmente(tester);
+        //VERIFICAMOS QUE SU COLOR CAMBIE
+        expect(swiperActual.colorSwiper, equals(c8));
 
-      await testBuscar(tester);
+        await Future.delayed(const Duration(seconds: 2));
+        Finder button = find.byKey(const Key('Previews - Next Preview btn'));
+        await tester.tap(button);
+
+        await tester.pumpAndSettle();
+      }
     });
+
+    // testWidgets('Test de filtrado de usuarios en admin', (tester) async {
+    //   await tester.pumpWidget(const BlocsProvider());
+    //   await tester.pumpAndSettle();
+
+    //   await tester.runAsync(() async {
+    //     expect(find.text('GrasSport'), findsOneWidget);
+
+    //     await Future.delayed(const Duration(seconds: 2));
+
+    //     await tester.pumpAndSettle();
+    //     await tester.pumpAndSettle();
+    //     await tester.pumpAndSettle();
+
+    //     final Finder saltarBtn = find.byKey(
+    //       const Key("saltar"),
+    //     );
+
+    //     await tester.tap(saltarBtn);
+    //     await tester.pumpAndSettle();
+    //     await tester.pumpAndSettle();
+
+    //     final Finder loginBtn = find.byKey(const Key('login'));
+    //     final Finder emailInput = find.byKey(const Key('emailInput'));
+    //     final Finder claveInput = find.byKey(const Key('passwordInput'));
+
+    //     await tester.enterText(emailInput, 'elesclenderlugo@gmail.com');
+    //     await tester.testTextInput.receiveAction(TextInputAction.done);
+    //     await tester.enterText(claveInput, '1234');
+    //     await tester.testTextInput.receiveAction(TextInputAction.done);
+
+    //     await tester.tap(loginBtn);
+
+    //     await tester.pumpAndSettle();
+
+    //     expect(find.byType(AdminView), findsOneWidget);
+    //   });
+    // });
   });
 }

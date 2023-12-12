@@ -80,6 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         width: 300, // Specify the desired width
                         child: TextField(
+                          key: const Key('emailInput'),
                           controller: _emailController,
                           style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
@@ -100,6 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         width: 300, // Specify the desired width
                         child: TextField(
+                          key: const Key('passwordInput'),
                           controller: _passwordController,
                           style: const TextStyle(color: Colors.white),
                           decoration: const InputDecoration(
@@ -118,6 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 16.0),
                       ElevatedButton.icon(
+                        key: const Key('login'),
                         onPressed: () async {
                           if (_areInputsValid()) {
                             String email = _emailController.text.trim();

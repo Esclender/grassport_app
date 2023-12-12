@@ -121,7 +121,7 @@ class ApiClient {
       });
 
       Map data = jsonDecode(response.body);
-      await Cookies().save(key: 'userToken', value: data['token']);
+      //await Cookies().save(key: 'userToken', value: data['token']);
 
       return data['token'];
     } catch (e) {
@@ -209,9 +209,8 @@ class ApiClient {
     }
   }
 
-  getMyHistory() async {
+  getMyHistory({isToken}) async {
     try {
-      String isToken = await Cookies().load(key: 'userToken');
       final uri = Uri.http(API_URL, getMyHistoryPath);
 
       final userHistory = await client.get(

@@ -46,6 +46,7 @@ class _AdminViewState extends State<AdminView> {
     return AnnotatedRegion(
       value: SystemModifiers.overlayDarkAdmin,
       child: Scaffold(
+        key: const Key('admin_view'),
         body: Stack(
           children: [
             // Gradient Background
@@ -137,11 +138,12 @@ class _AdminViewState extends State<AdminView> {
                         ),
                       ),
                     ),
-                    Spacer(),
-                    buildFloatingButton(0, leftBarWidth),
-                    buildFloatingButton(1, leftBarWidth),
-                    buildFloatingButton(2, leftBarWidth),
-                    Spacer(),
+                    const Spacer(),
+                    buildFloatingButton(
+                        0, leftBarWidth, const Key('dashboard')),
+                    buildFloatingButton(1, leftBarWidth, const Key('users')),
+                    buildFloatingButton(2, leftBarWidth, const Key('reports')),
+                    const Spacer(),
                     GestureDetector(
                       onTap: () async {
                         Navigator.pushNamed(context, routeLogin);
@@ -202,8 +204,9 @@ class _AdminViewState extends State<AdminView> {
     );
   }
 
-  Widget buildFloatingButton(int index, double buttonWidth) {
+  Widget buildFloatingButton(int index, double buttonWidth, Key key) {
     return GestureDetector(
+      key: key,
       onTap: () {
         setState(() {
           _selectedTabIndex = index;

@@ -31,7 +31,7 @@ class _StartingPreviews extends State<Previews> {
         body: Column(
           children: [
             Container(
-              key: Key("VistaPrevius"),
+              key: const Key("VistaPrevius"),
               margin: const EdgeInsets.only(
                 top: 50.0,
               ),
@@ -41,12 +41,15 @@ class _StartingPreviews extends State<Previews> {
                 key: Key('Preview ${currentSwiperIndex.state}'),
                 children: [
                   Swipers(
+                    key: const Key('Swiper 1'),
                     colorSwiper: currentSwiperIndex.state >= 0 ? c8 : c10,
                   ),
                   Swipers(
+                    key: const Key('Swiper 2'),
                     colorSwiper: currentSwiperIndex.state >= 1 ? c8 : c10,
                   ),
                   Swipers(
+                    key: const Key('Swiper 3'),
                     colorSwiper: currentSwiperIndex.state >= 2 ? c8 : c10,
                   ),
                 ],
@@ -188,6 +191,7 @@ class _ButtonsSkipAndNextState extends State<ButtonsSkipAndNext> {
           ),
         ),
         TextButton(
+          key: const Key("saltar"),
           onPressed: () {
             print(
                 '***********************************************CHECKING LOGGED USER');
@@ -203,7 +207,6 @@ class _ButtonsSkipAndNextState extends State<ButtonsSkipAndNext> {
             }
           },
           child: Text(
-            key: const Key("saltar"),
             'Saltar',
             style: TextStyle(
               decorationThickness: 2.0,

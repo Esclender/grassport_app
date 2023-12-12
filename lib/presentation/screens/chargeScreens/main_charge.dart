@@ -7,7 +7,7 @@ import '../../styles/systemThemes.dart';
 import '../../styles/colors.dart';
 
 class EffectIntro extends StatefulWidget {
-  const EffectIntro({super.key});
+  const EffectIntro({Key? key}) : super(key: key);
 
   @override
   State<EffectIntro> createState() => _EffectIntroState();
@@ -18,10 +18,14 @@ class _EffectIntroState extends State<EffectIntro>
   late AnimationController _controller;
   late Animation<double> _scale;
   AlignmentGeometry alignment = Alignment.bottomCenter;
+  List<Timer> timers = [];
 
   @override
   dispose() {
-    _controller.dispose(); // you need this
+    _controller.dispose();
+    for (var timer in timers) {
+      timer.cancel();
+    }
     super.dispose();
   }
 
@@ -29,27 +33,24 @@ class _EffectIntroState extends State<EffectIntro>
   void initState() {
     super.initState();
 
-    Timer(const Duration(milliseconds: 1600), () {
+    timers.add(Timer(const Duration(milliseconds: 1600), () {
       SystemChrome.setSystemUIOverlayStyle(SystemModifiers.overlayDark);
-    });
+    }));
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3), // Adjust the duration as needed
+      duration: const Duration(seconds: 3),
     );
 
-    // Create the scale animation
     _scale = Tween<double>(begin: 1.0, end: 20.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Curves.easeInOut, // Replace with your desired curve
+        curve: Curves.easeInOut,
       ),
     );
 
-    // Start the animation
     _controller.forward();
 
-    // Add a listener to the scale animation
     _scale.addListener(() {
       setState(() {
         alignment = Alignment.center;
@@ -90,8 +91,8 @@ class LogoAnimation extends StatefulWidget {
   final AlignmentGeometry alignment;
   final String route;
 
-  const LogoAnimation(
-      {super.key, required this.alignment, required this.route});
+  const LogoAnimation({Key? key, required this.alignment, required this.route})
+      : super(key: key);
 
   @override
   State<LogoAnimation> createState() => _StartingState();
@@ -99,15 +100,23 @@ class LogoAnimation extends StatefulWidget {
 
 class _StartingState extends State<LogoAnimation>
     with SingleTickerProviderStateMixin {
+  List<Timer> timers = [];
+
   @override
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Timer(const Duration(seconds: 2), () {
-        Navigator.pushNamed(context, widget.route);
-      });
-    });
+    timers.add(Timer(const Duration(seconds: 2), () {
+      Navigator.pushNamed(context, widget.route);
+    }));
+  }
+
+  @override
+  void dispose() {
+    for (var timer in timers) {
+      timer.cancel();
+    }
+    super.dispose();
   }
 
   @override
