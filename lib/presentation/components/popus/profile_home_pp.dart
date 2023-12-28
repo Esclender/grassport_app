@@ -9,6 +9,7 @@ import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:grassport_app/services/auth_login.dart';
+import 'package:grassport_app/services/clear_data.dart';
 
 // ignore: must_be_immutable
 class ProfileTop extends StatelessWidget {
@@ -80,7 +81,7 @@ class ProfileSettings extends StatelessWidget {
                 await logOutWithGoogle();
                 // ignore: use_build_context_synchronously
                 Timer(const Duration(seconds: 2), () {
-                  context.read<LoggedUser>().setData(null);
+                  clearDataLoggedUser(context);
                 });
               }
               // ignore: use_build_context_synchronously

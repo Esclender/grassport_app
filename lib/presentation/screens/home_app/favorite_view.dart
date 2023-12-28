@@ -28,14 +28,7 @@ class _FavViewState extends State<FavView> {
         title: const Text("Guardados"),
         centerTitle: true,
       ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50.0),
-            child: SavedList(),
-          ),
-        ],
-      ),
+      body: SavedList(),
     );
   }
 }

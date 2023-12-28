@@ -6,6 +6,7 @@ import 'package:grassport_app/presentation/bloc/home_view_selected/bloc.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
 import 'package:grassport_app/presentation/components/popus/must_be_logged_pp.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
+import 'package:grassport_app/presentation/styles/boxx_shadows.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
 // ignore: must_be_immutable
@@ -33,6 +34,36 @@ class _HomeBadgetState extends State<HomeBadget> {
     });
   }
 
+  Widget isNotificationsEmpty() {
+    int notifications = 1;
+    if (notifications > 0) {
+      return Stack(
+        children: [
+          const Icon(
+            Icons.notifications_outlined,
+            color: Colors.white,
+          ),
+          Positioned(
+            right: 0,
+            child: Container(
+              height: 10,
+              width: 10,
+              decoration: BoxDecoration(
+                color: c4,
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          )
+        ],
+      );
+    } else {
+      return const Icon(
+        Icons.notifications_outlined,
+        color: Colors.white,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     IsSearch showTopScreen = context.watch<IsSearch>();
@@ -44,13 +75,7 @@ class _HomeBadgetState extends State<HomeBadget> {
       decoration: BoxDecoration(
         color: c8,
         borderRadius: BorderRadius.circular(40.0),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromARGB(127, 0, 0, 0),
-            offset: Offset(0, 0.7),
-            blurRadius: 2,
-          ),
-        ],
+        boxShadow: [simpleShadow],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -101,6 +126,61 @@ class _HomeBadgetState extends State<HomeBadget> {
                   )
                 : const Icon(
                     Icons.bookmark_border,
+                    color: Colors.white,
+                  ),
+          ),
+          IconButton(
+            onPressed: () async {
+              if (isSigned && selectedIcon.state != 1) {
+                // ignore: use_build_context_synchronously
+                if (selectedIcon.state != 0) Navigator.pop(context);
+                setState(() {
+                  selectedIcon.changeView(2);
+                });
+                // ignore: use_build_context_synchronously
+                Navigator.pushNamed(context, routeNotifView);
+              } else {
+                // ignore: use_build_context_synchronously
+                showDialog(
+                  barrierColor: Colors.transparent,
+                  context: context,
+                  builder: (context) => MustBeLoggedPopup(),
+                );
+              }
+            },
+            icon: selectedIcon.state == 2
+                ? const Icon(
+                    Icons.notifications,
+                    color: Colors.white,
+                  )
+                : isNotificationsEmpty(),
+          ),
+          IconButton(
+            onPressed: () async {
+              if (isSigned && selectedIcon.state != 1) {
+                // ignore: use_build_context_synchronously
+                if (selectedIcon.state != 0) Navigator.pop(context);
+                setState(() {
+                  selectedIcon.changeView(3);
+                });
+                // ignore: use_build_context_synchronously
+                Navigator.pushNamed(context, routeCharge);
+              } else {
+                // ignore: use_build_context_synchronously
+                showDialog(
+                  barrierColor: Colors.transparent,
+                  context: context,
+                  builder: (context) => MustBeLoggedPopup(),
+                );
+              }
+            },
+            icon: selectedIcon.state == 3
+                ? const Icon(
+                    Icons.store,
+                    color: Colors.white,
+                  )
+                : const Icon(
+                    Icons.store_outlined,
                     color: Colors.white,
                   ),
           ),

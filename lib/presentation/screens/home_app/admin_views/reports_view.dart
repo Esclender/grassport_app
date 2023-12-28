@@ -168,10 +168,13 @@ class CardWidget extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class DetailedView extends StatelessWidget {
+  TextEditingController textAreaController = TextEditingController();
+
   final ReportInfo report;
 
-  const DetailedView({
+  DetailedView({
     required this.report,
     Key? key,
   }) : super(key: key);
@@ -199,6 +202,99 @@ class DetailedView extends StatelessWidget {
                 ),
               ],
               enableRotation: false,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green),
+              SizedBox(width: 8.0),
+              Text('Revision Exitosa', style: TextStyle(color: Colors.green)),
+            ],
+          ),
+          content: const Text('Se ha enviado la revision.',
+              style: TextStyle(color: Colors.green)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK', style: TextStyle(color: Colors.green)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showModifyDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          backgroundColor: c8,
+          child: SizedBox(
+            height: 400,
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Revision de reporte',
+                    style: TextStyle(
+                        color: c1, fontWeight: FontWeight.bold, fontSize: 16.0),
+                  ),
+                  const Gap(8),
+                  TextField(
+                    maxLines: 8,
+                    controller: textAreaController,
+                    decoration: const InputDecoration(
+                      hintText: "Deja una respuesta",
+                      hintStyle: TextStyle(color: Colors.white),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  const Gap(8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          _showSuccessDialog(context);
+                        },
+                        icon: Icon(
+                          Icons.send,
+                          color: c8,
+                        ),
+                        label: Text(
+                          'Enviar revision',
+                          style: TextStyle(
+                            color: c8,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         );
@@ -277,14 +373,34 @@ class DetailedView extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text(
-                  report.fechaCreacion,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w100,
-                    color: c10,
-                  ),
-                ),
+                Column(
+                  children: [
+                    Text(
+                      report.fechaCreacion,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w100,
+                        color: c10,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => _showModifyDialog(context),
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 5),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: c1,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Icon(
+                          Icons.edit_document,
+                          color: c8,
+                        ),
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
           ),

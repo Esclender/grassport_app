@@ -64,7 +64,7 @@ class _EffectIntroState extends State<EffectIntro>
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemModifiers.overlayDark,
       child: Container(
-        color: c1,
+        color: Colors.transparent,
         child: Stack(
           alignment: Alignment.center,
           children: [

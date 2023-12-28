@@ -21,6 +21,27 @@ class SideToSideTransition extends PageRouteBuilder {
   final Widget child;
 }
 
+class FadeInTransition extends PageRouteBuilder {
+  FadeInTransition({required this.child})
+      : super(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            const begin = 0.0;
+            const end = 1.0;
+            const curve = Curves.ease;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+            return FadeTransition(
+              opacity: animation.drive(tween),
+              child: child,
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 1000),
+        );
+  final Widget child;
+}
+
 class TopToBottom extends PageRouteBuilder {
   TopToBottom({required this.child})
       : super(

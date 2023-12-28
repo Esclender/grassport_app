@@ -129,11 +129,40 @@ class ApiClient {
     }
   }
 
-  registerUser(fields) async {
+  registerUser({
+    required File image,
+    required String email,
+    required String nombre,
+    required String apellido,
+    required String numero,
+    required String clave,
+  }) async {
     try {
-      final Map params = fields ?? {};
       final uri = Uri.http(API_URL, registerPath);
-      await client.post(uri, body: {...params});
+
+      http.MultipartRequest request = http.MultipartRequest('POST', uri);
+
+      request.fields['email'] = email;
+      request.fields['nombre'] = nombre;
+      request.fields['apellido'] = apellido;
+      request.fields['numero'] = numero;
+      request.fields['clave'] = clave;
+
+      request.files.add(
+        http.MultipartFile(
+          'image',
+          http.ByteStream(image.openRead().cast()),
+          await image.length(),
+          filename: basename(image.path),
+          contentType: MediaType('image', 'jpeg'),
+        ),
+      );
+
+      http.StreamedResponse streamedResponse = await request.send();
+      http.Response response = await http.Response.fromStream(streamedResponse);
+      Map responseJSON = jsonDecode(response.body);
+
+      return responseJSON['response'];
     } catch (e) {
       throw Exception(e);
     }

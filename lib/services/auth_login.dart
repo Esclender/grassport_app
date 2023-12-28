@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -82,23 +84,25 @@ Future<bool> checkIfUserIsSignedInJWT(BuildContext context) async {
   return true;
 }
 
-Future<void> registerUser({
+Future registerUser({
   String? email,
   String? password,
   String? nombre,
   String? apellido,
   String? numero,
+  required File image,
 }) async {
   try {
-    Map datosUser = {
-      'email': email,
-      'clave': password,
-      'nombre': nombre,
-      'apellido': apellido,
-      'numero': numero
-    };
+    Map confirmationData = await ApiClient().registerUser(
+      image: image,
+      email: email as String,
+      nombre: nombre as String,
+      apellido: apellido as String,
+      numero: numero as String,
+      clave: password as String,
+    );
 
-    await ApiClient().registerUser(datosUser);
+    return confirmationData;
   } catch (e) {
     print('Error registering user: $e');
   }

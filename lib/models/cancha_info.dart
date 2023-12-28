@@ -60,3 +60,17 @@ class CanchaInfo {
     return canchas;
   }
 }
+
+class Comment {
+  final String name;
+  final String comment;
+  final String profilePicture;
+  final List<Comment> replies;
+
+  Comment({
+    required this.name,
+    required this.comment,
+    required this.profilePicture,
+    required this.replies,
+  });
+}

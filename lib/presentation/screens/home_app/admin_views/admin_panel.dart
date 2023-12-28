@@ -19,6 +19,8 @@ class _AdminPanelViewState extends State<AdminPanelView> {
 
   final ApiClient _myClient = ApiClient();
 
+  int _currentIndex = 0;
+
   @override
   void initState() {
     setDataPanel();
@@ -92,12 +94,22 @@ class _AdminPanelViewState extends State<AdminPanelView> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.65,
                   child: PageView.builder(
+                    onPageChanged: (index) {
+                      print(index);
+                      setState(() {
+                        _currentIndex = index;
+                      });
+                    },
                     controller: _pageController,
                     itemCount: _widgets.length,
                     itemBuilder: (context, index) {
                       return _widgets[index];
                     },
                   ),
+                ),
+                SlideIndicator(
+                  pageCount: _widgets.length,
+                  currentIndex: _currentIndex,
                 ),
               ],
             ),
@@ -173,6 +185,42 @@ class _AdminPanelViewState extends State<AdminPanelView> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class SlideIndicator extends StatefulWidget {
+  final int pageCount;
+  int currentIndex;
+
+  SlideIndicator({
+    Key? key,
+    required this.pageCount,
+    required this.currentIndex,
+  }) : super(key: key);
+
+  @override
+  State<SlideIndicator> createState() => _SlideIndicatorState();
+}
+
+class _SlideIndicatorState extends State<SlideIndicator> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        widget.pageCount,
+        (index) => Container(
+          height: 5,
+          width: 5,
+          margin: EdgeInsets.symmetric(horizontal: 5),
+          decoration: BoxDecoration(
+            color: index == widget.currentIndex ? c1 : Colors.grey,
+            borderRadius: BorderRadius.circular(100),
+          ),
         ),
       ),
     );

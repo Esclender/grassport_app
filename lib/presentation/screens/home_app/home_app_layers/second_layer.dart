@@ -119,6 +119,7 @@ class AvatarUserNotLogged extends StatelessWidget {
       padding: const EdgeInsets.only(top: 60),
       child: GestureDetector(
         onTap: () {
+          context.read<GoogleMapMarkers>().clear();
           Navigator.pushNamed(context, routeLogin);
         },
         child: Container(

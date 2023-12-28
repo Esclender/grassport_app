@@ -3,6 +3,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/models/user_registered_model.dart';
+import 'package:grassport_app/presentation/styles/boxx_shadows.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
 class UserListScreen extends StatefulWidget {
@@ -348,16 +349,9 @@ class _UserListScreenState extends State<UserListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.greenAccent,
-                            blurRadius: 10.0,
-                            spreadRadius: 2.0,
-                            offset: Offset(0.0, 0.0),
-                          ),
-                        ],
+                        boxShadow: [neoShadow],
                       ),
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(user.photoURL),

@@ -5,10 +5,10 @@ import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/models/cancha_info.dart';
 import 'package:grassport_app/models/logged_user.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
-import 'package:grassport_app/presentation/components/map.dart';
 import 'package:grassport_app/presentation/components/popus/must_be_logged_pp.dart';
 import 'package:grassport_app/presentation/components/popus/succesfull_pp.dart';
 import 'package:grassport_app/presentation/components/stars_rating.dart';
+import 'package:grassport_app/presentation/screens/cancha_details/comments_section.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
 // ignore: must_be_immutable
@@ -24,6 +24,52 @@ class _CanchaDetailsState extends State<CanchaDetails> {
   @override
   Widget build(BuildContext context) {
     UserDisplayed? isUserSigned = context.watch<LoggedUser>().state;
+
+    List<Comment> comments = [
+      Comment(
+        replies: [],
+        name: "Esclender",
+        comment:
+            "Eu proident nostrud ex sunt Lorem anim duis esse consequat. Ullamco amet qui velit quis ad ipsum officia officia magna. Qui adipisicing commodo irure dolore cillum qui anim culpa nulla tempor do ut. Magna exercitation ullamco sint aute pariatur commodo cupidatat id quis esse sit ex. Culpa adipisicing esse eu ipsum culpa.",
+        profilePicture:
+            'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
+      ),
+      Comment(
+        replies: [],
+        name: "Esclender",
+        comment: "Comentario",
+        profilePicture:
+            'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
+      ),
+      Comment(
+        replies: [],
+        name: "Esclender",
+        comment: "Comentario",
+        profilePicture:
+            'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
+      ),
+      Comment(
+        replies: [],
+        name: "Esclender",
+        comment: "Comentario",
+        profilePicture:
+            'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
+      ),
+      Comment(
+        replies: [],
+        name: "Esclender",
+        comment: "Comentario",
+        profilePicture:
+            'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
+      ),
+      Comment(
+        replies: [],
+        name: "Esclender",
+        comment: "Comentario",
+        profilePicture:
+            'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
+      ),
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -52,10 +98,15 @@ class _CanchaDetailsState extends State<CanchaDetails> {
               const Gap(10),
               Text(
                 widget.cancha.address,
-                style: const TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 15),
               ),
-              StreetMap(
-                location: widget.cancha.location,
+              const Gap(20),
+              // StreetMap(
+              //   location: widget.cancha.location,
+              // ),
+              CommentsSection(
+                commentsCount: comments.length,
+                comments: comments,
               ),
               const Gap(15),
               ActionBtns(
@@ -182,4 +233,3 @@ class ActionBtns extends StatelessWidget {
     );
   }
 }
-//"assets/app_icons/whatsapp.svg"

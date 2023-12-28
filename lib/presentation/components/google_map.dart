@@ -23,7 +23,7 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
       Completer<GoogleMapController>();
   LatLng? currentLocation;
   Set<Marker> markersNearCanchas = {};
-  late Marker myPosicion = Marker(markerId: MarkerId('Posicion'));
+  Marker myPosicion = const Marker(markerId: MarkerId('Posicion'));
 
   @override
   void initState() {
@@ -65,9 +65,6 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
 
   void setMakers() async {
     // ignore: use_build_context_synchronously
-    //context.read<GoogleMapMarkers>().setMarkers(context, currentLocation);
-
-    // ignore: use_build_context_synchronously
     Set<Marker> data = await context
         .read<NearCanchas>()
         .getNearCanchas(currentLocation: currentLocation);
@@ -99,8 +96,7 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
     LatLng data = LatLng(location.latitude, location.longitude);
     // ignore: use_build_context_synchronously
     var loc = c.read<DeviceGpsLocation>();
-    print('*******************************************PRINT DATA');
-    print(data);
+
     loc.setGpsLocation(data);
     setMyPosicion();
 

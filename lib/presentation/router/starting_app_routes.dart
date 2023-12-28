@@ -10,13 +10,16 @@ import 'package:grassport_app/presentation/screens/StartingApp/select_current_lo
 import 'package:grassport_app/presentation/screens/StartingApp/start.dart';
 import 'package:grassport_app/presentation/screens/StartingApp/use_gps_location.dart';
 import 'package:grassport_app/presentation/screens/cancha_details/cancha_details_view.dart';
+import 'package:grassport_app/presentation/screens/cancha_details/comment_replies.dart';
 import 'package:grassport_app/presentation/screens/chargeScreens/main_charge.dart';
 import 'package:grassport_app/presentation/screens/home_app/admin_views/admin_home.dart';
 import 'package:grassport_app/presentation/screens/home_app/favorite_view.dart';
 import 'package:grassport_app/presentation/screens/home_app/home_view.dart';
+import 'package:grassport_app/presentation/screens/home_app/notifications_view.dart';
 import 'package:grassport_app/presentation/screens/home_app/profile_settings_views/modify_profile.dart';
 import 'package:grassport_app/presentation/screens/home_app/profile_settings_views/report_problem.dart';
 import 'package:grassport_app/presentation/screens/home_app/profile_settings_views/terms_conditions.dart';
+import 'package:grassport_app/presentation/screens/home_app/report_detailes_view.dart';
 import 'package:grassport_app/presentation/styles/side_to_side_transition.dart';
 
 const String routeStartApp = '/start';
@@ -29,7 +32,12 @@ const String routeAgreementLocation = '/agreementLocation';
 const String routeSelectLocation = '/agreementLocation/selectCurrentLocation';
 const String routeGpsLocation = '/agreementLocation/gpsLocation';
 const String routeHomeApp = '/home';
+const String routeMyPlaces = '/myPlaces';
 const String routeCanchaDetails = '/home/cancha_details';
+
+const String routeCanchaReplies = '/home/cancha_details/comment';
+const String routeReportDetailed = '/home/report_detailed';
+
 const String routeFavView = '/home/favorites';
 const String routeNotifView = '/home/notifications';
 const String routeEditProfile = '/home/profile/edit';
@@ -47,23 +55,29 @@ class MyRouters {
       case "/start/previews":
         return SideToSideTransition(child: const Previews());
       case "/start/login":
-        return SideToSideTransition(child: const LoginScreen());
+        return FadeInTransition(child: const LoginScreen());
       case "/start/register":
         return SideToSideTransition(child: const RegistrationScreen());
       case "/agreementLocation":
-        return SideToSideTransition(child: const AgreementLocation());
+        return FadeInTransition(child: const AgreementLocation());
       case "/agreementLocation/gpsLocation":
         return SideToSideTransition(child: const CurrentLocationByGps());
       case "/agreementLocation/selectCurrentLocation":
         return SideToSideTransition(child: const SelectCurrentLocation());
+      case "/myPlaces":
+        return FadeInTransition(child: const HomeApp());
       case "/home":
-        return SideToSideTransition(child: const HomeApp());
+        return FadeInTransition(child: const HomeApp());
       case "/home/admin/panel":
-        return SideToSideTransition(child: const AdminView());
+        return FadeInTransition(child: const AdminView());
       case "/home/favorites":
         return SideToSideTransition(child: const FavView());
+      case "/home/notifications":
+        return SideToSideTransition(child: const NotifView());
       case "/home/report":
         return SideToSideTransition(child: const ReportProblem());
+      case "/home/report_detailed":
+        return FadeInTransition(child: const ReportDetailedWidget());
       case "/home/terms":
         return SideToSideTransition(child: const TermsConditions());
       case "/home/cancha_details":
@@ -72,6 +86,11 @@ class MyRouters {
           child: CanchaDetails(
             cancha: data,
           ),
+        );
+      case "/home/cancha_details/comment":
+        //Comment data = (settings.arguments as Comment);
+        return FadeInTransition(
+          child: CommentRepliesDetailed(),
         );
       case "/home/profile/edit":
         return SideToSideTransition(child: const EditProfile());

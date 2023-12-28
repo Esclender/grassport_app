@@ -59,8 +59,6 @@ class _ReportProblemState extends State<ReportProblem> {
               Field(
                 imageController: selectImage,
               ),
-              // const Field(),
-              // const Field(),
               TextField(
                 maxLines: 8,
                 controller: textAreaController,
