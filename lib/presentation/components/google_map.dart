@@ -165,6 +165,7 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
                   ...markers,
                   ...markersNearCanchas,
                 },
+                zoomControlsEnabled: false,
               )
             : const Center(
                 child: CircularProgressIndicator(),

@@ -8,11 +8,13 @@ import 'package:grassport_app/presentation/styles/colors.dart';
 class CommentsSection extends StatefulWidget {
   final int commentsCount;
   final List<Comment> comments;
+  final bool isOwner;
 
   CommentsSection({
     super.key,
     required this.commentsCount,
     required this.comments,
+    this.isOwner = false,
   });
 
   @override
@@ -34,9 +36,10 @@ class _CommentsSectionState extends State<CommentsSection> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
-                color: c7,
+                color: widget.isOwner ? c1 : c7,
               ),
             ),
+            const Gap(10),
             Container(
               padding: EdgeInsets.all(15.0),
               decoration: BoxDecoration(
@@ -71,18 +74,46 @@ class _CommentsSectionState extends State<CommentsSection> {
         ),
         Row(
           children: [
-            SearchBar(
-              controller: _commentController,
-              backgroundColor: MaterialStateProperty.all(c2),
-              elevation: MaterialStateProperty.all(2.0),
-              constraints: const BoxConstraints(maxWidth: 280, minHeight: 50),
-              hintText: 'Escribe un comentario',
+            SizedBox(
+              height: 50,
+              width: 280,
+              child: TextField(
+                controller: _commentController,
+                style: TextStyle(color: c8),
+                decoration: InputDecoration(
+                  hintText: 'Escribe un comentario',
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: widget.isOwner ? c1 : c8,
+                      width: 2.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: widget.isOwner ? c1 : c8,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+              ),
             ),
             const Gap(20),
-            IconButton.filled(
-              onPressed: () {},
-              icon: Icon(Icons.send),
-              style: TextButton.styleFrom(backgroundColor: c8),
+            InkWell(
+              onTap: () {
+                // Your onPressed logic here
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.circular(10), // Adjust the radius as needed
+                  color: widget.isOwner ? c1 : c8,
+                ),
+                padding: EdgeInsets.all(10), // Adjust padding as needed
+                child: Icon(
+                  Icons.send,
+                  color: widget.isOwner ? c8 : c1,
+                ),
+              ),
             )
           ],
         )

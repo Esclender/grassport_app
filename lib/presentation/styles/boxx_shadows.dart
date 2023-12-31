@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grassport_app/presentation/styles/colors.dart';
 
 BoxShadow canchaCards = const BoxShadow(
   color: Colors.grey,
@@ -17,4 +18,10 @@ BoxShadow neoShadow = const BoxShadow(
   blurRadius: 10.0,
   spreadRadius: 2.0,
   offset: Offset(0.0, 0.0),
+);
+
+BoxShadow neoDarkShadow = BoxShadow(
+  color: c15.withOpacity(0.05),
+  offset: Offset(0, 0.7),
+  blurRadius: 2,
 );

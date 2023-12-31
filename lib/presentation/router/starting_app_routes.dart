@@ -20,6 +20,8 @@ import 'package:grassport_app/presentation/screens/home_app/profile_settings_vie
 import 'package:grassport_app/presentation/screens/home_app/profile_settings_views/report_problem.dart';
 import 'package:grassport_app/presentation/screens/home_app/profile_settings_views/terms_conditions.dart';
 import 'package:grassport_app/presentation/screens/home_app/report_detailes_view.dart';
+import 'package:grassport_app/presentation/screens/myPlacesHome/card_details/myplace_canchas_details.dart';
+import 'package:grassport_app/presentation/screens/myPlacesHome/welcome.dart';
 import 'package:grassport_app/presentation/styles/side_to_side_transition.dart';
 
 const String routeStartApp = '/start';
@@ -33,6 +35,7 @@ const String routeSelectLocation = '/agreementLocation/selectCurrentLocation';
 const String routeGpsLocation = '/agreementLocation/gpsLocation';
 const String routeHomeApp = '/home';
 const String routeMyPlaces = '/myPlaces';
+const String routeMyPlacesCanchaDetails = '/myPlaces/canchaDetails';
 const String routeCanchaDetails = '/home/cancha_details';
 
 const String routeCanchaReplies = '/home/cancha_details/comment';
@@ -65,7 +68,15 @@ class MyRouters {
       case "/agreementLocation/selectCurrentLocation":
         return SideToSideTransition(child: const SelectCurrentLocation());
       case "/myPlaces":
-        return FadeInTransition(child: const HomeApp());
+        return FadeInTransition(child: const MyPlaceWelcomeScreen());
+      case "/myPlaces/canchaDetails":
+        CanchaInfo data = (settings.arguments as CanchaInfo);
+
+        return SideToSideTransition(
+          child: MyPlaceCanchasDetail(
+            data: data,
+          ),
+        );
       case "/home":
         return FadeInTransition(child: const HomeApp());
       case "/home/admin/panel":

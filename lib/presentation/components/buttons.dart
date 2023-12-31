@@ -11,11 +11,12 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: TextButton.styleFrom(
-          backgroundColor: bg,
-          minimumSize: const Size(280, 50),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15)),
-          )),
+        backgroundColor: bg,
+        minimumSize: const Size(280, 50),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+      ),
       onPressed: () {
         next();
       },

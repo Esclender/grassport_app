@@ -101,9 +101,6 @@ class _CanchaDetailsState extends State<CanchaDetails> {
                 style: const TextStyle(fontSize: 15),
               ),
               const Gap(20),
-              // StreetMap(
-              //   location: widget.cancha.location,
-              // ),
               CommentsSection(
                 commentsCount: comments.length,
                 comments: comments,

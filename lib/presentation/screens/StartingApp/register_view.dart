@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/presentation/components/code_confirmation_modal.dart';
-import 'package:grassport_app/presentation/components/counter_timer.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:grassport_app/presentation/styles/systemThemes.dart';
 import 'package:grassport_app/services/auth_login.dart';

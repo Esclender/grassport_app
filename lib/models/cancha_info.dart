@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class CanchaInfo {
   LatLng location;
   String nombre;
+  String description;
   int rating;
   String address;
   bool isOpen;
@@ -15,6 +16,7 @@ class CanchaInfo {
     required this.isOpen,
     required this.location,
     this.photoURL = '',
+    this.description = '',
   });
 
   Map getObjectForFavorites() {

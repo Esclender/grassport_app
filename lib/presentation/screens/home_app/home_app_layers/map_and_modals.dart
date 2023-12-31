@@ -45,10 +45,6 @@ class _BottomModalState extends State<BottomModal> {
   Widget build(BuildContext context) {
     var nearCanchas = context.watch<NearCanchas>();
 
-    print(
-        '*****************************************************NEAR CANCHAS LISTADO');
-    print(nearCanchas);
-
     return DraggableScrollableSheet(
       initialChildSize: 0.15,
       minChildSize: 0.15,
