@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/models/cancha_info.dart';
 import 'package:grassport_app/presentation/components/stars_rating.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
@@ -7,16 +8,24 @@ import 'package:grassport_app/presentation/styles/colors.dart';
 
 // ignore: must_be_immutable
 class CanchaCard extends StatelessWidget {
-  CanchaInfo data;
+  CanchaMarker data;
+  ApiClient myClient = ApiClient();
 
   CanchaCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        //Navigator.pushNamed(context, '/cancha', arguments: {'id': data['id']});
-        Navigator.pushNamed(context, routeCanchaDetails, arguments: data);
+      onTap: () async {
+        CanchaInfo canchaDetails =
+            await myClient.getNearLocationsDetails(data.placeId);
+
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(
+          context,
+          routeCanchaDetails,
+          arguments: canchaDetails,
+        );
       },
       child: Container(
         margin: const EdgeInsets.all(20),
@@ -37,7 +46,7 @@ class CanchaCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   image: DecorationImage(
-                    image: NetworkImage(data.photoURL),
+                    image: NetworkImage(data.photoURL as String),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -55,7 +64,7 @@ class CanchaCard extends StatelessWidget {
 
 // ignore: must_be_immutable
 class CardInfo extends StatelessWidget {
-  CanchaInfo data;
+  CanchaMarker data;
 
   CardInfo({super.key, required this.data});
 
@@ -77,7 +86,7 @@ class CardInfo extends StatelessWidget {
                 ),
                 StarsRating(
                   canchaUpdate: () {},
-                  rate: data.rating,
+                  rate: data.rating as int,
                   isDetails: false,
                 ),
                 Text(

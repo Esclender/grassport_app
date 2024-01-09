@@ -19,7 +19,10 @@ class LocationDesc {
 
   Map getObject() {
     return {
-      "location": {"lat": location['lat'], "lng": location['lng']},
+      "location": {
+        "latitude": location['latitude'],
+        "longitude": location['longitude']
+      },
       "locality": locality,
       "street": street
     };

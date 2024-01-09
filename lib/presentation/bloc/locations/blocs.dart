@@ -1,5 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:grassport_app/api/api_client.dart';
+import 'package:grassport_app/models/lis_item_model.dart';
+
+ApiClient myClient = ApiClient();
 
 class SelectLocation extends Cubit<int> {
   SelectLocation()
@@ -11,12 +14,20 @@ class SelectLocation extends Cubit<int> {
 
   getRegistros({address = ''}) async {
     if (state == 0) {
-      Map location = await ApiClient().getMyHistory();
+      List<LocationTagModel> location = await myClient.getMyHistory();
 
-      return location['historial'];
+      return location;
     }
 
-    Map location = await ApiClient().searchByAddress(search: address);
+    Map location = await myClient.searchByAddress(search: address);
     return location['response']; //change by the search places
+  }
+}
+
+class IsGpsEnabled extends Cubit<bool> {
+  IsGpsEnabled() : super(false);
+
+  void setGpsPermissions(bool isEnabled) {
+    emit(isEnabled);
   }
 }

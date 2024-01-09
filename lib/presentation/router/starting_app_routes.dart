@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grassport_app/models/cancha_info.dart';
+import 'package:grassport_app/models/report_model.dart';
 import 'package:grassport_app/presentation/screens/StartingApp/firebase_init.dart';
 import 'package:grassport_app/presentation/screens/StartingApp/location_agree.dart';
 //import 'package:grassport_app/presentation/screens/StartingApp/login.dart';
@@ -88,7 +89,13 @@ class MyRouters {
       case "/home/report":
         return SideToSideTransition(child: const ReportProblem());
       case "/home/report_detailed":
-        return FadeInTransition(child: const ReportDetailedWidget());
+        ReportInfo data = (settings.arguments as ReportInfo);
+
+        return FadeInTransition(
+          child: ReportDetailedWidget(
+            dataReport: data,
+          ),
+        );
       case "/home/terms":
         return SideToSideTransition(child: const TermsConditions());
       case "/home/cancha_details":
@@ -99,9 +106,12 @@ class MyRouters {
           ),
         );
       case "/home/cancha_details/comment":
-        //Comment data = (settings.arguments as Comment);
+        Comment data = (settings.arguments as Comment);
+
         return FadeInTransition(
-          child: CommentRepliesDetailed(),
+          child: CommentRepliesDetailed(
+            comment: data,
+          ),
         );
       case "/home/profile/edit":
         return SideToSideTransition(child: const EditProfile());

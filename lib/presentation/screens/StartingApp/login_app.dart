@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:grassport_app/exceptions/custom_exception.dart';
+import 'package:grassport_app/presentation/components/alerts.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:grassport_app/presentation/styles/systemThemes.dart';
@@ -19,30 +21,51 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // Function to show "Verifique los datos" alert
-  void _showErrorAlert() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Verifique los datos'),
-          content: const Text('Por favor, ingrese un correo y clave validos.'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Aceptar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   bool _areInputsValid() {
     return _emailController.text.trim().isNotEmpty &&
         _passwordController.text.trim().isNotEmpty;
+  }
+
+  Future<void> _loginUser() async {
+    if (_areInputsValid()) {
+      String email = _emailController.text.trim();
+      String password = _passwordController.text.trim();
+
+      try {
+        bool isAdmin = await loginWithCredentials(
+          email: email,
+          password: password,
+          context: context,
+        );
+
+        if (!isAdmin) {
+          // ignore: use_build_context_synchronously
+          Navigator.pushNamed(
+            context,
+            routeAgreementLocation,
+          );
+        } else {
+          // ignore: use_build_context_synchronously
+          Navigator.pushNamed(
+            context,
+            routeToAdminPanel,
+          );
+        }
+      } on CustomException catch (e) {
+        // ignore: use_build_context_synchronously
+        CustomDialogs.showAlert(
+          context: context,
+          title: 'Verifique los datos',
+          message: e.message,
+        );
+      }
+    } else {
+      CustomDialogs.showAlert(
+        context: context,
+        title: 'Verifique los datos',
+        message: 'Por favor, Ingrese todos los campos.',
+      );
+    }
   }
 
   @override
@@ -119,38 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 16.0),
                       ElevatedButton.icon(
                         onPressed: () async {
-                          if (_areInputsValid()) {
-                            String email = _emailController.text.trim();
-                            String password = _passwordController.text.trim();
-
-                            try {
-                              bool isAdmin = await loginWithCredentials(
-                                email: email,
-                                password: password,
-                                context: context,
-                              );
-
-                              if (!isAdmin) {
-                                // ignore: use_build_context_synchronously
-                                Navigator.pushNamed(
-                                  context,
-                                  routeAgreementLocation,
-                                );
-                              } else {
-                                // ignore: use_build_context_synchronously
-                                Navigator.pushNamed(
-                                  context,
-                                  routeToAdminPanel,
-                                );
-                              }
-                              // // ignore: use_build_context_synchronously
-                              //
-                            } catch (e) {
-                              _showErrorAlert();
-                            }
-                          } else {
-                            _showErrorAlert();
-                          }
+                          await _loginUser();
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -182,8 +174,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                 // ignore: use_build_context_synchronously
                                 SessionManager.manageViews(context);
-                              } on Exception catch (e) {
-                                throw Exception(e);
+                              } on CustomException catch (e) {
+                                // ignore: use_build_context_synchronously
+                                CustomDialogs.showAlert(
+                                  context: context,
+                                  title: 'Verifique los datos',
+                                  message: e.message,
+                                );
                               }
                             },
                             child: Column(

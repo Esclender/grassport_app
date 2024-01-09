@@ -20,6 +20,7 @@ class LocationTag extends StatelessWidget {
   final String department;
   final String location;
   final bool isHomeSearch;
+  final String placeId;
 
   const LocationTag({
     super.key,
@@ -27,6 +28,7 @@ class LocationTag extends StatelessWidget {
     required this.department,
     required this.location,
     required this.latLng,
+    required this.placeId,
     this.isHomeSearch = false,
   });
 
@@ -39,7 +41,10 @@ class LocationTag extends StatelessWidget {
             LocationDesc savedLocation = LocationDesc(
               leading: 'history',
               locality: department,
-              location: {'lat': latLng.latitude, 'lng': latLng.longitude},
+              location: {
+                'latitude': latLng.latitude,
+                'longitude': latLng.longitude
+              },
               street: location,
             );
 
@@ -53,11 +58,12 @@ class LocationTag extends StatelessWidget {
             // ignore: use_build_context_synchronously
             Navigator.pushNamed(context, routeCharge);
           } else {
-            CanchaInfo data = CanchaInfo(
+            CanchaMarker data = CanchaMarker(
               nombre: department,
-              address: location,
-              isOpen: false,
               location: latLng,
+              placeId: placeId,
+              rating: 0,
+              address: location,
             );
 
             context.read<IsSearch>().toggleSearch(false);

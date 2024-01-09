@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:grassport_app/models/notification_model.dart';
+import 'package:grassport_app/presentation/bloc/notifications/bloc.dart';
 import 'package:grassport_app/presentation/components/shapes.dart';
-import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
 // ignore: must_be_immutable
@@ -14,57 +15,21 @@ class NotificationList extends StatefulWidget {
 }
 
 class _SavedListState extends State<NotificationList> {
-  List<Notificacion> data = [];
-
-  @override
-  void initState() {
-    setNotifications();
-    super.initState();
-  }
-
-  void setNotifications() async {
-    // List<CanchaInfo> favorites = await ApiClient().getMyFavorites();
-
-    setState(() {
-      data = [
-        Notificacion(
-          author: 'Esclender',
-          reason: 'Realizo un comentario',
-          time: 'Hace 5 minutos',
-          section: 'Tus canchas',
-          isNew: true,
-          route: 1,
-        ),
-        Notificacion(
-          author: 'Grassport Team',
-          reason: 'Reviso un reporte',
-          time: 'Hace 5 minutos',
-          section: 'Reportes',
-          isNew: false,
-          route: 0,
-        ),
-      ];
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     //var listSaved = context.watch<SavedLocations>().state;
 
+    NotificationsScaffold data = context.watch<Notifications>().state!;
+
     return ListView.separated(
-      itemCount: data.length, //listSaved.length
+      itemCount: data.allNotifications.length, //listSaved.length
       separatorBuilder: (BuildContext context, int index) => const Divider(),
       itemBuilder: (context, ind) {
-        Notificacion notif = data[ind];
+        Notificacion notif = data.allNotifications[ind];
 
         return InkWell(
           onTap: () {
-            switch (notif.route) {
-              case 0:
-                Navigator.pushNamed(context, routeReportDetailed);
-                break;
-              default:
-            }
+            notif.goToRoute(context);
           },
           child: ListTile(
             leading: Icon(
@@ -84,7 +49,7 @@ class _SavedListState extends State<NotificationList> {
               ),
             ),
             subtitle: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
                   notif.section,
@@ -102,7 +67,7 @@ class _SavedListState extends State<NotificationList> {
                       ),
                       const Gap(8),
                       Text(
-                        'Hace 5 minutos',
+                        data.allNotifications[ind].time,
                         style: TextStyle(color: c16, fontSize: 12),
                       ),
                     ],

@@ -46,6 +46,7 @@ class _SavedListState extends State<SavedList> {
           title: data[ind].nombre,
           direccion: data[ind].address,
           location: data[ind].location,
+          placeId: data[ind].placeId,
         );
       },
     );
@@ -56,6 +57,7 @@ class _SavedListState extends State<SavedList> {
 class SavedOne extends StatelessWidget {
   String title;
   String direccion;
+  String placeId;
   LatLng location;
   Icon icon;
 
@@ -63,6 +65,7 @@ class SavedOne extends StatelessWidget {
     super.key,
     this.title = "",
     this.direccion = "",
+    required this.placeId,
     required this.icon,
     required this.location,
   });
@@ -73,11 +76,12 @@ class SavedOne extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        CanchaInfo data = CanchaInfo(
+        CanchaMarker data = CanchaMarker(
           nombre: title,
-          address: direccion,
-          isOpen: false,
           location: location,
+          placeId: placeId,
+          rating: 0,
+          address: direccion,
         );
 
         context.read<GoogleMapMarkers>().setSingleMarker(data);

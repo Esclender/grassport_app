@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grassport_app/models/lis_item_model.dart';
 import 'package:grassport_app/presentation/bloc/google_map_markers/bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_is_search/bloc.dart';
 import 'package:grassport_app/presentation/bloc/locations/blocs.dart';
@@ -38,7 +39,7 @@ class HomeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CanchasByInout, List>(
+    return BlocBuilder<CanchasByInput, List<LocationTagModel>>(
       builder: (context, registros) {
         final showTopScreen = context.watch<IsSearch>().state;
         final locationData = context.read<SelectLocation>();

@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:grassport_app/models/lis_item_model.dart';
 import 'package:grassport_app/presentation/components/location_search_list_items.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
 class Searching extends StatefulWidget {
   final dynamic historyData;
   final int? header;
-  final List registros;
+  final List<LocationTagModel> registros;
   final bool isHomeSearch;
 
-  const Searching(
-      {super.key,
-      required this.historyData,
-      this.header,
-      required this.registros,
-      this.isHomeSearch = false});
+  const Searching({
+    super.key,
+    required this.historyData,
+    required this.registros,
+    this.header,
+    this.isHomeSearch = false,
+  });
 
   @override
   State<Searching> createState() => _SearchingState();
 }
 
 class _SearchingState extends State<Searching> {
-  LatLng getLocation(location) {
-    return LatLng(location['lat'], location['lng']);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,16 +41,17 @@ class _SearchingState extends State<Searching> {
               child: widget.registros.isNotEmpty
                   ? ListView.separated(
                       itemBuilder: (BuildContext context, int index) {
+                        LocationTagModel registro = widget.registros[index];
+
                         return LocationTag(
                           isHomeSearch: widget.isHomeSearch,
-                          latLng:
-                              getLocation(widget.registros[index]['location']),
-                          leading:
-                              widget.registros[index]['leading'] == 'history'
-                                  ? const Icon(Icons.history)
-                                  : const Icon(Icons.location_city),
-                          department: widget.registros[index]['locality'],
-                          location: widget.registros[index]['street'],
+                          latLng: registro.location,
+                          leading: registro.leading == 'history'
+                              ? const Icon(Icons.history)
+                              : const Icon(Icons.location_city),
+                          department: registro.department,
+                          location: registro.street,
+                          placeId: registro.placeId,
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) =>

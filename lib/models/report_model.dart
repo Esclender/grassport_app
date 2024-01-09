@@ -5,6 +5,7 @@ class ReportInfo {
   final String email;
   String number;
   String fechaCreacion;
+  String comment;
 
   ReportInfo({
     this.userName = '',
@@ -13,6 +14,7 @@ class ReportInfo {
     this.email = '',
     this.number = '',
     this.fechaCreacion = '',
+    this.comment = '',
   });
 
   static transformBodyArray(body) {
@@ -22,6 +24,7 @@ class ReportInfo {
       ReportInfo reportInfo = ReportInfo(
         userName: reporte['nombre'] ?? 'Usuario Google',
         description: reporte['descripcion'],
+        comment: reporte['comentario'],
         imageUrl: reporte['imageURL'],
         email: reporte['email'],
         number: reporte['numero'] ?? '',
@@ -31,5 +34,19 @@ class ReportInfo {
     }
 
     return reportes;
+  }
+
+  static transformDetails(body) {
+    Map reporte = body['response'];
+
+    return ReportInfo(
+      userName: reporte['nombre'] ?? 'Usuario Google',
+      description: reporte['descripcion'] ?? '',
+      imageUrl: reporte['imageURL'] ?? '',
+      email: reporte['email'] ?? '',
+      number: reporte['numero'] ?? '',
+      fechaCreacion: reporte['fecha_creacion'] ?? '',
+      comment: reporte['comentario'],
+    );
   }
 }

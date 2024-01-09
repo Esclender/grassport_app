@@ -6,12 +6,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:grassport_app/presentation/bloc/device_current_location/blocs.dart';
 import 'package:grassport_app/presentation/bloc/google_map_markers/bloc.dart';
 import 'package:grassport_app/presentation/bloc/nearCanchas/blocs.dart';
+import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:grassport_app/services/location_ask.dart';
 
 // ignore: must_be_immutable
 class GoogleMapBig extends StatefulWidget {
   GoogleMapBig({super.key, this.isGps = true});
-
   bool isGps;
 
   @override
@@ -22,8 +22,6 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
   LatLng? currentLocation;
-  Set<Marker> markersNearCanchas = {};
-  Marker myPosicion = const Marker(markerId: MarkerId('Posicion'));
 
   @override
   void initState() {
@@ -32,15 +30,13 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
       //_liveLocation();
     } else {
       _definedLocation();
-      setMakers();
+      setMarkers();
     }
 
-    setMyPosicion();
     super.initState();
   }
 
   void updateFocusMap(latLng, markers) async {
-    // Update the camera position to focus on the new marker
     if (markers.isNotEmpty) {
       final GoogleMapController controller = await _controller.future;
       controller.animateCamera(CameraUpdate.newLatLng(latLng));
@@ -48,34 +44,22 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
   }
 
   void setMyPosicion({LatLng? posLocation}) async {
-    BitmapDescriptor markerIcon = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(),
-      "assets/app_icons/Current_Location_Marker.png",
-    );
-
-    setState(() {
-      myPosicion = Marker(
-        markerId: const MarkerId("Posicion"),
-        position: LatLng(currentLocation?.latitude as double,
-            currentLocation?.longitude as double),
-        icon: markerIcon,
-      );
-    });
+    await context.read<GoogleMapMarkers>().setUserMarker(
+          posLocation as LatLng,
+        );
   }
 
-  void setMakers() async {
+  void setMarkers() async {
     // ignore: use_build_context_synchronously
-    Set<Marker> data = await context
+    await context.read<GoogleMapMarkers>().setMarkers(context, currentLocation);
+
+    //SET MODAL CARDS CANCHAS
+    // ignore: use_build_context_synchronously
+    await context
         .read<NearCanchas>()
         .getNearCanchas(currentLocation: currentLocation);
 
-    Future.delayed(const Duration(seconds: 2), () {
-      showMarkerInfoWindow(data);
-    });
-
-    setState(() {
-      markersNearCanchas = data;
-    });
+    setMyPosicion(posLocation: currentLocation);
   }
 
   void showMarkerInfoWindow(Set<Marker> markers) async {
@@ -89,16 +73,15 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
 
   void checkPermissions() async {
     BuildContext c = context;
-    var location = await checkIsGpsEnabled(context: c);
+    Position location = await checkIsGpsEnabled(context: c);
 
     //TODO: MANAGE WHEN USE DOESN'T AGREE
 
     LatLng data = LatLng(location.latitude, location.longitude);
     // ignore: use_build_context_synchronously
-    var loc = c.read<DeviceGpsLocation>();
+    c.read<DeviceGpsLocation>().setGpsLocation(data);
 
-    loc.setGpsLocation(data);
-    setMyPosicion();
+    setMyPosicion(posLocation: data);
 
     setState(() {
       currentLocation = data;
@@ -106,25 +89,25 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
   }
 
   //LISTEN
-  void _liveLocation() {
-    LocationSettings locationSettings = AndroidSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 0,
-      intervalDuration: const Duration(seconds: 100),
-    );
+  // void _liveLocation() {
+  //   LocationSettings locationSettings = AndroidSettings(
+  //     accuracy: LocationAccuracy.high,
+  //     distanceFilter: 0,
+  //     intervalDuration: const Duration(seconds: 100),
+  //   );
 
-    Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((Position position) {
-      LatLng actualLoc = LatLng(position.latitude, position.longitude);
+  //   Geolocator.getPositionStream(locationSettings: locationSettings)
+  //       .listen((Position position) {
+  //     LatLng actualLoc = LatLng(position.latitude, position.longitude);
 
-      BuildContext c = context;
-      c.read<DeviceGpsLocation>().setGpsLocation(actualLoc);
+  //     BuildContext c = context;
+  //     c.read<DeviceGpsLocation>().setGpsLocation(actualLoc);
 
-      setState(() {
-        currentLocation = actualLoc;
-      });
-    });
-  }
+  //     setState(() {
+  //       currentLocation = actualLoc;
+  //     });
+  //   });
+  // }
 
   //USE LOCATION PROVIDED
   void _definedLocation() {
@@ -141,35 +124,40 @@ class _GoogleMapBigState extends State<GoogleMapBig> {
   Widget build(BuildContext context) {
     return BlocBuilder<GoogleMapMarkers, Set<Marker>>(
       builder: (context, markers) {
-        List<Marker> myList = markers.toList();
-        if (myList.isNotEmpty) {
-          Marker lastElement = myList.last;
-          Future.delayed(const Duration(seconds: 2), () {
-            updateFocusMap(lastElement.position, markers);
-            showMarkerInfoWindow(markers);
-          });
+        // List<Marker> myList = markers.toList();
+
+        // if (myList.isNotEmpty) {
+        //   Marker lastElemen = myList.last;
+
+        //   Future.delayed(const Duration(seconds: 2), () {
+        //     updateFocusMap(lastElemen.position, markers);
+        //     showMarkerInfoWindow(markers);
+        //   });
+        // }
+
+        if (currentLocation == null) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: c8,
+            ),
+          );
         }
 
-        return currentLocation != null
-            ? GoogleMap(
-                mapType: MapType.normal,
-                initialCameraPosition: CameraPosition(
-                  target: currentLocation as LatLng,
-                  zoom: 14.4746,
-                ),
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
-                markers: {
-                  myPosicion,
-                  ...markers,
-                  ...markersNearCanchas,
-                },
-                zoomControlsEnabled: false,
-              )
-            : const Center(
-                child: CircularProgressIndicator(),
-              );
+        return GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: CameraPosition(
+            target: currentLocation as LatLng,
+            zoom: 14.4746,
+          ),
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+          markers: {
+            ...markers,
+          },
+          zoomControlsEnabled: false,
+          compassEnabled: false,
+        );
       },
     );
   }

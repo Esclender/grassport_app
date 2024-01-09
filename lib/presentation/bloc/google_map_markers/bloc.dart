@@ -5,12 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/models/cancha_info.dart';
+import 'package:grassport_app/models/lis_item_model.dart';
+
+ApiClient myClient = ApiClient();
 
 class GoogleMapMarkers extends Cubit<Set<Marker>> {
   GoogleMapMarkers() : super({}); //CONSUME ALL MARKERS OF GOOGLE MAPS HERE
 
   setMarkers(context, currentLocation) async {
-    List<CanchaInfo> dataCanchas = await ApiClient().getNearLocations(
+    Set<Marker> newSet = {};
+
+    List<CanchaMarker> dataCanchas = await myClient.getNearLocations(
         lat: currentLocation?.latitude, lon: currentLocation?.longitude);
 
     BitmapDescriptor markerCancha = await BitmapDescriptor.fromAssetImage(
@@ -19,34 +24,34 @@ class GoogleMapMarkers extends Cubit<Set<Marker>> {
     );
 
     // ignore: use_build_context_synchronously
-    for (CanchaInfo cancha in dataCanchas) {
-      emit({
-        ...state,
+    for (CanchaMarker cancha in dataCanchas) {
+      newSet.add(
         Marker(
-          markerId: MarkerId(cancha.address),
-          position: LatLng(cancha.location.latitude, cancha.location.longitude),
+          markerId: MarkerId(cancha.placeId),
+          position: cancha.location,
           icon: markerCancha,
           infoWindow: InfoWindow(
             title: cancha.nombre,
             anchor: const Offset(0.5, 0.1),
           ),
-        )
-      });
+        ),
+      );
     }
+
+    emit(newSet);
   }
 
-  //TODO: CANCHA CAN'T BE NULL
-  setSingleMarker(CanchaInfo cancha) async {
+  setSingleMarker(CanchaMarker cancha) async {
     BitmapDescriptor markerCancha = await BitmapDescriptor.fromAssetImage(
       const ImageConfiguration(),
       "assets/app_icons/cancha_icon_location.png",
     );
 
     emit({
-      ...state, //TODO: CHECK THIS PART THIS SOULD CHECK TWO
+      ...state,
       Marker(
-        markerId: MarkerId(cancha.address),
-        position: LatLng(cancha.location.latitude, cancha.location.longitude),
+        markerId: MarkerId(cancha.placeId),
+        position: cancha.location,
         icon: markerCancha,
         infoWindow: InfoWindow(
           title: cancha.nombre,
@@ -56,19 +61,21 @@ class GoogleMapMarkers extends Cubit<Set<Marker>> {
     });
   }
 
-  setUserMarker(LatLng location) async {
+  setUserMarker(LatLng newLocation) async {
     BitmapDescriptor markerIcon = await BitmapDescriptor.fromAssetImage(
       const ImageConfiguration(),
       "assets/app_icons/Current_Location_Marker.png",
     );
 
-    state.removeWhere((Marker element) => element.position == location);
+    state.removeWhere(
+      (Marker element) => element.markerId == MarkerId('Posicion'),
+    );
 
     emit({
       ...state,
       Marker(
         markerId: const MarkerId('Posicion'),
-        position: location,
+        position: newLocation,
         icon: markerIcon,
       )
     });
@@ -79,11 +86,12 @@ class GoogleMapMarkers extends Cubit<Set<Marker>> {
   }
 }
 
-class CanchasByInout extends Cubit<List> {
-  CanchasByInout() : super([]);
+class CanchasByInput extends Cubit<List<LocationTagModel>> {
+  CanchasByInput() : super([]);
 
   getCanchasByInput({query = ''}) async {
-    List locations = await ApiClient().searchCanchas(search: query);
+    List<LocationTagModel> locations =
+        await myClient.searchCanchas(search: query);
 
     emit([...locations]);
 

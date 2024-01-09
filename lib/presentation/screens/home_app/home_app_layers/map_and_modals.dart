@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/models/cancha_info.dart';
+import 'package:grassport_app/presentation/bloc/locations/blocs.dart';
 import 'package:grassport_app/presentation/bloc/nearCanchas/blocs.dart';
 import 'package:grassport_app/presentation/components/cancha_card.dart';
 import 'package:grassport_app/presentation/components/focus_my_location.dart';
 import 'package:grassport_app/presentation/components/google_map.dart';
+import 'package:grassport_app/presentation/components/search_near_Canchas_btn.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
 class MainAppHomeLayer extends StatefulWidget {
@@ -17,19 +20,26 @@ class MainAppHomeLayer extends StatefulWidget {
 class _MainAppHomeLayerState extends State<MainAppHomeLayer> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        GoogleMapBig(
-          isGps: false,
-        ),
-        Positioned(
-          bottom: MediaQuery.of(context).size.height * 0.18,
-          right: 10,
-          child: const MyLocationFocusButton(),
-        ),
-        const BottomModal(),
-      ],
-    );
+    return BlocBuilder<IsGpsEnabled, bool>(builder: (context, isEnabled) {
+      return Stack(
+        children: [
+          GoogleMapBig(
+            isGps: false,
+          ),
+          Positioned(
+            bottom: MediaQuery.of(context).size.height * 0.18,
+            right: 10,
+            child: Column(
+              children: [
+                isEnabled ? const MySearchCanchasButton() : Container(),
+                const MyLocationFocusButton()
+              ],
+            ),
+          ),
+          const BottomModal(),
+        ],
+      );
+    });
   }
 }
 
@@ -86,7 +96,7 @@ class _BottomModalState extends State<BottomModal> {
 // ignore: must_be_immutable
 class ListCanchas extends StatelessWidget {
   ScrollController scrollController;
-  List canchasArray;
+  List<CanchaMarker> canchasArray;
 
   ListCanchas({
     super.key,

@@ -1,25 +1,24 @@
 // ignore: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/models/cancha_info.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
 // ignore: must_be_immutable
 class CommentWidget extends StatefulWidget {
-  String name;
-  String comment;
-  String profilePicture;
-  bool isReply;
+  Comment commentInfo;
   bool isDetailed;
+  bool isDetailedReply;
+  Function? updateFun;
 
   CommentWidget({
     super.key,
-    required this.name,
-    required this.comment,
-    required this.profilePicture,
-    required this.isReply,
+    required this.commentInfo,
     required this.isDetailed,
+    this.isDetailedReply = false,
+    this.updateFun,
   });
 
   @override
@@ -29,47 +28,37 @@ class CommentWidget extends StatefulWidget {
 class _CommentWidgetState extends State<CommentWidget> {
   TextEditingController _replyController = TextEditingController();
 
-  List replies = [
-    Comment(
-      replies: [],
-      name: "Esclender",
-      comment: "Comentario",
-      profilePicture:
-          'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-    ),
-    Comment(
-      replies: [],
-      name: "Esclender",
-      comment: "Comentario",
-      profilePicture:
-          'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-    ),
-    Comment(
-      replies: [],
-      name: "Esclender",
-      comment: "Comentario",
-      profilePicture:
-          'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-    ),
-  ];
+  ApiClient myClient = ApiClient();
+
+  Future<void> sentComment() async {
+    await myClient.saveComment(
+      placeId: widget.commentInfo.placeId,
+      comment: _replyController.text,
+      commentToReplyId: widget.commentInfo.id,
+      isReply: 'true',
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<Comment> replies = widget.commentInfo.replies;
+    Comment info = widget.commentInfo;
+
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: NetworkImage(widget.profilePicture),
+        backgroundImage: NetworkImage(info.profilePicture),
       ),
       isThreeLine: true,
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.name,
+            info.name,
             style: TextStyle(color: c16, fontWeight: FontWeight.bold),
           ),
           const Gap(8),
           Padding(
-            padding: EdgeInsets.only(top: 5),
+            padding: const EdgeInsets.only(top: 5),
             child: Row(
               children: [
                 Container(
@@ -82,7 +71,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                 ),
                 const Gap(8),
                 Text(
-                  'Hace 5 minutos',
+                  info.tiempoPublicado,
                   style: TextStyle(color: c16, fontSize: 12),
                 ),
               ],
@@ -94,14 +83,18 @@ class _CommentWidgetState extends State<CommentWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.comment),
+            Text(info.comment),
             // Add your extra widget below the subtitle
             const SizedBox(height: 8),
-            widget.isReply || widget.isDetailed
+            widget.isDetailed || widget.isDetailedReply
                 ? Container()
                 : InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, routeCanchaReplies);
+                      Navigator.pushNamed(
+                        context,
+                        routeCanchaReplies,
+                        arguments: info,
+                      );
                     },
                     child: Text(
                       '${replies.length} Respuestas',
@@ -111,7 +104,7 @@ class _CommentWidgetState extends State<CommentWidget> {
           ],
         ),
       ),
-      trailing: widget.isReply
+      trailing: !widget.isDetailed || widget.isDetailedReply
           ? null
           : InkWell(
               splashColor: Colors.transparent,
@@ -123,9 +116,8 @@ class _CommentWidgetState extends State<CommentWidget> {
                     content: SizedBox(
                       height: 80, // Set a fixed height for the SnackBar content
                       child: ListView(
-                        // Use ListView to handle keyboard overflow
                         children: [
-                          Text('Respondiendo a ${widget.name}'),
+                          Text('Respondiendo a ${info.name}'),
                           Row(
                             children: [
                               Expanded(
@@ -135,9 +127,16 @@ class _CommentWidgetState extends State<CommentWidget> {
                                     hintText: 'Escribe tu respuesta',
                                     hintStyle: TextStyle(color: c1),
                                   ),
-                                  onSubmitted: (value) {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
+                                  onSubmitted: (value) async {
+                                    //await widget.updateFun!();
+
+                                    try {
+                                      ScaffoldMessenger.of(context)
+                                          .hideCurrentSnackBar();
+                                      await sentComment();
+                                    } finally {
+                                      await widget.updateFun!();
+                                    }
                                   },
                                   autofocus: true,
                                 ),

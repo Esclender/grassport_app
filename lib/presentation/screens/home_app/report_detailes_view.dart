@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:grassport_app/models/report_model.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
 class ReportDetailedWidget extends StatefulWidget {
-  const ReportDetailedWidget({super.key});
+  final ReportInfo dataReport;
+  const ReportDetailedWidget({
+    super.key,
+    required this.dataReport,
+  });
 
   @override
   State<ReportDetailedWidget> createState() => _ReportDetailedWidgetState();
@@ -19,7 +24,7 @@ class _ReportDetailedWidgetState extends State<ReportDetailedWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
-              leading: CircleAvatar(
+              leading: const CircleAvatar(
                 backgroundImage: NetworkImage(
                     'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/profile-ddefault.png?alt=media&token=36401350-8ef2-4483-b277-c3a17461e780'),
               ),
@@ -37,9 +42,7 @@ class _ReportDetailedWidgetState extends State<ReportDetailedWidget> {
                 ],
               ),
             ),
-            Text(
-              'Sint reprehenderit non cillum qui duis id fugiat amet id nisi reprehenderit. Aliqua pariatur magna laboris fugiat nostrud. Excepteur ipsum minim mollit nostrud.\nIncididunt cupidatat voluptate aliquip qui incididunt tempor aliquip cillum qui nisi ea. Cupidatat et amet anim elit incididunt irure. Ut elit dolor laboris ut aute aliquip sint ea nisi est irure et. Sint do proident voluptate consequat enim non aliquip deserunt.\n Velit cillum aliquip duis nostrud excepteur ex ad eiusmod enim non nostrud. Magna ullamco quis ex commodo non voluptate ipsum do et aute cillum sint laborum commodo. Laborum ut exercitation id ea nisi elit.Id est aute qui elit. Proident enim et ipsum excepteur. Officia deserunt laboris adipisicing anim quis tempor aliqua eiusmod Lorem cillum consectetur.',
-            ),
+            Text(widget.dataReport.comment),
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/presentation/components/alerts.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -58,7 +59,11 @@ class _FormStep1State extends State<FormStep1> {
         imageFile != null) {
       widget.onContinue();
     } else {
-      _showAlert('Llena todos los campos');
+      CustomDialogs.showAlert(
+        context: context,
+        title: 'Validar campos',
+        message: 'Llena todos los campos',
+      );
     }
   }
 
@@ -161,32 +166,6 @@ class _FormStep1State extends State<FormStep1> {
           )
         ],
       ),
-    );
-  }
-
-  void _showAlert(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Row(
-            children: [
-              Icon(Icons.warning, color: Colors.green),
-              SizedBox(width: 8.0),
-              Text('Alerta', style: TextStyle(color: Colors.green)),
-            ],
-          ),
-          content: Text(message, style: const TextStyle(color: Colors.green)),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('OK', style: TextStyle(color: Colors.green)),
-            ),
-          ],
-        );
-      },
     );
   }
 }

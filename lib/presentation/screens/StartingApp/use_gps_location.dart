@@ -138,9 +138,7 @@ class _ConfirmLocationState extends State<ConfirmLocation> {
               )
             ],
           )
-        : const Center(
-            child: CircularProgressIndicator(),
-          );
+        : Container();
   }
 }
 

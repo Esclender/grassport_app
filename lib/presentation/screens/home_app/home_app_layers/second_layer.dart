@@ -20,7 +20,7 @@ class _SecondLayerState extends State<SecondLayer> {
   final TextEditingController _searchController = TextEditingController();
 
   void searchCanchas({search}) async {
-    final locationData = context.read<CanchasByInout>();
+    final locationData = context.read<CanchasByInput>();
     await locationData.getCanchasByInput(query: search);
   }
 

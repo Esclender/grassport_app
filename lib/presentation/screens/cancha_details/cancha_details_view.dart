@@ -9,67 +9,29 @@ import 'package:grassport_app/presentation/components/popus/must_be_logged_pp.da
 import 'package:grassport_app/presentation/components/popus/succesfull_pp.dart';
 import 'package:grassport_app/presentation/components/stars_rating.dart';
 import 'package:grassport_app/presentation/screens/cancha_details/comments_section.dart';
+import 'package:grassport_app/presentation/styles/boxx_shadows.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 
 // ignore: must_be_immutable
 class CanchaDetails extends StatefulWidget {
   CanchaInfo cancha;
-  CanchaDetails({super.key, required this.cancha});
+
+  CanchaDetails({
+    super.key,
+    required this.cancha,
+  });
 
   @override
   State<CanchaDetails> createState() => _CanchaDetailsState();
 }
 
 class _CanchaDetailsState extends State<CanchaDetails> {
+  ApiClient myClienet = ApiClient();
+
   @override
   Widget build(BuildContext context) {
     UserDisplayed? isUserSigned = context.watch<LoggedUser>().state;
-
-    List<Comment> comments = [
-      Comment(
-        replies: [],
-        name: "Esclender",
-        comment:
-            "Eu proident nostrud ex sunt Lorem anim duis esse consequat. Ullamco amet qui velit quis ad ipsum officia officia magna. Qui adipisicing commodo irure dolore cillum qui anim culpa nulla tempor do ut. Magna exercitation ullamco sint aute pariatur commodo cupidatat id quis esse sit ex. Culpa adipisicing esse eu ipsum culpa.",
-        profilePicture:
-            'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-      ),
-      Comment(
-        replies: [],
-        name: "Esclender",
-        comment: "Comentario",
-        profilePicture:
-            'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-      ),
-      Comment(
-        replies: [],
-        name: "Esclender",
-        comment: "Comentario",
-        profilePicture:
-            'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-      ),
-      Comment(
-        replies: [],
-        name: "Esclender",
-        comment: "Comentario",
-        profilePicture:
-            'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-      ),
-      Comment(
-        replies: [],
-        name: "Esclender",
-        comment: "Comentario",
-        profilePicture:
-            'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-      ),
-      Comment(
-        replies: [],
-        name: "Esclender",
-        comment: "Comentario",
-        profilePicture:
-            'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-      ),
-    ];
+    List<Comment> comments = widget.cancha.comments;
 
     return Scaffold(
       appBar: AppBar(
@@ -81,29 +43,26 @@ class _CanchaDetailsState extends State<CanchaDetails> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              _buildOwner(),
               Container(
                 height: MediaQuery.of(context).size.height * 0.27,
                 width: MediaQuery.of(context).size.width * 0.95,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   image: DecorationImage(
-                      image: NetworkImage(widget.cancha.photoURL),
-                      fit: BoxFit.cover),
+                    image: NetworkImage(widget.cancha.photoURL),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const Gap(10),
               DetailsTitles(
                 data: widget.cancha,
               ),
-              const Gap(10),
-              Text(
-                widget.cancha.address,
-                style: const TextStyle(fontSize: 15),
-              ),
               const Gap(20),
               CommentsSection(
-                commentsCount: comments.length,
                 comments: comments,
+                placeId: widget.cancha.placeId,
               ),
               const Gap(15),
               ActionBtns(
@@ -114,6 +73,45 @@ class _CanchaDetailsState extends State<CanchaDetails> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildOwner() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Publicado por:",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const Gap(10),
+        Row(
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  simpleShadow,
+                ],
+              ),
+              child: CircleAvatar(
+                radius: 25,
+                backgroundImage: NetworkImage(
+                  widget.cancha.ownerURL,
+                ),
+              ),
+            ),
+            Text(
+              "${widget.cancha.ownerName}",
+              style: TextStyle(
+                color: c8,
+              ),
+            ),
+          ],
+        ),
+        const Gap(10),
+      ],
     );
   }
 }
@@ -141,11 +139,26 @@ class DetailsTitles extends StatelessWidget {
                 maxLines: 1,
               ),
             ),
+            Text(
+              data.address,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w200,
+              ),
+            ),
             StarsRating(
               canchaUpdate: () {},
               rate: data.rating,
               isDetails: false,
-            )
+            ),
+            const Gap(10),
+            Text(
+              data.description,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w100,
+              ),
+            ),
           ],
         ),
         Column(

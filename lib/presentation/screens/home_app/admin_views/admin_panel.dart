@@ -55,7 +55,9 @@ class _AdminPanelViewState extends State<AdminPanelView> {
     }
 
     List<Widget> _widgets = [
-      _buildWrap(),
+      ListView(
+        children: [_buildWrap()],
+      ),
       BarGraphic(
         dataList: adminPanel?.topUsers as List<BarData>,
         max: adminPanel?.maxPlusTen as double,
@@ -95,7 +97,6 @@ class _AdminPanelViewState extends State<AdminPanelView> {
                   height: MediaQuery.of(context).size.height * 0.65,
                   child: PageView.builder(
                     onPageChanged: (index) {
-                      print(index);
                       setState(() {
                         _currentIndex = index;
                       });
@@ -142,6 +143,11 @@ class _AdminPanelViewState extends State<AdminPanelView> {
             context,
             'Reportes \nde la semana',
             adminPanel?.totalReportsOfWeek as int,
+          ),
+          _buildCircularStat(
+            context,
+            'Canchas Publicadas',
+            100,
           ),
         ],
       ),

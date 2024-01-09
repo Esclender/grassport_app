@@ -12,6 +12,12 @@ import 'package:grassport_app/services/save_preferens.dart';
 import 'package:grassport_app/services/session_manager.dart';
 
 Future<UserDisplayed> signInWithGoogle(BuildContext context) async {
+  bool isConnectedWithNoPreviousToken = await GoogleSignIn().isSignedIn();
+
+  if (isConnectedWithNoPreviousToken) {
+    await GoogleSignIn().disconnect();
+  }
+
   // Trigger the authentication flow
   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -30,15 +36,15 @@ Future<UserDisplayed> signInWithGoogle(BuildContext context) async {
 
   String jwtToken = await ApiClient().getToken(
     email: userInfo.user?.email ?? '',
-    nombre: userInfo.user?.displayName ?? '',
-    photoURL: userInfo.user?.photoURL ?? '',
   );
 
   bool isAdmin = SessionManager.extractIsAdmin(jwtToken);
+  String name = SessionManager.extractNombre(jwtToken);
+  String photoUrl = SessionManager.extractPhotoURL(jwtToken);
 
   UserDisplayed userData = UserDisplayed(
-    displayName: userInfo.user?.displayName,
-    photoURL: userInfo.user?.photoURL,
+    displayName: name,
+    photoURL: photoUrl,
     isAdmin: isAdmin,
   );
 

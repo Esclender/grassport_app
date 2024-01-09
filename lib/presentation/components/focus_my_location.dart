@@ -11,6 +11,7 @@ class MyLocationFocusButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      heroTag: 'Focus Button',
       onPressed: () {
         LatLng? myLocationToFocus = context.read<DeviceGpsLocation>().state;
 

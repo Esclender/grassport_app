@@ -52,49 +52,49 @@ class _MyPlaceCanchasDetailState extends State<MyPlaceCanchasDetail> {
   }
 
   List<Comment> comments = [
-    Comment(
-      replies: [],
-      name: "Esclender",
-      comment:
-          "Eu proident nostrud ex sunt Lorem anim duis esse consequat. Ullamco amet qui velit quis ad ipsum officia officia magna. Qui adipisicing commodo irure dolore cillum qui anim culpa nulla tempor do ut. Magna exercitation ullamco sint aute pariatur commodo cupidatat id quis esse sit ex. Culpa adipisicing esse eu ipsum culpa.",
-      profilePicture:
-          'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-    ),
-    Comment(
-      replies: [],
-      name: "Esclender",
-      comment: "Comentario",
-      profilePicture:
-          'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-    ),
-    Comment(
-      replies: [],
-      name: "Esclender",
-      comment: "Comentario",
-      profilePicture:
-          'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-    ),
-    Comment(
-      replies: [],
-      name: "Esclender",
-      comment: "Comentario",
-      profilePicture:
-          'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-    ),
-    Comment(
-      replies: [],
-      name: "Esclender",
-      comment: "Comentario",
-      profilePicture:
-          'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-    ),
-    Comment(
-      replies: [],
-      name: "Esclender",
-      comment: "Comentario",
-      profilePicture:
-          'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
-    ),
+    // Comment(
+    //   replies: [],
+    //   name: "Esclender",
+    //   comment:
+    //       "Eu proident nostrud ex sunt Lorem anim duis esse consequat. Ullamco amet qui velit quis ad ipsum officia officia magna. Qui adipisicing commodo irure dolore cillum qui anim culpa nulla tempor do ut. Magna exercitation ullamco sint aute pariatur commodo cupidatat id quis esse sit ex. Culpa adipisicing esse eu ipsum culpa.",
+    //   profilePicture:
+    //       'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
+    // ),
+    // Comment(
+    //   replies: [],
+    //   name: "Esclender",
+    //   comment: "Comentario",
+    //   profilePicture:
+    //       'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
+    // ),
+    // Comment(
+    //   replies: [],
+    //   name: "Esclender",
+    //   comment: "Comentario",
+    //   profilePicture:
+    //       'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
+    // ),
+    // Comment(
+    //   replies: [],
+    //   name: "Esclender",
+    //   comment: "Comentario",
+    //   profilePicture:
+    //       'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
+    // ),
+    // Comment(
+    //   replies: [],
+    //   name: "Esclender",
+    //   comment: "Comentario",
+    //   profilePicture:
+    //       'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
+    // ),
+    // Comment(
+    //   replies: [],
+    //   name: "Esclender",
+    //   comment: "Comentario",
+    //   profilePicture:
+    //       'https://firebasestorage.googleapis.com/v0/b/grassportapp-7ccb1.appspot.com/o/usuarios%2F1703518477729.jpg?alt=media&token=17c34920-964e-4c7c-8ede-58bfdd1b3f78',
+    // ),
   ];
 
   @override
@@ -217,9 +217,9 @@ class _MyPlaceCanchasDetailState extends State<MyPlaceCanchasDetail> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: CommentsSection(
-              commentsCount: comments.length,
               comments: comments,
               isOwner: true,
+              placeId: widget.data.placeId,
             ),
           ),
           const Gap(20),
@@ -279,7 +279,6 @@ class _MyPlaceCanchasDetailState extends State<MyPlaceCanchasDetail> {
               onPressed: () {
                 // Access the entered text using _textEditingController.text
                 String enteredText = formController.text;
-                print('Entered Text: $enteredText');
                 Navigator.of(context).pop();
               },
               child: Text('Editar'),

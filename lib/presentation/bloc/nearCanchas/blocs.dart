@@ -1,52 +1,29 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/models/cancha_info.dart';
 
-var nearCanchas = [];
+List nearCanchas = [];
+ApiClient myClient = ApiClient();
 
-class NearCanchas extends Cubit<List<CanchaInfo>> {
+class NearCanchas extends Cubit<List<CanchaMarker>> {
   NearCanchas() : super([]);
 
-  setNearCanchas(List<CanchaInfo> data) {
+  setNearCanchas(List<CanchaMarker> data) {
     emit([...data]);
   }
 
   setDefintive(data) {
     emit(data);
-
-    print('**********************************************CANCHAS');
-
-    print(state);
   }
 
-  Future<Set<Marker>> getNearCanchas({LatLng? currentLocation}) async {
-    List<CanchaInfo> dataCanchas = await ApiClient().getNearLocations(
-        lat: currentLocation?.latitude, lon: currentLocation?.longitude);
-
-    emit([...dataCanchas]);
-
-    Set<Marker> markers = {};
-
-    BitmapDescriptor markerCancha = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(),
-      "assets/app_icons/cancha_icon_location.png",
+  Future<void> getNearCanchas({LatLng? currentLocation}) async {
+    List<CanchaMarker> dataCanchas = await myClient.getNearLocations(
+      lat: currentLocation?.latitude,
+      lon: currentLocation?.longitude,
     );
 
-    // ignore: use_build_context_synchronously
-    for (CanchaInfo cancha in dataCanchas) {
-      markers.add(Marker(
-        markerId: MarkerId(cancha.address),
-        position: LatLng(cancha.location.latitude, cancha.location.longitude),
-        icon: markerCancha,
-        infoWindow: InfoWindow(
-          title: cancha.nombre,
-          anchor: const Offset(0.5, 0.1),
-        ),
-      ));
-    }
-
-    return markers;
+    //emit([...dataCanchas]);
+    emit(dataCanchas);
   }
 }

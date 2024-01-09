@@ -26,11 +26,11 @@ class _CodeConfirmationWidgetState extends State<CodeConfirmationWidget> {
   final TextEditingController _confirmarCodeController =
       TextEditingController();
 
-  isValidCode() {
+  isValidCode() async {
     if (int.tryParse(_confirmarCodeController.text) == widget.code) {
-      widget.onCodeConfirmed();
+      await widget.onCodeConfirmed();
     } else {
-      _showAlert('Codigo no es correcto');
+      widget.onCancel();
     }
   }
 
@@ -92,7 +92,9 @@ class _CodeConfirmationWidgetState extends State<CodeConfirmationWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton.icon(
-                  onPressed: isValidCode,
+                  onPressed: () async {
+                    await isValidCode();
+                  },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
@@ -134,32 +136,6 @@ class _CodeConfirmationWidgetState extends State<CodeConfirmationWidget> {
           ],
         ),
       ),
-    );
-  }
-
-  void _showAlert(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Row(
-            children: [
-              Icon(Icons.warning, color: Colors.green),
-              SizedBox(width: 8.0),
-              Text('Alerta', style: TextStyle(color: Colors.green)),
-            ],
-          ),
-          content: Text(message, style: const TextStyle(color: Colors.green)),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('OK', style: TextStyle(color: Colors.green)),
-            ),
-          ],
-        );
-      },
     );
   }
 }

@@ -41,9 +41,10 @@ class BlocsProvider extends StatelessWidget {
         BlocProvider(create: (context) => Notifications()),
         BlocProvider(create: (context) => LoggedUser()),
         BlocProvider(create: (context) => DeviceGpsLocation()),
-        BlocProvider(create: (context) => CanchasByInout()),
+        BlocProvider(create: (context) => CanchasByInput()),
         BlocProvider(create: (context) => GoogleMapMarkers()),
         BlocProvider(create: (context) => IsAdmin()),
+        BlocProvider(create: (context) => IsGpsEnabled()),
       ],
       child: const MyApp(),
     );

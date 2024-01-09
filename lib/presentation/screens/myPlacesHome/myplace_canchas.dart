@@ -23,6 +23,8 @@ class _UserPostedCanchasWidgetState extends State<UserPostedCanchasWidget> {
         'Laborum sunt magna ipsum ea proident mollit. Ipsum labore occaecat culpa qui officia quis esse qui ex duis id. Tempor aliquip tempor proident occaecat dolor.Laborum sunt magna ipsum ea proident mollit. Ipsum labore occaecat culpa qui officia quis esse qui ex duis id. Tempor aliquip tempor proident occaecat dolor.Laborum sunt magna ipsum ea proident mollit. Ipsum labore occaecat culpa qui officia quis esse qui ex duis id. Tempor aliquip tempor proident occaecat dolor. ',
     isOpen: true,
     location: LatLng(-12.0116547, -77.1024219),
+    placeId: '',
+    comments: [],
   );
 
   @override

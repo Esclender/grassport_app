@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/models/logged_user.dart';
+import 'package:grassport_app/models/notification_model.dart';
 import 'package:grassport_app/presentation/bloc/home_is_search/bloc.dart';
 import 'package:grassport_app/presentation/bloc/home_view_selected/bloc.dart';
 import 'package:grassport_app/presentation/bloc/loged_user_data/bloc.dart';
+import 'package:grassport_app/presentation/bloc/notifications/bloc.dart';
 import 'package:grassport_app/presentation/components/popus/must_be_logged_pp.dart';
 import 'package:grassport_app/presentation/router/starting_app_routes.dart';
 import 'package:grassport_app/presentation/styles/boxx_shadows.dart';
@@ -20,10 +23,13 @@ class HomeBadget extends StatefulWidget {
 class _HomeBadgetState extends State<HomeBadget> {
   //int selectedIcon = 0;
   bool isSigned = false;
+  late NotificationsScaffold? notifications;
+  ApiClient myClient = ApiClient();
 
   @override
   void initState() {
     checkUser();
+    setNotifications();
     super.initState();
   }
 
@@ -34,9 +40,14 @@ class _HomeBadgetState extends State<HomeBadget> {
     });
   }
 
+  void setNotifications() async {
+    // ignore: use_build_context_synchronously
+    await context.read<Notifications>().setNotifications();
+  }
+
   Widget isNotificationsEmpty() {
-    int notifications = 1;
-    if (notifications > 0) {
+    int countOfNotifications = notifications?.newNotificationsCount ?? 0;
+    if (countOfNotifications > 0) {
       return Stack(
         children: [
           const Icon(
@@ -68,6 +79,7 @@ class _HomeBadgetState extends State<HomeBadget> {
   Widget build(BuildContext context) {
     IsSearch showTopScreen = context.watch<IsSearch>();
     HomeView selectedIcon = context.watch<HomeView>();
+    notifications = context.watch<Notifications>().state;
 
     return Container(
       width: 220,

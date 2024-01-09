@@ -1,12 +1,12 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:grassport_app/api/api_client.dart';
 import 'package:grassport_app/presentation/components/buttons.dart';
-import 'package:grassport_app/presentation/router/starting_app_routes.dart';
+import 'package:grassport_app/presentation/components/alerts.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 class ReportProblem extends StatefulWidget {
   const ReportProblem({super.key});
@@ -17,11 +17,10 @@ class ReportProblem extends StatefulWidget {
 
 class _ReportProblemState extends State<ReportProblem> {
   TextEditingController textAreaController = TextEditingController();
-  ProgressDialog? pr;
+  String text = "Sube una foto de tu problema";
 
   @override
   void initState() {
-    setPr();
     super.initState();
   }
 
@@ -36,12 +35,10 @@ class _ReportProblemState extends State<ReportProblem> {
     }
   }
 
-  setPr() {
+  cleanFields() {
     setState(() {
-      pr = pr = ProgressDialog(context, showLogs: true, isDismissible: false);
-      pr?.style(
-        message: 'Subiendo reporte...',
-      );
+      textAreaController.clear();
+      imageFile = null;
     });
   }
 
@@ -56,10 +53,9 @@ class _ReportProblemState extends State<ReportProblem> {
             alignment: WrapAlignment.end,
             runSpacing: 10.0,
             children: [
-              Field(
-                imageController: selectImage,
-              ),
+              _buildImageField(),
               TextField(
+                keyboardType: TextInputType.text,
                 maxLines: 8,
                 controller: textAreaController,
                 decoration: InputDecoration(
@@ -76,25 +72,26 @@ class _ReportProblemState extends State<ReportProblem> {
                 width: 150,
                 child: CustomButton(
                   next: () async {
-                    pr?.show();
-                    Future.delayed(const Duration(seconds: 4)).then((value) {
-                      pr?.update(message: 'Reporte subido!');
+                    try {
+                      CustomDialogs.showSearchingDialog(
+                          context, 'Subiendo Reporte...');
 
-                      Future.delayed(const Duration(seconds: 2), () {
-                        pr?.hide().whenComplete(() {
-                          Future.delayed(
-                            const Duration(seconds: 1),
-                          ).then((v) {
-                            Navigator.pushNamed(context, routeHomeApp);
-                          });
-                        });
+                      await ApiClient().reportProblem(
+                        imageFile as File,
+                        textAreaController.value.text,
+                      );
+                    } finally {
+                      // ignore: use_build_context_synchronously
+                      Navigator.pop(context);
+                      // ignore: use_build_context_synchronously
+                      CustomDialogs.showSearchingDialog(
+                          context, 'Reporte Subido...');
+
+                      Timer(const Duration(seconds: 1), () {
+                        Navigator.pop(context);
+                        cleanFields();
                       });
-                    });
-
-                    await ApiClient().reportProblem(
-                      imageFile as File,
-                      textAreaController.value.text,
-                    );
+                    }
                   },
                   text: Text(
                     "Enviar",
@@ -109,25 +106,11 @@ class _ReportProblemState extends State<ReportProblem> {
       ),
     );
   }
-}
 
-// ignore: must_be_immutable
-class Field extends StatefulWidget {
-  Function imageController;
-  Field({super.key, required this.imageController});
-
-  @override
-  State<Field> createState() => _FieldState();
-}
-
-class _FieldState extends State<Field> {
-  String text = "Sube una foto de tu problema";
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildImageField() {
     return CustomButton(
       next: () async {
-        var imageName = await widget.imageController(ImageSource.gallery);
+        var imageName = await selectImage(ImageSource.gallery);
 
         setState(() {
           text = imageName;

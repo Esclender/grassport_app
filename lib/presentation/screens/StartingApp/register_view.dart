@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:grassport_app/api/api_client.dart';
+import 'package:grassport_app/presentation/components/alerts.dart';
 import 'package:grassport_app/presentation/components/code_confirmation_modal.dart';
 import 'package:grassport_app/presentation/styles/colors.dart';
 import 'package:grassport_app/presentation/styles/systemThemes.dart';
@@ -30,6 +32,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late int code;
   int expirationTime = 0;
   bool isBottomSheetVisible = false;
+
+  ApiClient myClient = ApiClient();
 
   Future selectImage(ImageSource imageSource) async {
     XFile? image = await imagePicker.pickImage(source: imageSource);
@@ -232,7 +236,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Widget codeConfirmation() {
-    onCodeConfirmed() {
+    onCodeConfirmed() async {
+      await myClient.completeRegister(email: _emailController.text.trim());
+
       _emailController.clear();
       _nombreController.clear();
       _apellidoController.clear();
@@ -245,11 +251,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         imageFile = null;
       });
 
-      _showSuccessDialog();
+      CustomDialogs.showAlert(
+        context: context,
+        title: "¡Listo!",
+        message: 'Te has registrado exitosamente!',
+      );
     }
 
     onCancel() {
-      _showAlert('Codigo no es correcto');
+      setState(() {
+        isBottomSheetVisible = false;
+      });
     }
 
     return CodeConfirmationWidget(
@@ -292,7 +304,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         _claveController.text.isEmpty ||
         _confirmarClaveController.text.isEmpty ||
         imageFile == null) {
-      _showAlert('Llena todos los campos');
+      CustomDialogs.showAlert(
+        context: context,
+        title: 'Validar Campos',
+        message: 'Llena todos los campos',
+      );
     } else {
       // All fields are filled, continue with registration logic
       _verifyPasswordsAndRegister();
@@ -308,22 +324,36 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     String confirmarClave = _confirmarClaveController.text.trim();
 
     if (password != confirmarClave) {
-      _showAlert('Claves no son iguales');
-    } else {
-      Map confirmationDta = await registerUser(
-        email: email,
-        password: password,
-        nombre: nombre,
-        apellido: apellido,
-        numero: numeroTlf,
-        image: imageFile as File,
+      CustomDialogs.showAlert(
+        context: context,
+        title: 'Validar Campos',
+        message: 'Claves no son iguales',
       );
+    } else {
+      try {
+        CustomDialogs.showSearchingDialog(
+          context,
+          'Espere un momento...',
+        );
 
-      setState(() {
-        code = confirmationDta["verificationCode"];
-        expirationTime = confirmationDta["expirationTime"];
-        isBottomSheetVisible = true;
-      });
+        Map confirmationDta = await registerUser(
+          email: email,
+          password: password,
+          nombre: nombre,
+          apellido: apellido,
+          numero: numeroTlf,
+          image: imageFile as File,
+        );
+
+        setState(() {
+          code = confirmationDta["verificationCode"];
+          expirationTime = confirmationDta["expirationTime"];
+          isBottomSheetVisible = true;
+        });
+      } finally {
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
+      }
 
       //_showSuccessDialog();
     }
@@ -335,7 +365,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         .hasMatch(email)) {
       return true;
     } else {
-      _showAlert('Ingrese un email válido');
+      CustomDialogs.showAlert(
+        context: context,
+        title: 'Validar Campos',
+        message: 'Ingrese un email válido',
+      );
       return false;
     }
   }
@@ -345,61 +379,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     if (phoneNumber.length >= 9) {
       return true;
     } else {
-      _showAlert('Ingrese un número de teléfono válido (mínimo 9 dígitos)');
+      CustomDialogs.showAlert(
+        context: context,
+        title: 'Validar Campos',
+        message: 'Ingrese un número de teléfono válido (mínimo 9 dígitos)',
+      );
       return false;
     }
-  }
-
-  void _showAlert(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Row(
-            children: [
-              Icon(Icons.warning, color: Colors.green),
-              SizedBox(width: 8.0),
-              Text('Alerta', style: TextStyle(color: Colors.green)),
-            ],
-          ),
-          content: Text(message, style: const TextStyle(color: Colors.green)),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('OK', style: TextStyle(color: Colors.green)),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.green),
-              SizedBox(width: 8.0),
-              Text('Registro Exitoso', style: TextStyle(color: Colors.green)),
-            ],
-          ),
-          content: const Text('Te has registrado exitosamente.',
-              style: TextStyle(color: Colors.green)),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('OK', style: TextStyle(color: Colors.green)),
-            ),
-          ],
-        );
-      },
-    );
   }
 }

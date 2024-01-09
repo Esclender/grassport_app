@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:grassport_app/exceptions/custom_exception.dart';
 import 'package:grassport_app/models/admin_panel_model.dart';
+import 'package:grassport_app/models/lis_item_model.dart';
+import 'package:grassport_app/models/notification_model.dart';
 import 'package:grassport_app/models/report_model.dart';
 import 'package:grassport_app/models/user_registered_model.dart';
 import 'package:http_parser/http_parser.dart';
@@ -15,7 +18,7 @@ class ApiClient {
   // ignore: prefer_typing_uninitialized_variables
   final client = http.Client();
   // ignore: constant_identifier_names
-  static const String API_URL_PROD = "54.207.102.152:3000"; //""
+  static const String API_URL_PROD = "18.230.150.129:3000"; //""
 
   //HERE WE DEFINE THE ENV WE ARE NOW
   // ignore: constant_identifier_names
@@ -24,12 +27,16 @@ class ApiClient {
   //ENPOINTS
   static const String getTokenPath = "/usuarios";
   static const String registerPath = "/usuarios/registro";
+  static const String registerCompletePath = "/usuarios/registro/completado";
   static const String loginPath = "/usuarios/login";
   static const String getMyHistoryPath = "/usuarios/mis-datos/historial";
   static const String saveFavoritesPath = "/usuarios/favoritos";
   static const String getFavoritesPath = "/usuarios/mis-datos/favoritos";
   static const String userDataPath = "/usuarios/mis-datos";
   static const String reportProblemPath = "/usuarios/report";
+  static const String notificationsPath = "/usuarios/notifications";
+  static const String saveCommentPath = "/usuarios/comment";
+  static const String getReportDetail = "/usuarios/report";
 
   static const String locationPath = "/ubicacion/geocoding";
   static const String nearLocationsPath =
@@ -59,9 +66,23 @@ class ApiClient {
       final uri = Uri.http(API_URL, nearLocationsPath, {'latLng': "$lat,$lon"});
       final response = await client.get(uri);
       final dataNoMapped = jsonDecode(response.body);
-      List<CanchaInfo> canchas = CanchaInfo.transformResponse(dataNoMapped);
+      List<CanchaMarker> canchas = CanchaMarker.transformResponse(dataNoMapped);
 
       return canchas;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<CanchaInfo> getNearLocationsDetails(placeId) async {
+    try {
+      final uri = Uri.http(API_URL, "$nearLocationsPath/$placeId");
+      final response = await client.get(uri);
+      final dataNoMapped = jsonDecode(response.body);
+
+      CanchaInfo data = CanchaInfo.transformResponseDetails(dataNoMapped);
+
+      return data;
     } catch (e) {
       throw Exception(e);
     }
@@ -80,7 +101,7 @@ class ApiClient {
     }
   }
 
-  searchCanchas({search}) async {
+  Future<List<LocationTagModel>> searchCanchas({search}) async {
     try {
       final uri = Uri.http(API_URL, searchCanchasPath, {'nombre': search});
       final response = await client.get(
@@ -88,28 +109,25 @@ class ApiClient {
       );
       final dataJson = jsonDecode(response.body);
 
-      return dataJson['response'];
+      List<LocationTagModel> dataMapped =
+          LocationTagModel.transformResponse(dataJson);
+
+      return dataMapped;
     } catch (e) {
       throw Exception(e);
     }
   }
 
-  getToken({email, nombre, photoURL}) async {
-    try {
-      final uri = Uri.http(API_URL, getTokenPath);
-      final response = await client.post(uri, body: {
-        'email': email,
-        'nombre': nombre,
-        'photoURL': photoURL,
-      });
+  getToken({email}) async {
+    final uri = Uri.http(API_URL, getTokenPath);
+    final response = await client.post(uri, body: {'email': email});
+    Map data = jsonDecode(response.body);
 
-      Map data = jsonDecode(response.body);
-      await Cookies().save(key: 'userToken', value: data['token']);
+    if (response.statusCode == 400) throw CustomException(data['message']);
 
-      return data['token'];
-    } catch (e) {
-      throw Exception(e);
-    }
+    await Cookies().save(key: 'userToken', value: data['token']);
+
+    return data['token'];
   }
 
   login({email, clave}) async {
@@ -168,6 +186,53 @@ class ApiClient {
     }
   }
 
+  completeRegister({
+    required String email,
+  }) async {
+    try {
+      final uri = Uri.http(API_URL, registerCompletePath);
+
+      await client.post(
+        uri,
+        body: {'email': email},
+      );
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  saveComment({
+    required String placeId,
+    required String comment,
+    String isReply = 'false',
+    String commentToReplyId = '',
+  }) async {
+    try {
+      String token = await Cookies().load(key: 'userToken');
+      final uri = Uri.http(
+        API_URL,
+        saveCommentPath,
+        {
+          "isReply": isReply,
+        },
+      );
+
+      await client.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        body: {
+          'place_id': placeId,
+          'comentario': comment,
+          'commentToReply': commentToReplyId,
+        },
+      );
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   //ONLY LOGGED USERS
   getUserData({email}) async {
     try {
@@ -191,6 +256,32 @@ class ApiClient {
       );
 
       return user;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<NotificationsScaffold> getUserNotifications() async {
+    try {
+      String isToken = await Cookies().load(key: 'userToken');
+      final uri = Uri.http(
+        API_URL,
+        notificationsPath,
+      );
+
+      final userData = await client.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $isToken',
+        },
+      );
+
+      final docJson = jsonDecode(userData.body);
+      NotificationsScaffold doc = Notificacion.transformBodyList(
+        docJson['response'],
+      );
+
+      return doc;
     } catch (e) {
       throw Exception(e);
     }
@@ -238,7 +329,7 @@ class ApiClient {
     }
   }
 
-  getMyHistory() async {
+  Future<List<LocationTagModel>> getMyHistory() async {
     try {
       String isToken = await Cookies().load(key: 'userToken');
       final uri = Uri.http(API_URL, getMyHistoryPath);
@@ -250,7 +341,12 @@ class ApiClient {
         },
       );
 
-      return jsonDecode(userHistory.body);
+      Map data = jsonDecode(userHistory.body);
+
+      List<LocationTagModel> dataMapped =
+          LocationTagModel.transformResponse(data);
+
+      return dataMapped;
     } catch (e) {
       throw Exception(e);
     }
@@ -322,6 +418,24 @@ class ApiClient {
       request.fields['descripcion'] = description;
 
       await request.send();
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<ReportInfo> getReportDetails(idReporte) async {
+    try {
+      String token = await Cookies().load(key: 'userToken');
+      final uri = Uri.http(API_URL, "$getReportDetail/$idReporte");
+
+      final dataReponse =
+          await client.get(uri, headers: {"Authorization": "Bearer $token"});
+
+      final dataJson = jsonDecode(dataReponse.body);
+
+      ReportInfo info = ReportInfo.transformDetails(dataJson);
+
+      return info;
     } catch (e) {
       throw Exception(e);
     }

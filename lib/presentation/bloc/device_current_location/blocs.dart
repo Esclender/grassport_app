@@ -6,9 +6,6 @@ class DeviceGpsLocation extends Cubit<LatLng?> {
       : super(null); //0 is equal to history and 1 equal to serch places
 
   void setGpsLocation(LatLng event) {
-    print(
-        '***********************************************************SETTING THE GPS');
-    print(event);
     emit(event);
   }
 }

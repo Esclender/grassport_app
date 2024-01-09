@@ -188,9 +188,6 @@ class _ButtonsSkipAndNextState extends State<ButtonsSkipAndNext> {
         ),
         TextButton(
           onPressed: () {
-            print(
-                '***********************************************CHECKING LOGGED USER');
-            print(isLogged);
             if (!isAdmin) {
               if (isLogged != null) {
                 Navigator.pushNamed(context, routeAgreementLocation);
